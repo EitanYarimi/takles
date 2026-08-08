@@ -150,11 +150,13 @@ def safe_feed(url: str, limit: int, topic_hint: str | None = None) -> list[dict]
 
 
 def build_payload() -> dict:
+    from distill import enrich_items
+
     main = safe_feed(GOOGLE_RSS, 20)
     sports = safe_feed(GOOGLE_SPORTS, 8, "sport")
     # מושכים יותר ואז מסננים לרלוונטי תיירות/נופש
     leisure = safe_feed(GOOGLE_TRAVEL, 25, "leisure")[:6]
-    clusters = merge_items(main, sports, leisure)
+    clusters = enrich_items(merge_items(main, sports, leisure))
     return {
         "fetchedAt": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "count": len(clusters),

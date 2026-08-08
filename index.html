@@ -779,6 +779,7 @@
         <li><strong>כותרת ראשית</strong> — הסיפור הכי רלוונטי לישראל כרגע.</li>
         <li><strong>כותרת בעולם</strong> — אירוע בינלאומי בולט, מופרד מהלוח הישראלי.</li>
         <li><strong>ריבועי נושאים</strong> — ביטחון, פוליטיקה, אזור, בעולם, כלכלה, פנים, תיירות ונופש, ספורט.</li>
+        <li><strong>סיכום מראש</strong> — לכל כתבה: עובדות, רקע ומבט קדימה — בלי שהמשתמש יריץ דבר.</li>
         <li><strong>צפיתי</strong> — מוריד כתבה מהלוח הפעיל בלי למחוק אותה לגמרי.</li>
         <li><strong>בלי לינקים החוצה</strong> — נשארים בתוך תכלס; העובדות מרוכזות כאן.</li>
       </ul>
@@ -905,7 +906,11 @@
         return;
       }
       const names = [...new Set(lead.sources.map((s) => s.name))];
-      const deck = (lead.bullet_facts && lead.bullet_facts[0]) || lead.insight || "";
+      const deck =
+        lead.background ||
+        (lead.bullet_facts && lead.bullet_facts[0]) ||
+        lead.insight ||
+        "";
       els.lead.hidden = false;
       els.lead.classList.add("visible");
       els.lead.dataset.id = lead.id;
@@ -941,7 +946,11 @@
         return;
       }
       const names = [...new Set(story.sources.map((s) => s.name))];
-      const deck = (story.bullet_facts && story.bullet_facts[0]) || story.insight || "";
+      const deck =
+        story.background ||
+        (story.bullet_facts && story.bullet_facts[0]) ||
+        story.insight ||
+        "";
       els.worldLead.hidden = false;
       els.worldLead.classList.add("visible");
       els.worldLead.dataset.id = story.id;
@@ -1619,12 +1628,16 @@
           ${c.bullet_facts.map((b) => `<li>${escapeHtml(b)}</li>`).join("")}
         </ul>
         <div class="block">
-          <h3>תובנה</h3>
-          <p>${escapeHtml(c.insight)}</p>
+          <h3>רקע</h3>
+          <p>${escapeHtml(c.background || c.historical_context || "")}</p>
         </div>
         <div class="block">
-          <h3>הקשר</h3>
-          <p>${escapeHtml(c.historical_context)}</p>
+          <h3>מבט קדימה</h3>
+          <p>${escapeHtml(c.outlook || "לעקוב אחרי עדכונים רשמיים.")}</p>
+        </div>
+        <div class="block">
+          <h3>תובנה</h3>
+          <p>${escapeHtml(c.insight)}</p>
         </div>
         <div class="block">
           <h3>נתונים רלוונטיים</h3>
@@ -1711,8 +1724,49 @@
     }
 
     function localDistill(item) {
-      const headlines = item.sources.map((s) => s.headline);
-      const names = [...new Set(item.sources.map((s) => s.name))];
+      const pre = item.distill || null;
+      const headlines = (item.sources || []).map((s) => s.headline);
+      const names = [...new Set((item.sources || []).map((s) => s.name))];
+
+      if (pre && Array.isArray(pre.bullet_facts) && pre.bullet_facts.length) {
+        return {
+          title: pre.title || dryTitle(item.title),
+          bullet_facts: pre.bullet_facts,
+          status: pre.status || item.status || "reported",
+          insight: pre.insight || "",
+          historical_context: pre.historical_context || pre.background || "",
+          background: pre.background || pre.historical_context || "",
+          outlook: pre.outlook || "",
+          sources: item.sources,
+          original_headlines: headlines,
+          pubDate: item.pubDate,
+          link: item.link,
+          image: pickContextImage(item.title),
+          topic: item.topicHint || classifyTopic(item.title, item.sources),
+          mode: pre.mode || item.distillMode || "prebuilt",
+        };
+      }
+
+      // fallback if payload has flattened fields from server
+      if (item.bullet_facts?.length && item.background && item.outlook) {
+        return {
+          title: item.dryTitle || dryTitle(item.title),
+          bullet_facts: item.bullet_facts,
+          status: item.status || "reported",
+          insight: item.insight || "",
+          historical_context: item.historical_context || item.background,
+          background: item.background,
+          outlook: item.outlook,
+          sources: item.sources,
+          original_headlines: headlines,
+          pubDate: item.pubDate,
+          link: item.link,
+          image: pickContextImage(item.title),
+          topic: item.topicHint || classifyTopic(item.title, item.sources),
+          mode: item.distillMode || "prebuilt",
+        };
+      }
+
       const quoted = /"|״|„|“|”/.test(item.title) || /:/.test(item.title);
       const multi = names.length >= 2;
       let status = "reported";
@@ -1751,6 +1805,8 @@
         status,
         insight,
         historical_context: context,
+        background: context,
+        outlook: "לעקוב אחרי הצלבת מקורות ועדכונים רשמיים ביממה הקרובה.",
         sources: item.sources,
         original_headlines: headlines,
         pubDate: item.pubDate,
@@ -1804,12 +1860,16 @@
                 ${c.bullet_facts.map((b) => `<li>${escapeHtml(b)}</li>`).join("")}
               </ul>
               <div class="block">
-                <h3>תובנה</h3>
-                <p>${escapeHtml(c.insight)}</p>
+                <h3>רקע</h3>
+                <p>${escapeHtml(c.background || c.historical_context || "")}</p>
               </div>
               <div class="block">
-                <h3>הקשר</h3>
-                <p>${escapeHtml(c.historical_context)}</p>
+                <h3>מבט קדימה</h3>
+                <p>${escapeHtml(c.outlook || "")}</p>
+              </div>
+              <div class="block">
+                <h3>תובנה</h3>
+                <p>${escapeHtml(c.insight)}</p>
               </div>
               <div class="sources-row">${sourceChips}</div>
               <div class="time">עודכן ${escapeHtml(relativeTime(c.pubDate))}</div>

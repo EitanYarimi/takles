@@ -1,18 +1,27 @@
 # תכלס (ClearNews) — POC
 
 פורטל חדשות ישראלי יבש: כותרת ראשית לישראל, כותרת בעולם, וריבועי נושאים.
+לכל כתבה נוצר **סיכום מראש** (עובדות · רקע · מבט קדימה) בזמן משיכת הפיד.
 
 ## Live
 
-אחרי הפעלה של GitHub Pages:  
 `https://eitanyarimi.github.io/takles/`
 
-האתר ב-Pages מתעדכן מ-RSS כל ~30 דקות (GitHub Actions).
-
-## הרצה מקומית (WebSocket חי)
+## הרצה מקומית
 
 ```bash
+# אופציונלי לזיקוק AI:
+export GEMINI_API_KEY=AIza...
 python3 serve.py
 ```
 
 פתחו http://127.0.0.1:8765/
+
+בלי מפתח — סיכום היוריסטי מראש (עדיין בלי פעולה מהמשתמש).
+עם מפתח — Gemini; תוצאות נשמרות ב־`distill_cache.json`.
+
+לבניית `news.json` ל־Pages:
+
+```bash
+python3 scripts/build_news.py
+```
