@@ -14,7 +14,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 CACHE_PATH = ROOT / "distill_cache.json"
-DISTILL_VERSION = "v6-cross-source"
+DISTILL_VERSION = "v7-no-meta-insight"
 SSL_CTX = ssl._create_unverified_context()
 UA = "Mozilla/5.0 ClearNewsPOC/0.5"
 GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.0-flash")
@@ -51,11 +51,11 @@ PROMPT = """אתה עורך חדשות יבש לפורטל "תכל׳ס" (ישר�
 - bullet_facts: מערך 3–5 עובדות ברורות (מי/מה/איפה/מתי/מספרים אם יש) — משפט מלא לכל פריט
 - background: 2–3 משפטים של ידע מקדים
 - outlook: 2 משפטים זהירים על מה לעקוב
-- insight: תובנה קצרה על מה שמוסכם או חלוק בין המקורות
 - status: אחד מ־confirmed | reported | denied | review
 
 כללים: עברית, יבש, בלי פעלים דרמטיים, בלי לינקים, אל תמציא מספרים שלא מופיעים בקלט.
 why_matters חייב להיות משפט עצמאי שמסביר חשיבות — לא "כי זה חדשות" ולא מטא על האתר.
+אל תכתוב תובנות מטא כמו "יש חפיפה בין מקורות" או "מוצג המשותף ולא הספין".
 """
 
 

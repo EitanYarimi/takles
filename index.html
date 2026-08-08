@@ -6,31 +6,31 @@
   <title>תכל׳ס — POC</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&family=Secular+One&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --paper: #fafaf7;
-      --paper-edge: #e6e4de;
-      --ink: #111111;
-      --ink-soft: #2a2a2a;
-      --headline: #1f3350;
-      --h-security: #0d6b52;
-      --h-politics: #5b3d8a;
-      --h-region: #1d5f9c;
-      --h-world: #3a4a6b;
-      --h-economy: #6b7a1f;
-      --h-domestic: #9a4f1c;
-      --h-leisure: #7a4d6a;
-      --h-sport: #1a6b7a;
-      --muted: #5c5c5c;
-      --rule: #111111;
-      --rule-soft: #cfcfcf;
+      --ink: #102033;
+      --ink-soft: #2c3f52;
+      --headline: #0f2740;
+      --accent: #0b6e5c;
+      --h-security: #0b6e5c;
+      --h-politics: #4a3f72;
+      --h-region: #1a5f8f;
+      --h-world: #3d5268;
+      --h-economy: #5a6a18;
+      --h-domestic: #8a4a1a;
+      --h-leisure: #6d4560;
+      --h-sport: #176878;
+      --muted: #5a6b7a;
+      --rule: #102033;
+      --rule-soft: rgba(16, 32, 51, 0.12);
       --spot: #9b1c1c;
       --ok: #0f5c3b;
       --warn: #8a5a00;
       --info: #1e3f66;
-      --badge-bg: #f0f0ec;
+      --badge-bg: rgba(16, 32, 51, 0.05);
       --font: "Heebo", "Arial Hebrew", Arial, sans-serif;
+      --font-display: "Secular One", "Heebo", "Arial Hebrew", Arial, sans-serif;
     }
 
     * { box-sizing: border-box; }
@@ -39,85 +39,98 @@
     body {
       font-family: var(--font);
       color: var(--ink);
-      background: #eceae4;
       line-height: 1.5;
       -webkit-font-smoothing: antialiased;
+      background:
+        radial-gradient(1100px 560px at 88% -8%, rgba(11, 110, 92, 0.07), transparent 55%),
+        radial-gradient(900px 480px at -8% 18%, rgba(26, 95, 143, 0.05), transparent 52%),
+        linear-gradient(165deg, #f7fafb 0%, #ffffff 45%, #f5f8f7 100%);
+      background-attachment: fixed;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      z-index: 0;
     }
 
     .wrap {
-      width: min(880px, calc(100% - 1.5rem));
-      margin: 1.25rem auto 3rem;
-      padding: 1.5rem 1.5rem 2.2rem;
-      background: var(--paper);
-      border: 1px solid var(--paper-edge);
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.06);
+      position: relative;
+      z-index: 1;
+      width: min(900px, calc(100% - 1.4rem));
+      margin: 0 auto 2.75rem;
+      padding: 1.15rem 0.25rem 2.2rem;
     }
 
     header.hero {
       text-align: center;
-      padding: 0.15rem 0 1.1rem;
-      margin-bottom: 1.1rem;
-      border-top: 3px double var(--rule);
-      border-bottom: 3px double var(--rule);
+      padding: 1.25rem 0.5rem 0.2rem;
+      margin-bottom: 0;
+      animation: brand-in 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
     }
 
     .mast-top {
       display: flex;
-      justify-content: space-between;
-      gap: 1rem;
+      justify-content: center;
+      gap: 0.65rem;
       align-items: baseline;
       font-size: 0.78rem;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.03em;
       color: var(--muted);
-      margin-bottom: 0.55rem;
+      margin-bottom: 0.3rem;
+      font-weight: 600;
+    }
+    .mast-top span + span::before {
+      content: "·";
+      margin-inline-end: 0.65rem;
+      opacity: 0.5;
     }
 
     .brand {
-      font-family: var(--font);
-      font-size: clamp(3.2rem, 9vw, 4.8rem);
-      font-weight: 800;
+      font-family: var(--font-display);
+      font-size: clamp(3.8rem, 12vw, 5.8rem);
+      font-weight: 400;
       letter-spacing: -0.03em;
       margin: 0;
-      line-height: 0.95;
+      line-height: 0.9;
       color: var(--ink);
     }
 
-    .motto {
-      margin: 0.45rem 0 0.15rem;
-      font-size: 1.05rem;
-      font-style: normal;
-      font-weight: 500;
-      color: var(--ink-soft);
-    }
-
     .tagline {
-      margin: 0.4rem auto 0;
-      color: var(--muted);
-      font-size: 0.98rem;
-      max-width: 34rem;
-      line-height: 1.45;
+      margin: 0.55rem auto 0;
+      color: var(--ink-soft);
+      font-size: 1.06rem;
+      font-weight: 500;
+      max-width: 26rem;
+      line-height: 1.4;
     }
 
     .about-link {
       display: inline-block;
-      margin-top: 0.75rem;
-      color: var(--ink-soft);
-      font-size: 0.88rem;
-      font-weight: 700;
+      margin-top: 0.45rem;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 600;
       text-decoration: underline;
       text-underline-offset: 0.18em;
     }
-    .about-link:hover { color: var(--ink); }
+    .about-link:hover { color: var(--accent); }
 
     .about-view {
       display: none;
       margin-top: 0.5rem;
+      padding: 0 0.5rem;
     }
     .about-view.active { display: block; }
     .about-view h2 {
       margin: 0 0 0.75rem;
-      font-size: 1.55rem;
-      font-weight: 800;
+      font-family: var(--font-display);
+      font-size: 1.7rem;
+      font-weight: 400;
       letter-spacing: -0.02em;
       color: var(--headline);
     }
@@ -138,159 +151,129 @@
     }
     .about-view li { margin-bottom: 0.45rem; }
 
-    .settings {
-      margin-top: 0.9rem;
-      display: grid;
-      gap: 0.35rem;
-      max-width: 34rem;
-      margin-inline: auto;
-      text-align: right;
-    }
-    .settings label {
-      font-size: 0.84rem;
-      color: var(--muted);
-      font-weight: 600;
-    }
-    .settings input {
-      width: 100%;
-      border: 1px solid var(--rule-soft);
-      border-radius: 2px;
-      padding: 0.6rem 0.75rem;
-      font: inherit;
-      background: #fff;
-      color: var(--ink);
-    }
-    .hint {
-      font-size: 0.8rem;
-      color: var(--muted);
-      margin: 0;
-    }
-
     .status-line {
-      min-height: 1.3rem;
+      min-height: 0;
       color: var(--muted);
-      font-size: 0.86rem;
-      margin: 0.65rem 0 0.85rem;
+      font-size: 0.78rem;
+      margin: 1.4rem 0 0.85rem;
       font-weight: 600;
+      padding: 0 0.5rem;
+      opacity: 0.7;
+      letter-spacing: 0.01em;
     }
 
-    .topics {
-      display: none;
+    .topics { display: none; }
+
+    .home-stage {
+      padding: 0;
+      margin-top: 0.85rem;
+    }
+
+    .board-label {
+      margin: 0 0 0.65rem;
+      padding: 0 0.5rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: 0.02em;
     }
 
     .cubes {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0.85rem;
-      margin-top: 0.35rem;
+      gap: 1rem 1.5rem;
+      margin-top: 0.15rem;
+      padding: 0 0.35rem;
     }
     .topic-cube {
-      background: #fff;
-      border: 1px solid var(--rule-soft);
-      border-radius: 2px;
-      min-height: 220px;
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(16, 32, 51, 0.1);
+      border-radius: 14px;
+      min-height: 0;
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      padding: 0.75rem 0.85rem 0.55rem;
+      box-shadow: 0 8px 22px rgba(16, 32, 51, 0.04);
+      animation: cube-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
     }
+    .topic-cube:nth-child(1) { animation-delay: 0.08s; }
+    .topic-cube:nth-child(2) { animation-delay: 0.12s; }
+    .topic-cube:nth-child(3) { animation-delay: 0.16s; }
+    .topic-cube:nth-child(4) { animation-delay: 0.2s; }
+    .topic-cube:nth-child(5) { animation-delay: 0.24s; }
+    .topic-cube:nth-child(6) { animation-delay: 0.28s; }
+    .topic-cube:nth-child(7) { animation-delay: 0.32s; }
+    .topic-cube:nth-child(8) { animation-delay: 0.36s; }
+
     .topic-cube header {
       display: flex;
       justify-content: space-between;
       align-items: baseline;
       gap: 0.5rem;
-      padding: 0.7rem 0.8rem;
-      border-bottom: 2px solid var(--rule);
-      background: #f5f5f1;
+      padding: 0.2rem 0 0.5rem;
+      border-bottom: 0;
+      background: transparent;
       cursor: pointer;
     }
-    .topic-cube header:hover {
-      filter: brightness(0.98);
-    }
+    .topic-cube header:hover h2 { color: var(--accent); }
     .topic-cube header .n::after {
       content: " · הכל";
       font-weight: 600;
-      opacity: 0.75;
+      opacity: 0.7;
     }
-    .topic-cube[data-topic="security"] header {
-      border-bottom-color: var(--h-security);
-      background: #eef7f3;
-    }
-    .topic-cube[data-topic="politics"] header {
-      border-bottom-color: var(--h-politics);
-      background: #f5f1f9;
-    }
-    .topic-cube[data-topic="region"] header {
-      border-bottom-color: var(--h-region);
-      background: #eef4fa;
-    }
-    .topic-cube[data-topic="world"] header {
-      border-bottom-color: var(--h-world);
-      background: #f0f2f6;
-    }
-    .topic-cube[data-topic="economy"] header {
-      border-bottom-color: var(--h-economy);
-      background: #f5f6ea;
-    }
-    .topic-cube[data-topic="domestic"] header {
-      border-bottom-color: var(--h-domestic);
-      background: #faf3ec;
-    }
-    .topic-cube[data-topic="leisure"] header {
-      border-bottom-color: var(--h-leisure);
-      background: #f8f1f5;
-    }
-    .topic-cube[data-topic="sport"] header {
-      border-bottom-color: var(--h-sport);
-      background: #eef6f7;
-    }
+    .topic-cube[data-topic="security"] header h2 { color: var(--h-security); }
+    .topic-cube[data-topic="politics"] header h2 { color: var(--h-politics); }
+    .topic-cube[data-topic="region"] header h2 { color: var(--h-region); }
+    .topic-cube[data-topic="world"] header h2 { color: var(--h-world); }
+    .topic-cube[data-topic="economy"] header h2 { color: var(--h-economy); }
+    .topic-cube[data-topic="domestic"] header h2 { color: var(--h-domestic); }
+    .topic-cube[data-topic="leisure"] header h2 { color: var(--h-leisure); }
+    .topic-cube[data-topic="sport"] header h2 { color: var(--h-sport); }
+
     .topic-cube header h2 {
       margin: 0;
-      font-size: 1.05rem;
-      font-weight: 800;
-      letter-spacing: -0.02em;
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 400;
+      letter-spacing: -0.01em;
       color: var(--headline);
     }
     .topic-cube header .n {
       color: var(--muted);
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       font-weight: 700;
     }
     .cube-list {
       list-style: none;
       margin: 0;
-      padding: 0;
+      padding: 0.15rem 0 0.4rem;
       flex: 1;
     }
     .cube-list li {
-      border-bottom: 1px solid var(--rule-soft);
-      padding: 0.65rem 0.8rem;
+      border-bottom: 0;
+      padding: 0.45rem 0;
       cursor: pointer;
     }
-    .cube-list li:hover {
-      background: #f7f7f4;
-    }
+    .cube-list li:hover .cube-title { color: var(--accent); }
     .cube-list li:last-child { border-bottom: 0; }
-    .cube-list .item {
-      display: block;
-    }
-    .cube-list .item:hover .cube-title {
-      color: var(--ink-soft);
-    }
+    .cube-list .item { display: block; }
     .cube-meta {
       display: flex;
-      gap: 0.45rem;
+      gap: 0.4rem;
       flex-wrap: wrap;
-      margin-bottom: 0.25rem;
-      font-size: 0.72rem;
-      font-weight: 700;
+      margin-bottom: 0.12rem;
+      font-size: 0.68rem;
+      font-weight: 600;
       color: var(--muted);
+      opacity: 0.85;
     }
     .cube-title {
       font-size: 0.95rem;
-      font-weight: 800;
-      line-height: 1.3;
+      font-weight: 600;
+      line-height: 1.35;
       letter-spacing: -0.01em;
-      color: var(--headline);
+      color: var(--ink-soft);
     }
     .topic-cube[data-topic="security"] .cube-title,
     .topic-cube[data-topic="security"] header h2,
@@ -317,48 +300,168 @@
     .topic-cube[data-topic="sport"] header h2,
     h2.title.t-sport { color: var(--h-sport); }
     .cube-empty {
-      padding: 1.2rem 0.8rem;
+      padding: 0.75rem 0;
       color: var(--muted);
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       font-weight: 600;
     }
 
-    .grid {
-      display: none;
-    }
+    .grid { display: none; }
 
     .detail-view {
       display: none;
       animation: rise 0.3s ease both;
+      padding: 0 0.5rem;
     }
     .detail-view.active { display: block; }
     .home-view.hidden { display: none; }
 
     .lead {
       display: none;
-      margin: 0.85rem 0 1rem;
-      padding: 1rem 1.05rem 1.1rem;
-      border: 1px solid var(--rule-soft);
-      border-top: 3px solid var(--rule);
-      background: #fff;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.72);
+      box-shadow: 0 18px 40px rgba(16, 32, 51, 0.06);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       cursor: pointer;
+      overflow: hidden;
+      animation: lead-in 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.12s both;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
     .lead.visible { display: block; }
-    .lead:hover { background: #fafaf7; }
-    .lead-kicker {
-      margin: 0 0 0.35rem;
-      font-size: 0.75rem;
+    .lead:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 22px 48px rgba(16, 32, 51, 0.09);
+    }
+    .lead:hover .lead-title { color: var(--accent); }
+
+    .lead-copy {
+      padding: 1.15rem 1.35rem 1.35rem;
+    }
+
+    .viz {
+      position: relative;
+      height: clamp(168px, 28vw, 240px);
+      overflow: hidden;
+      isolation: isolate;
+      background: #1a2a36;
+    }
+    .viz img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      object-position: center;
+      transform: scale(1.02);
+    }
+    .viz-map svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .viz-contain {
+      background: #f3f1ea;
+      height: clamp(220px, 42vw, 320px);
+    }
+    .viz-contain img {
+      object-fit: contain;
+      transform: none;
+      background: #f3f1ea;
+    }
+    .viz-contain::after {
+      background: linear-gradient(180deg, transparent 55%, rgba(16, 32, 51, 0.25) 100%);
+    }
+    .viz-contain .viz-context {
+      color: #102033;
+      text-shadow: none;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 0.22rem 0.55rem;
+      border-radius: 999px;
+    }
+    .viz-contain .viz-credit {
+      color: #102033;
+      background: rgba(255, 255, 255, 0.92);
+    }
+    .viz::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background:
+        linear-gradient(180deg, rgba(16, 32, 51, 0.05) 0%, rgba(16, 32, 51, 0.18) 45%, rgba(16, 32, 51, 0.55) 100%);
+      pointer-events: none;
+    }
+    .viz-credit {
+      position: absolute;
+      inset-inline-start: 0.85rem;
+      bottom: 0.7rem;
+      z-index: 2;
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.95);
+      background: rgba(16, 32, 51, 0.45);
+      padding: 0.28rem 0.6rem;
+      border-radius: 999px;
+      backdrop-filter: blur(6px);
+      max-width: calc(100% - 1.7rem);
+    }
+    .viz-context {
+      position: absolute;
+      inset-inline-end: 0.85rem;
+      top: 0.75rem;
+      z-index: 2;
+      font-size: 0.72rem;
       font-weight: 800;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--muted);
+      color: #fff;
+      text-shadow: 0 1px 8px rgba(0, 0, 0, 0.35);
+    }
+    .viz-security,
+    .viz-north { background: linear-gradient(135deg, #0b6e5c 0%, #134e63 55%, #1a3a4a 100%); }
+    .viz-politics,
+    .viz-knesset { background: linear-gradient(135deg, #4a3f72 0%, #2f4568 55%, #1e3348 100%); }
+    .viz-region,
+    .viz-hormuz,
+    .viz-gaza { background: linear-gradient(135deg, #1a5f8f 0%, #0f6e7a 55%, #14524a 100%); }
+    .viz-world,
+    .viz-usa { background: linear-gradient(135deg, #3d5268 0%, #2a4a5e 55%, #1c3a4a 100%); }
+    .viz-economy,
+    .viz-markets { background: linear-gradient(135deg, #5a6a18 0%, #3d6b4a 55%, #1f4f4a 100%); }
+    .viz-domestic,
+    .viz-weather { background: linear-gradient(135deg, #8a4a1a 0%, #6b4a2e 55%, #3d4550 100%); }
+    .viz-leisure,
+    .viz-travel { background: linear-gradient(135deg, #6d4560 0%, #4a5570 55%, #2f4a5a 100%); }
+    .viz-sport { background: linear-gradient(135deg, #176878 0%, #1a5f6e 55%, #164a58 100%); }
+    .viz-label {
+      font-family: var(--font);
+      font-size: 22px;
+      font-weight: 800;
+      fill: rgba(255,255,255,0.88);
+    }
+
+    .detail-hero .viz {
+      margin: -1.2rem -1.25rem 1rem;
+      border-radius: 18px 18px 0 0;
+      height: clamp(150px, 26vw, 220px);
+    }
+
+    .lead-kicker {
+      margin: 0 0 0.45rem;
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: none;
+      color: var(--accent);
     }
     .lead-title {
-      margin: 0 0 0.55rem;
-      font-size: clamp(1.55rem, 3.8vw, 2.15rem);
-      font-weight: 800;
-      line-height: 1.2;
-      letter-spacing: -0.025em;
+      font-family: var(--font-display);
+      margin: 0 0 0.6rem;
+      font-size: clamp(1.85rem, 5vw, 2.55rem);
+      font-weight: 400;
+      line-height: 1.12;
+      letter-spacing: -0.02em;
       color: var(--headline);
     }
     .lead-title.t-security { color: var(--h-security); }
@@ -370,63 +473,75 @@
     .lead-title.t-leisure { color: var(--h-leisure); }
     .lead-title.t-sport { color: var(--h-sport); }
     .lead-deck {
-      margin: 0 0 0.65rem;
-      font-size: 1.05rem;
+      margin: 0 0 0.55rem;
+      font-size: 1.08rem;
       font-weight: 500;
       color: var(--ink-soft);
-      line-height: 1.55;
-      max-width: 42rem;
+      line-height: 1.45;
+      max-width: 36rem;
     }
     .lead-meta {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.45rem 0.75rem;
-      font-size: 0.8rem;
+      gap: 0.4rem 0.7rem;
+      font-size: 0.78rem;
       font-weight: 700;
       color: var(--muted);
+    }
+    .lead-cta {
+      display: inline-flex;
+      margin-top: 0.85rem;
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: var(--accent);
     }
 
     .world-lead {
       display: none;
-      margin: 0.85rem 0 0;
-      padding: 0.95rem 0 1.05rem;
-      border-top: 1px solid var(--rule-soft);
-      border-bottom: 1px solid var(--rule);
+      margin: 0.85rem 0.35rem 0.15rem;
+      padding: 0.85rem 1rem;
+      border: 0;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.28);
       cursor: pointer;
+      animation: lead-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.22s both;
     }
     .world-lead.visible { display: block; }
-    .world-lead:hover { background: #f7f7f4; }
+    .world-lead:hover { background: rgba(255, 255, 255, 0.45); }
+    .world-lead:hover .lead-title { color: var(--accent); }
     .world-lead .lead-kicker {
       color: var(--h-world);
+      font-size: 0.72rem;
+      margin-bottom: 0.25rem;
+      letter-spacing: 0.02em;
+      text-transform: none;
+      font-weight: 700;
     }
     .world-lead .lead-title {
-      font-size: clamp(1.2rem, 2.8vw, 1.55rem);
-      margin-bottom: 0.4rem;
+      font-family: var(--font);
+      font-size: clamp(1.05rem, 2.4vw, 1.22rem);
+      font-weight: 700;
+      margin: 0;
+      line-height: 1.35;
     }
-    .world-lead .lead-deck {
-      font-size: 0.95rem;
-      margin-bottom: 0.45rem;
-    }
+    .world-lead .lead-deck,
+    .world-lead .lead-meta { display: none; }
 
     .action-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.5rem;
-      margin: 0.85rem 0 1rem;
-    }
-    .action-row .mark-seen {
-      background: var(--ink);
-      color: #fff;
-      border-color: var(--ink);
-    }
-    .action-row .mark-seen:hover { background: #000; }
-    .action-row .restore-seen {
-      background: #fff;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.65rem 1rem;
+      margin: 0 0 1.25rem;
+      padding-bottom: 0;
+      border-bottom: 0;
     }
 
     .topic-list-view {
       display: none;
       animation: rise 0.3s ease both;
+      padding: 0 0.5rem;
     }
     .topic-list-view.active { display: block; }
 
@@ -438,7 +553,7 @@
     }
     .sort-bar button {
       border: 1px solid var(--rule-soft);
-      background: #fff;
+      background: rgba(255,255,255,0.7);
       color: var(--ink-soft);
       font: inherit;
       font-size: 0.82rem;
@@ -456,23 +571,18 @@
       list-style: none;
       margin: 0;
       padding: 0;
-      border: 1px solid var(--rule-soft);
-      background: #fff;
+      border: 0;
+      background: transparent;
     }
     .topic-full-list li {
-      padding: 0.85rem 0.9rem;
+      padding: 0.85rem 0;
       border-bottom: 1px solid var(--rule-soft);
       cursor: pointer;
     }
     .topic-full-list li:last-child { border-bottom: 0; }
-    .topic-full-list li:hover { background: #fafaf7; }
-    .topic-full-list li.is-seen {
-      background: #f0f0ee;
-      opacity: 0.72;
-    }
-    .topic-full-list li.is-seen .tfl-title {
-      color: #7a7a7a;
-    }
+    .topic-full-list li:hover .tfl-title { color: var(--accent); }
+    .topic-full-list li.is-seen { opacity: 0.62; }
+    .topic-full-list li.is-seen .tfl-title { color: #7a8a96; }
     .tfl-meta {
       display: flex;
       flex-wrap: wrap;
@@ -483,7 +593,7 @@
       color: var(--muted);
     }
     .tfl-title {
-      font-size: 1.02rem;
+      font-size: 1.05rem;
       font-weight: 800;
       line-height: 1.3;
       color: var(--headline);
@@ -498,96 +608,73 @@
     .tfl-title.t-sport { color: var(--h-sport); }
 
     .back-btn {
-      border: 1px solid var(--rule);
-      background: #fff;
-      color: var(--ink);
-      border-radius: 2px;
-      padding: 0.45rem 0.85rem;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      border-radius: 0;
+      padding: 0.35rem 0;
       font: inherit;
       font-size: 0.9rem;
       font-weight: 700;
       cursor: pointer;
-      margin-bottom: 1rem;
+      margin: 0 0 1rem;
+      transition: color 0.15s ease;
     }
-    .back-btn:hover { background: #f3f3f0; }
-    .action-row .mark-seen {
-      background: var(--ink);
-      color: #fff;
-      border-color: var(--ink);
+    .back-btn:hover { color: var(--accent); background: transparent; }
+
+    .action-row .back-btn {
+      margin: 0;
     }
-    .action-row .mark-seen:hover { background: #000; }
+    .action-row .mark-seen,
+    .action-row .restore-seen {
+      border: 1px solid rgba(11, 110, 92, 0.22);
+      background: rgba(11, 110, 92, 0.08);
+      color: var(--accent);
+      border-radius: 999px;
+      padding: 0.45rem 0.95rem;
+      font-size: 0.86rem;
+      font-weight: 700;
+    }
+    .action-row .mark-seen:hover,
+    .action-row .restore-seen:hover {
+      background: rgba(11, 110, 92, 0.14);
+      color: var(--accent);
+      border-color: rgba(11, 110, 92, 0.35);
+    }
+    .action-row .restore-seen {
+      border-color: var(--rule-soft);
+      background: rgba(255, 255, 255, 0.65);
+      color: var(--ink-soft);
+    }
+    .action-row .restore-seen:hover {
+      background: #fff;
+      color: var(--ink);
+      border-color: rgba(16, 32, 51, 0.2);
+    }
 
     .detail-hero {
       display: grid;
-      gap: 0.85rem;
-      margin-bottom: 1rem;
-      padding-bottom: 1rem;
-      border-bottom: 2px solid var(--rule);
+      gap: 0.65rem;
+      margin-bottom: 1.35rem;
+      padding: 1.2rem 1.25rem 1.3rem;
+      border-bottom: 0;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.72);
+      box-shadow: 0 14px 34px rgba(16, 32, 51, 0.05);
+      overflow: hidden;
     }
-    .detail-hero .media {
-      width: min(100%, 420px);
-      max-height: 200px;
-    }
-    .stats-row {
+
+    .detail-body {
+      padding: 0 0.35rem 0.5rem;
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 0.55rem;
-      margin: 0.9rem 0;
-    }
-    .stat-box {
-      border: 1px solid var(--rule-soft);
-      background: #f7f7f4;
-      padding: 0.7rem 0.75rem;
-    }
-    .stat-box .val {
-      font-size: 1.35rem;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      color: var(--ink);
-      line-height: 1.1;
-    }
-    .stat-box .lbl {
-      margin-top: 0.25rem;
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: var(--muted);
-    }
-    .timeline {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      border: 1px solid var(--rule-soft);
-      background: #fff;
-    }
-    .timeline li {
-      display: grid;
-      grid-template-columns: 7.5rem 1fr;
-      gap: 0.75rem;
-      padding: 0.7rem 0.8rem;
-      border-bottom: 1px solid var(--rule-soft);
-    }
-    .timeline li:last-child { border-bottom: 0; }
-    .timeline .when {
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: var(--muted);
-    }
-    .timeline .what {
-      font-size: 0.92rem;
-      font-weight: 600;
-      color: var(--ink-soft);
-    }
-    .detail-note {
-      margin-top: 0.85rem;
-      font-size: 0.8rem;
-      color: var(--muted);
-      font-weight: 600;
+      gap: 1.35rem;
     }
 
     @media (max-width: 720px) {
-      .cubes { grid-template-columns: 1fr; }
-      .stats-row { grid-template-columns: 1fr; }
-      .timeline li { grid-template-columns: 1fr; gap: 0.2rem; }
+      .cubes { grid-template-columns: 1fr; gap: 0.85rem; }
+      .lead-copy { padding: 1rem 1.05rem 1.15rem; }
+      .detail-hero { padding: 1rem 1.05rem; border-radius: 16px; }
+      .detail-hero .viz { margin: -1rem -1.05rem 0.85rem; border-radius: 16px 16px 0 0; }
     }
 
     article.card {
@@ -600,44 +687,14 @@
       animation: rise 0.35s ease both;
     }
     article.card:last-child { border-bottom: 0; }
-    .card-body {
-      padding: 1.25rem 0 1.3rem;
-    }
-    .media {
-      display: block;
-      position: relative;
-      width: min(100%, 320px);
-      max-height: 160px;
-      aspect-ratio: 16 / 9;
-      overflow: hidden;
-      background: #e8e8e4;
-      border: 1px solid var(--rule-soft);
-      margin: 0 0 0.85rem;
-    }
-    .media img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-    .media-credit {
-      position: absolute;
-      inset-inline-start: 0.65rem;
-      bottom: 0.6rem;
-      background: rgba(17, 17, 17, 0.82);
-      color: #fff;
-      font-size: 0.72rem;
-      font-weight: 700;
-      padding: 0.28rem 0.55rem;
-      border-radius: 2px;
-    }
+    .card-body { padding: 1.25rem 0 1.3rem; }
     .sources-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.4rem 0.7rem;
-      margin-top: 0.9rem;
-      padding-top: 0.65rem;
-      border-top: 1px solid var(--rule-soft);
+      gap: 0.35rem 0.85rem;
+      margin-top: 0.25rem;
+      padding-top: 0;
+      border-top: 0;
     }
     .source-chip {
       display: inline-flex;
@@ -645,10 +702,22 @@
       border: 0;
       background: transparent;
       padding: 0;
-      font-size: 0.84rem;
-      font-weight: 700;
+      font-size: 0.82rem;
+      font-weight: 600;
     }
 
+    @keyframes brand-in {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: none; }
+    }
+    @keyframes lead-in {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: none; }
+    }
+    @keyframes cube-in {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: none; }
+    }
     @keyframes rise {
       from { opacity: 0; transform: translateY(5px); }
       to { opacity: 1; transform: none; }
@@ -665,19 +734,19 @@
     .badge {
       display: inline-flex;
       align-items: center;
-      border-radius: 2px;
-      padding: 0.18rem 0.48rem;
-      font-size: 0.74rem;
+      border-radius: 999px;
+      padding: 0.2rem 0.55rem;
+      font-size: 0.72rem;
       font-weight: 700;
-      letter-spacing: 0.03em;
-      background: var(--badge-bg);
+      letter-spacing: 0.01em;
+      background: rgba(255, 255, 255, 0.7);
       color: var(--ink-soft);
-      border: 1px solid var(--rule-soft);
+      border: 0;
     }
-    .badge.reported { color: var(--warn); background: #fff7e8; border-color: #efd7a4; }
-    .badge.confirmed { color: var(--ok); background: #eaf6ef; border-color: #b7d8c5; }
-    .badge.denied { color: var(--spot); background: #f8eaea; border-color: #e2bcbc; }
-    .badge.review { color: var(--info); background: #eaf0f7; border-color: #bfd0e3; }
+    .badge.reported { color: var(--warn); background: rgba(255, 247, 232, 0.9); }
+    .badge.confirmed { color: var(--ok); background: rgba(234, 246, 239, 0.95); }
+    .badge.denied { color: var(--spot); background: rgba(248, 234, 234, 0.95); }
+    .badge.review { color: var(--info); background: rgba(234, 240, 247, 0.95); }
     .badge.sources {
       color: var(--muted);
       font-weight: 600;
@@ -687,11 +756,11 @@
     }
 
     h2.title {
-      font-family: var(--font);
-      font-size: clamp(1.35rem, 3vw, 1.75rem);
-      margin: 0 0 0.65rem;
-      line-height: 1.25;
-      font-weight: 800;
+      font-family: var(--font-display);
+      font-size: clamp(1.55rem, 3.4vw, 2.05rem);
+      margin: 0 0 0.35rem;
+      line-height: 1.18;
+      font-weight: 400;
       color: var(--headline);
       letter-spacing: -0.02em;
     }
@@ -707,58 +776,69 @@
     }
 
     .block {
-      margin-top: 0.75rem;
-      padding: 0.65rem 0.75rem;
-      border: 1px solid var(--rule-soft);
-      background: #f7f7f4;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      background: transparent;
     }
-    .block + .block { margin-top: 0.45rem; }
+    .block + .block { margin-top: 0; }
     .block h3 {
-      margin: 0 0 0.2rem;
-      font-size: 0.72rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--muted);
-      font-weight: 700;
+      margin: 0 0 0.35rem;
+      font-size: 0.92rem;
+      letter-spacing: -0.01em;
+      text-transform: none;
+      color: var(--ink);
+      font-weight: 800;
     }
     .block p {
       margin: 0;
       color: var(--ink-soft);
-      font-size: 0.98rem;
+      font-size: 1.02rem;
+      line-height: 1.55;
+      max-width: 40rem;
     }
     .block p.why-matters {
-      margin-top: 0.75rem;
-      padding-top: 0.7rem;
-      border-top: 1px dashed var(--rule-soft);
+      margin-top: 0.85rem;
+      padding: 0.75rem 0.9rem;
+      border-top: 0;
+      border-radius: 12px;
+      background: rgba(11, 110, 92, 0.07);
       font-weight: 500;
       line-height: 1.5;
     }
     .block p.why-matters strong {
-      color: var(--ink);
+      color: var(--accent);
       font-weight: 800;
     }
 
     .time {
-      margin-top: 0.8rem;
+      margin-top: 0.15rem;
       font-size: 0.8rem;
       color: var(--muted);
       font-weight: 600;
     }
 
     footer {
-      margin-top: 1.5rem;
-      padding-top: 0.8rem;
-      border-top: 3px double var(--rule);
+      margin-top: 2rem;
+      padding: 0.75rem 0.5rem 0;
+      border-top: 0;
       color: var(--muted);
-      font-size: 0.82rem;
+      font-size: 0.78rem;
       text-align: center;
+      opacity: 0.75;
     }
 
     @media (max-width: 640px) {
-      .wrap { margin: 0.5rem auto 1.5rem; padding: 1rem 0.9rem 1.4rem; }
+      .wrap { margin: 0 auto 1.5rem; padding: 0.75rem 0.15rem 1.4rem; }
       .mast-top { font-size: 0.7rem; }
-      .brand { font-size: 3.1rem; }
+      .brand { font-size: 3.4rem; }
       ul.facts li { font-size: 1rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      header.hero, .lead, .topic-cube, .detail-view, .topic-list-view, article.card {
+        animation: none !important;
+      }
     }
   </style>
 </head>
@@ -770,14 +850,16 @@
         <span>עובדות · בלי דרמה</span>
       </div>
       <h1 class="brand">תכל׳ס</h1>
-      <p class="tagline">מה חשוב עכשיו — עובדות קצרות, בלי דרמה.</p>
-      <a class="about-link" href="#about" id="aboutLink">מה האתר עושה?</a>
+      <p class="tagline">מה חשוב עכשיו — בקצרה, בלי רעש.</p>
     </header>
 
     <div class="home-view" id="homeView">
-      <article class="lead" id="lead" hidden></article>
-      <article class="world-lead" id="worldLead" hidden></article>
+      <div class="home-stage">
+        <article class="lead" id="lead" hidden></article>
+        <article class="world-lead" id="worldLead" hidden></article>
+      </div>
       <p class="status-line" id="status">טוען…</p>
+      <p class="board-label">לפי נושא</p>
       <div class="cubes" id="cubes"></div>
     </div>
     <div class="about-view" id="aboutView">
@@ -803,7 +885,7 @@
 
     <footer>
       מקור נתונים: Google News Israel · POC ·
-      <a class="about-link" href="#about" style="margin:0;font-size:inherit">מה האתר עושה?</a>
+      <a class="about-link" href="#about" id="aboutLink" style="margin:0;font-size:inherit">מה האתר עושה?</a>
     </footer>
   </div>
 
@@ -907,6 +989,155 @@
       })[0];
     }
 
+    function shortDeck(text, max = 140) {
+      const raw = String(text || "").replace(/\s+/g, " ").trim();
+      if (!raw) return "";
+      const sentence = raw.split(/(?<=[.!?…])\s+|־\s+/)[0] || raw;
+      if (sentence.length <= max) return sentence;
+      return sentence.slice(0, max - 1).replace(/\s+\S*$/, "") + "…";
+    }
+
+    function pickVisualContext(title, topic) {
+      const t = String(title || "");
+      if (/הורמוז|איראן|מפרץ|חות|עומאן|נפט/.test(t)) return "hormuz";
+      if (/חיזבאללה|לבנון|רחפן|יירוט|גבול|כיפת|צפון/.test(t)) return "north";
+      if (/עזה|חמאס|חטופ|רפיח|פירוז/.test(t)) return "gaza";
+      if (/כנסת|ממשלה|פריימר|קואליצ|מפלג|בחיר|אופוזיצ/.test(t)) return "knesset";
+      if (/טראמפ|ארה.?ב|וושינגטון|סנאט|תובע|ביידן|אמריק/.test(t)) return "usa";
+      if (/מזג|חום|שרב|גשם|שריפה|תחזית/.test(t)) return "weather";
+      if (/מני|בורסה|ריבית|דולר|שקל|שוק|כלכל|טבק|השקע/.test(t)) return "markets";
+      if (/כדורגל|מכבי|הפועל|ספורט|גמר|ליגה|שחקן|מאמן/.test(t)) return "sport";
+      if (/תייר|נופש|מלון|טיס|חופשה|אייר/.test(t)) return "travel";
+      return topic || "domestic";
+    }
+
+    function storyVisual(card) {
+      const key = pickVisualContext(card?.title || "", card?.topic || "domestic");
+      // תמונות הקשר מקומיות — AI / מדיה שסופקה; לא תיעוד מהאירוע
+      const pack = {
+        hormuz: {
+          label: "מצר הורמוז",
+          alt: "אוניות בנתיב ימי",
+          src: "media/hormuz.jpg",
+          credit: "ויזואל תכל׳ס",
+          note: "AI · לא תיעוד מהאירוע",
+        },
+        north: {
+          label: "גבול הצפון",
+          alt: "נוף הררי בגבול",
+          src: "media/north.jpg",
+          credit: "ויזואל תכל׳ס",
+          note: "AI · לא תיעוד מהאירוע",
+        },
+        gaza: {
+          label: "רצועת עזה",
+          alt: "מבט על רצועת עזה",
+          src: "media/gaza-context.jpg",
+          credit: "הקשר ויזואלי",
+          note: "לא תיעוד מהאירוע",
+        },
+        knesset: {
+          label: "פוליטיקה",
+          alt: "בניין ממשל",
+          src: "media/knesset.jpg",
+          credit: "ויזואל תכל׳ס",
+          note: "AI · לא תיעוד מהאירוע",
+        },
+        politics: {
+          label: "פוליטיקה",
+          alt: "בניין ממשל",
+          src: "media/knesset.jpg",
+          credit: "ויזואל תכל׳ס",
+          note: "AI · לא תיעוד מהאירוע",
+        },
+        usa: {
+          label: "ארה״ב",
+          alt: "וושינגטון",
+          src: "media/usa.jpg",
+          credit: "ויזואל תכל׳ס",
+          note: "AI · לא תיעוד מהאירוע",
+        },
+        weather: {
+          label: "מזג אוויר",
+          alt: "שמיים דרמטיים",
+          src: "media/weather.jpg",
+          credit: "ויזואל תכל׳ס",
+          note: "AI · לא תיעוד מהאירוע",
+        },
+        markets: {
+          label: "שווקים",
+          alt: "מסכי מסחר",
+          src: "media/markets.jpg",
+          credit: "ויזואל תכל׳ס",
+          note: "AI · לא תיעוד מהאירוע",
+        },
+        economy: {
+          label: "כלכלה",
+          alt: "מסכי מסחר",
+          src: "media/markets.jpg",
+          credit: "ויזואל תכל׳ס",
+          note: "AI · לא תיעוד מהאירוע",
+        },
+        sport: {
+          label: "ספורט",
+          alt: "אצטדיון",
+          src: "media/sport.jpg",
+          credit: "ויזואל תכל׳ס",
+          note: "AI · לא תיעוד מהאירוע",
+        },
+        travel: {
+          label: "תיירות",
+          alt: "טיסה",
+          src: "media/travel.jpg",
+          credit: "ויזואל תכל׳ס",
+          note: "AI · לא תיעוד מהאירוע",
+        },
+        leisure: {
+          label: "תיירות ונופש",
+          alt: "חוף",
+          src: "media/leisure.jpg",
+          credit: "ויזואל תכל׳ס",
+          note: "AI · לא תיעוד מהאירוע",
+        },
+        security: {
+          label: "ביטחון",
+          alt: "עיר בלילה",
+          src: "media/security.jpg",
+          credit: "ויזואל תכל׳ס",
+          note: "AI · לא תיעוד מהאירוע",
+        },
+        region: {
+          label: "המזרח התיכון",
+          alt: "עיר במזרח התיכון",
+          src: "media/region.jpg",
+          credit: "ויזואל תכל׳ס",
+          note: "AI · לא תיעוד מהאירוע",
+        },
+        world: {
+          label: "בעולם",
+          alt: "כדור הארץ",
+          src: "media/world.jpg",
+          credit: "ויזואל תכל׳ס",
+          note: "AI · לא תיעוד מהאירוע",
+        },
+        domestic: {
+          label: "פנים הארץ",
+          alt: "נוף עירוני בישראל",
+          src: "media/domestic.jpg",
+          credit: "ויזואל תכל׳ס",
+          note: "AI · לא תיעוד מהאירוע",
+        },
+      };
+      const chosen = pack[key] || pack.domestic;
+      const fitClass = chosen.fit === "contain" ? " viz-contain" : "";
+      const creditNote = chosen.note || "הקשר לנושא · לא תיעוד מהאירוע";
+      return `<div class="viz viz-${escapeHtml(key)}${fitClass}">
+        <img src="${escapeHtml(chosen.src)}" alt="${escapeHtml(chosen.alt)}" loading="lazy" decoding="async" />
+        <span class="viz-context">${escapeHtml(chosen.label)}</span>
+        <span class="viz-credit">${escapeHtml(chosen.credit)} · ${escapeHtml(creditNote)}</span>
+      </div>`;
+    }
+
     function renderLead(cards) {
       const lead = pickLeadStory(cards);
       if (!els.lead) return;
@@ -918,25 +1149,30 @@
         return;
       }
       const names = [...new Set(lead.sources.map((s) => s.name))];
-      const deck =
+      const deck = shortDeck(
         lead.summary ||
-        lead.background ||
-        (lead.bullet_facts && lead.bullet_facts[0]) ||
-        lead.insight ||
-        "";
+          lead.why_matters ||
+          (lead.bullet_facts && lead.bullet_facts[0]) ||
+          lead.background ||
+          ""
+      );
       els.lead.hidden = false;
       els.lead.classList.add("visible");
       els.lead.dataset.id = lead.id;
       els.lead.innerHTML = `
-        <p class="lead-kicker">ישראל · ${escapeHtml(TOPIC_HE[lead.topic] || "")}</p>
-        <h2 class="lead-title t-${escapeHtml(lead.topic || "domestic")}">${escapeHtml(lead.title)}</h2>
-        <p class="lead-deck">${escapeHtml(deck)}</p>
-        <div class="lead-meta">
-          <span>${STATUS_HE[lead.status] || lead.status}</span>
-          <span>·</span>
-          <span>${names.length} מקורות</span>
-          <span>·</span>
-          <span>${escapeHtml(relativeTime(lead.pubDate))}</span>
+        ${storyVisual(lead)}
+        <div class="lead-copy">
+          <p class="lead-kicker">ישראל · ${escapeHtml(TOPIC_HE[lead.topic] || "")}</p>
+          <h2 class="lead-title t-${escapeHtml(lead.topic || "domestic")}">${escapeHtml(lead.title)}</h2>
+          ${deck ? `<p class="lead-deck">${escapeHtml(deck)}</p>` : ""}
+          <div class="lead-meta">
+            <span>${STATUS_HE[lead.status] || lead.status}</span>
+            <span>·</span>
+            <span>${names.length} מקורות</span>
+            <span>·</span>
+            <span>${escapeHtml(relativeTime(lead.pubDate))}</span>
+          </div>
+          <div class="lead-cta">לקרוא בתכל׳ס ←</div>
         </div>
       `;
       renderWorldLead(cards, lead.id);
@@ -958,27 +1194,12 @@
         delete els.worldLead.dataset.id;
         return;
       }
-      const names = [...new Set(story.sources.map((s) => s.name))];
-      const deck =
-        story.summary ||
-        story.background ||
-        (story.bullet_facts && story.bullet_facts[0]) ||
-        story.insight ||
-        "";
       els.worldLead.hidden = false;
       els.worldLead.classList.add("visible");
       els.worldLead.dataset.id = story.id;
       els.worldLead.innerHTML = `
-        <p class="lead-kicker">בעולם</p>
+        <p class="lead-kicker">בעולם · ${escapeHtml(relativeTime(story.pubDate))}</p>
         <h2 class="lead-title t-world">${escapeHtml(story.title)}</h2>
-        <p class="lead-deck">${escapeHtml(deck)}</p>
-        <div class="lead-meta">
-          <span>${STATUS_HE[story.status] || story.status}</span>
-          <span>·</span>
-          <span>${names.length} מקורות</span>
-          <span>·</span>
-          <span>${escapeHtml(relativeTime(story.pubDate))}</span>
-        </div>
       `;
     }
 
@@ -989,7 +1210,7 @@
           const items = cards
             .filter((c) => c.topic === topic.id)
             .sort((a, b) => cardTime(b) - cardTime(a))
-            .slice(0, 4);
+            .slice(0, 3);
           const list = items.length
             ? `<ul class="cube-list">${items
                 .map((c) => {
@@ -997,11 +1218,9 @@
                   return `<li data-id="${escapeHtml(c.id)}">
                     <div class="item">
                       <div class="cube-meta">
-                        <span>${STATUS_HE[c.status] || c.status}</span>
+                        <span>${escapeHtml(relativeTime(c.pubDate))}</span>
                         <span>·</span>
                         <span>${names.length} מקורות</span>
-                        <span>·</span>
-                        <span>${escapeHtml(relativeTime(c.pubDate))}</span>
                       </div>
                       <div class="cube-title">${escapeHtml(c.title)}</div>
                     </div>
@@ -1012,7 +1231,7 @@
           return `<section class="topic-cube" data-topic="${topic.id}">
             <header>
               <h2>${topic.label}</h2>
-              <span class="n">${items.length}/4</span>
+              <span class="n">${items.length}</span>
             </header>
             ${list}
           </section>`;
@@ -1024,9 +1243,7 @@
       const active = activeCards();
       renderLead(active);
       renderTopicCubes(active);
-      const seenN = seenCards().length;
-      const expiredN = allCards.filter((c) => !isSeen(c.id) && !isFreshOnBoard(c)).length;
-      els.status.textContent = `${active.length} על הלוח · ${expiredN} פגו תוקף`;
+      els.status.textContent = `${active.length} עדכונים פעילים`;
     }
 
     function classifyTopic(title, sources = []) {
@@ -1343,102 +1560,6 @@
       });
     }
 
-    function buildExtras(title, topic, sources) {
-      const n = sources.length;
-      const statsByTopic = {
-        security: [
-          { val: String(n), lbl: "מקורות מצולבים" },
-          { val: "גבול צפון", lbl: "זירה עיקרית" },
-          { val: "שוטף", lbl: "קצב עדכון" },
-        ],
-        politics: [
-          { val: String(n), lbl: "מקורות מצולבים" },
-          { val: "כנסת", lbl: "זירה" },
-          { val: "פתוח", lbl: "סטטוס פוליטי" },
-        ],
-        region: [
-          { val: String(n), lbl: "מקורות מצולבים" },
-          { val: "~20%", lbl: "מתזת עולמית דרך הורמוז*" },
-          { val: "אזורי", lbl: "היקף השפעה" },
-        ],
-        world: [
-          { val: String(n), lbl: "מקורות מצולבים" },
-          { val: "גלובלי", lbl: "היקף" },
-          { val: "רחוק", lbl: "קרבה לישראל" },
-        ],
-        economy: [
-          { val: String(n), lbl: "מקורות מצולבים" },
-          { val: "₪/$", lbl: "שווקים רלוונטיים" },
-          { val: "יומי", lbl: "קצב מעקב" },
-        ],
-        domestic: [
-          { val: String(n), lbl: "מקורות מצולבים" },
-          { val: "מקומי", lbl: "היקף" },
-          { val: "אזרחי", lbl: "סוג אירוע" },
-        ],
-        leisure: [
-          { val: String(n), lbl: "מקורות מצולבים" },
-          { val: "פנאי", lbl: "סוג" },
-          { val: "רך", lbl: "עדיפות לוח" },
-        ],
-        sport: [
-          { val: String(n), lbl: "מקורות מצולבים" },
-          { val: "ספורט", lbl: "זירה" },
-          { val: "תוצאה", lbl: "מיקוד" },
-        ],
-      };
-      const timelineByTopic = {
-        security: [
-          { when: "רקע", what: "מתיחות מתמשכת בגבול / זירת לחימה פעילה." },
-          { when: "התפתחות", what: "דיווח שוטף על אירוע נקודתי או חילופי אש." },
-          { when: "עכשיו", what: dryTitle(title) },
-        ],
-        politics: [
-          { when: "רקע", what: "מחלוקת פוליטית או מהלך פרלמנטרי פתוח." },
-          { when: "התפתחות", what: "הודעות גורמים / הצבעות / מהלכי מפלגות." },
-          { when: "עכשיו", what: dryTitle(title) },
-        ],
-        region: [
-          { when: "רקע", what: "סכסוך אזורי ומתיחות סביב נתיבי שיט / בריתות." },
-          { when: "התפתחות", what: "הצהרות מדינות והצלבת דיווחים מהמזרח התיכון." },
-          { when: "עכשיו", what: dryTitle(title) },
-        ],
-        world: [
-          { when: "רקע", what: "אירוע בינלאומי מחוץ לאזור הקרוב." },
-          { when: "התפתחות", what: "דיווחים ממעצמות / מוסדות גלובליים." },
-          { when: "עכשיו", what: dryTitle(title) },
-        ],
-        economy: [
-          { when: "רקע", what: "מדדים כלכליים ותנודות שוק רלוונטיות." },
-          { when: "התפתחות", what: "פרסום נתון או החלטת מדיניות." },
-          { when: "עכשיו", what: dryTitle(title) },
-        ],
-        domestic: [
-          { when: "רקע", what: "אירוע אזרחי / מזג אוויר / מקומי." },
-          { when: "התפתחות", what: "עדכוני רשויות או דיווחי שטח." },
-          { when: "עכשיו", what: dryTitle(title) },
-        ],
-        leisure: [
-          { when: "רקע", what: "בידור, תרבות או תיירות." },
-          { when: "התפתחות", what: "פרסום / אירוע / עדכון צרכני." },
-          { when: "עכשיו", what: dryTitle(title) },
-        ],
-        sport: [
-          { when: "רקע", what: "משחק, תחרות או סגל." },
-          { when: "התפתחות", what: "תוצאה / העברה / הודעת מועדון." },
-          { when: "עכשיו", what: dryTitle(title) },
-        ],
-      };
-      return {
-        stats: statsByTopic[topic] || statsByTopic.domestic,
-        timeline: timelineByTopic[topic] || timelineByTopic.domestic,
-        stat_note:
-          topic === "region"
-            ? "*נתון הקשר כללי לPOC — לא אומדן חי מהאירוע הנוכחי."
-            : "נתוני הקשר ל-POC; בגרסה מלאה יגיעו ממקורות מאומתים.",
-      };
-    }
-
     function enrichCard(card, item) {
       const id =
         "a" +
@@ -1446,8 +1567,7 @@
           Array.from(item.title || card.title || "")
             .reduce((h, ch) => ((h << 5) - h + ch.charCodeAt(0)) | 0, 0)
         ).toString(16);
-      const extras = buildExtras(card.title, card.topic, card.sources || []);
-      return { ...card, id, ...extras };
+      return { ...card, id };
     }
 
     let listTopicId = null;
@@ -1589,23 +1709,6 @@
         return;
       }
       const names = [...new Set(c.sources.map((s) => s.name))];
-      const media = c.image?.url
-        ? `<div class="media">
-            <img src="${escapeHtml(c.image.url)}" alt="תמונת הקשר" loading="lazy" />
-            <span class="media-credit">${escapeHtml(c.image.credit || "איור הקשר")}</span>
-          </div>`
-        : "";
-      const stats = (c.stats || [])
-        .map(
-          (s) => `<div class="stat-box"><div class="val">${escapeHtml(s.val)}</div><div class="lbl">${escapeHtml(s.lbl)}</div></div>`
-        )
-        .join("");
-      const timeline = (c.timeline || [])
-        .map(
-          (t) =>
-            `<li><div class="when">${escapeHtml(t.when)}</div><div class="what">${escapeHtml(t.what)}</div></li>`
-        )
-        .join("");
       const sourceChips = names
         .map((name) => `<span class="source-chip">${escapeHtml(name)}</span>`)
         .join("");
@@ -1619,52 +1722,45 @@
         els.topicListView.innerHTML = "";
       }
       els.detailView.innerHTML = `
-        <button type="button" class="back-btn" id="backBtn">← חזרה למהדורה</button>
         <div class="action-row">
+          <button type="button" class="back-btn" id="backBtn">← חזרה למהדורה</button>
           ${
             seen
-              ? `<button type="button" class="back-btn restore-seen" id="restoreBtn">החזר ללוח</button>`
-              : `<button type="button" class="back-btn mark-seen" id="seenBtn">צפיתי — הורד מהלוח</button>`
+              ? `<button type="button" class="back-btn restore-seen" id="restoreBtn" title="החזר את הכתבה ללוח">החזר ללוח</button>`
+              : `<button type="button" class="back-btn mark-seen" id="seenBtn" title="הורד מהלוח הפעיל">צפיתי</button>`
           }
         </div>
         <article class="detail-hero">
-          ${media}
+          ${storyVisual(c)}
           <div class="meta">
             <span class="badge ${escapeHtml(c.status)}">${STATUS_HE[c.status] || c.status}</span>
             <span class="badge sources">${escapeHtml(TOPIC_HE[c.topic] || "פנים")}</span>
-            <span class="badge sources">מבוסס על ${names.length} מקורות</span>
+            <span class="badge sources">${names.length} מקורות</span>
             ${seen ? `<span class="badge sources">נצפה</span>` : ""}
           </div>
           <h2 class="title t-${escapeHtml(c.topic || "domestic")}" style="margin:0">${escapeHtml(c.title)}</h2>
-          <div class="time" style="margin:0">עודכן ${escapeHtml(relativeTime(c.pubDate))}</div>
+          <div class="time" style="margin:0">${escapeHtml(relativeTime(c.pubDate))}</div>
         </article>
-        <div class="block">
-          <h3>מה בתכל׳ס</h3>
-          <p>${escapeHtml(c.summary || c.background || c.historical_context || "")}</p>
-          ${
-            c.why_matters
-              ? `<p class="why-matters"><strong>למה זה חשוב:</strong> ${escapeHtml(c.why_matters)}</p>`
-              : ""
-          }
+        <div class="detail-body">
+          <div class="block">
+            <h3>מה בתכל׳ס</h3>
+            <p>${escapeHtml(c.summary || c.background || c.historical_context || "")}</p>
+            ${
+              c.why_matters
+                ? `<p class="why-matters"><strong>למה זה חשוב</strong> — ${escapeHtml(c.why_matters)}</p>`
+                : ""
+            }
+          </div>
+          <div class="block">
+            <h3>רקע</h3>
+            <p>${escapeHtml(c.background || c.historical_context || "")}</p>
+          </div>
+          <div class="block">
+            <h3>מבט קדימה</h3>
+            <p>${escapeHtml(c.outlook || "לעקוב אחרי עדכונים רשמיים.")}</p>
+          </div>
+          <div class="sources-row">${sourceChips}</div>
         </div>
-        <div class="block">
-          <h3>רקע</h3>
-          <p>${escapeHtml(c.background || c.historical_context || "")}</p>
-        </div>
-        <div class="block">
-          <h3>מבט קדימה</h3>
-          <p>${escapeHtml(c.outlook || "לעקוב אחרי עדכונים רשמיים.")}</p>
-        </div>
-        <div class="block">
-          <h3>נתונים רלוונטיים</h3>
-          <div class="stats-row">${stats}</div>
-          <p class="detail-note">${escapeHtml(c.stat_note || "")}</p>
-        </div>
-        <div class="block">
-          <h3>היסטוריית אירוע</h3>
-          <ol class="timeline">${timeline}</ol>
-        </div>
-        <div class="sources-row">${sourceChips}</div>
       `;
       document.getElementById("backBtn").addEventListener("click", showHome);
       const seenBtn = document.getElementById("seenBtn");
@@ -1716,29 +1812,6 @@
       }
     }
 
-    function pickContextImage(title) {
-      const t = title || "";
-      if (/הורמוז|איראן|מפרץ|טורקיה|סעודיה|מצרים|חות/.test(t)) {
-        return { url: "media/iran.svg", credit: "איור הקשר · לא תיעוד", kind: "iran" };
-      }
-      if (/חיזבאללה|לבנון|רחפן|צה.?ל|יירוט|גבול|כיפת/.test(t)) {
-        return { url: "media/security.svg", credit: "איור הקשר · לא תיעוד", kind: "security" };
-      }
-      if (/כנסת|ממשלה|בחיר|רע.?ם|קואליצ|פריימר|מפלג/.test(t)) {
-        return { url: "media/politics.svg", credit: "איור הקשר · לא תיעוד", kind: "politics" };
-      }
-      if (/מזג|חום|שרב|תחזית|גשם/.test(t)) {
-        return { url: "media/weather.svg", credit: "איור הקשר · לא תיעוד", kind: "weather" };
-      }
-      if (/שריפה|תאונה|משטרה|פשיעה|פתח תקווה/.test(t)) {
-        return { url: "media/civil.svg", credit: "איור הקשר · לא תיעוד", kind: "civil" };
-      }
-      if (/ארה.?ב|טראמפ|ביידן|וושינגטון|סנאט|תובע/.test(t)) {
-        return { url: "media/world.svg", credit: "איור הקשר · לא תיעוד", kind: "world" };
-      }
-      return { url: "media/default.svg", credit: "איור הקשר · לא תיעוד", kind: "default" };
-    }
-
     function localDistill(item) {
       const pre = item.distill || null;
       const headlines = (item.sources || []).map((s) => s.headline);
@@ -1759,7 +1832,6 @@
           original_headlines: headlines,
           pubDate: item.pubDate,
           link: item.link,
-          image: pickContextImage(item.title),
           topic: item.topicHint || classifyTopic(item.title, item.sources),
           mode: pre.mode || item.distillMode || "prebuilt",
         };
@@ -1781,7 +1853,6 @@
           original_headlines: headlines,
           pubDate: item.pubDate,
           link: item.link,
-          image: pickContextImage(item.title),
           topic: item.topicHint || classifyTopic(item.title, item.sources),
           mode: item.distillMode || "prebuilt",
         };
@@ -1833,7 +1904,6 @@
         original_headlines: headlines,
         pubDate: item.pubDate,
         link: item.link,
-        image: pickContextImage(item.title),
         topic: item.topicHint || classifyTopic(item.title, item.sources),
         mode: "local",
       };
@@ -1862,16 +1932,9 @@
                 `<span class="source-chip">${escapeHtml(s.name)}</span>`
             )
             .join("");
-          const media = c.image?.url
-            ? `<div class="media">
-                <img src="${escapeHtml(c.image.url)}" alt="תמונת הקשר" loading="lazy" />
-                <span class="media-credit">${escapeHtml(c.image.credit || "איור הקשר")}</span>
-              </div>`
-            : "";
           return `
           <article class="card" style="animation-delay:${i * 40}ms">
             <div class="card-body">
-              ${media}
               <div class="meta">
                 <span class="badge ${escapeHtml(c.status)}">${STATUS_HE[c.status] || c.status}</span>
                 <span class="badge sources">${escapeHtml(TOPIC_HE[c.topic] || "פנים")}</span>
