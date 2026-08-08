@@ -14,6 +14,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 CACHE_PATH = ROOT / "distill_cache.json"
+DISTILL_VERSION = "v2-summary"
 SSL_CTX = ssl._create_unverified_context()
 UA = "Mozilla/5.0 ClearNewsPOC/0.5"
 GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.0-flash")
@@ -39,13 +40,15 @@ PROMPT = """אתה עורך חדשות יבש לפורטל "תכלס" (ישרא�
 קלט: כותרת מקבץ + כותרות מקורות.
 החזר JSON בלבד (בלי markdown) עם השדות:
 - title: כותרת יבשה בעברית, בלי דרמה/קליקבייט
-- bullet_facts: מערך 3–5 עובדות קצרות (מי/מה/איפה/מתי/מספרים אם יש)
-- background: משפט–שניים של ידע מקדים (למה זה חשוב עכשיו)
-- outlook: משפט–שניים זהיר על מה לעקוב / השלכות אפשריות (בלי סנסציה)
-- insight: תובנה קצרה אחת על מה שמוסכם בין המקורות
+- summary: פסקה של 2–4 משפטים שמסבירה לקורא מה קרה בפועל ולמה זה משנה — לא חזרה על הכותרת במילה אחת, אלא הסבר קריא
+- bullet_facts: מערך 3–5 עובדות ברורות (מי/מה/איפה/מתי/מספרים אם יש) — כל פריט משפט מלא, לא שבריר כותרת
+- background: 2–3 משפטים של ידע מקדים (רקע שהקורא צריך כדי להבין את הכותרת)
+- outlook: 2 משפטים זהירים על מה לעקוב / השלכות אפשריות (בלי סנסציה)
+- insight: תובנה קצרה על מה שמוסכם או חלוק בין המקורות
 - status: אחד מ־confirmed | reported | denied | review
 
 כללים: עברית, יבש, בלי פעלים דרמטיים, בלי לינקים, אל תמציא מספרים שלא מופיעים בקלט.
+אל תכתוב משפטים של 4–6 מילים בלבד — תן הסבר מספיק כדי שאפשר להבין בלי לקרוא את המקור.
 """
 
 
@@ -62,7 +65,7 @@ def dry_title(title: str) -> str:
 
 
 def item_fingerprint(item: dict) -> str:
-    parts = [item.get("title") or ""]
+    parts = [DISTILL_VERSION, item.get("title") or ""]
     for s in item.get("sources") or []:
         parts.append(s.get("name") or "")
         parts.append(s.get("headline") or "")
@@ -81,13 +84,53 @@ def load_cache() -> dict:
 
 def save_cache(cache: dict) -> None:
     try:
-        # keep cache bounded
         if len(cache) > 400:
             keys = sorted(cache.keys(), key=lambda k: cache[k].get("_ts", 0), reverse=True)
             cache = {k: cache[k] for k in keys[:300]}
         CACHE_PATH.write_text(json.dumps(cache, ensure_ascii=False), encoding="utf-8")
     except Exception as exc:  # noqa: BLE001
         print(f"[distill] cache save failed: {exc}")
+
+
+def _unique_lines(lines: list[str], limit: int = 5) -> list[str]:
+    out: list[str] = []
+    seen: set[str] = set()
+    for raw in lines:
+        dry = dry_title(raw)
+        if not dry:
+            continue
+        key = re.sub(r"\s+", " ", dry).strip().lower()[:56]
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append(dry)
+        if len(out) >= limit:
+            break
+    return out
+
+
+def _build_summary(title: str, headlines: list[str], names: list[str]) -> str:
+    extras = _unique_lines([h for h in headlines if dry_title(h) != title], limit=3)
+    parts = [
+        f"לפי הדיווחים, {title.rstrip('.')}."
+    ]
+    if extras:
+        parts.append(
+            "פרטים נוספים שעולים מהמקורות: "
+            + "; ".join(extras[:2])
+            + "."
+        )
+    if len(names) >= 2:
+        parts.append(
+            f"הנושא מדווח במקביל ב־{len(names)} מקורות ({', '.join(names[:3])}"
+            + ("…" if len(names) > 3 else "")
+            + "), ולכן מוצג ככרטיס אחד עם עובדות מצולבות."
+        )
+    else:
+        parts.append(
+            "כרגע זה מבוסס בעיקר על מקור אחד בפיד — כדאי לקרוא את הרקע ואת המבט קדימה לפני מסקנה חזקה."
+        )
+    return " ".join(parts)
 
 
 def heuristic_distill(item: dict) -> dict:
@@ -110,55 +153,91 @@ def heuristic_distill(item: dict) -> dict:
     if re.search(r"חשד|אולי|עשוי|נבדק", title):
         status = "review"
 
-    bullets: list[str] = []
-    seen: set[str] = set()
-    for h in [title, *headlines]:
-        dry = dry_title(h)
-        key = dry[:40]
-        if not dry or key in seen:
-            continue
-        seen.add(key)
-        bullets.append(dry)
-        if len(bullets) >= 4:
-            break
+    bullets = _unique_lines([title, *headlines], limit=4)
     while len(bullets) < 3:
         bullets.append(
-            f"מקור נוסף: {names[len(bullets)]}"
+            f"דיווח נוסף מ־{names[len(bullets)]}: יש לעקוב אחרי הצלבה."
             if len(bullets) < len(names)
-            else "פרטים נוספים טרם הובהרו במקורות שנבדקו"
+            else "חלק מהפרטים עדיין לא הובהרו במקורות שנבדקו בפיד."
         )
 
-    insight = (
-        f"אותו אירוע מדווח ב-{len(names)} מקורות — מוצג ככרטיס אחד."
-        if multi
-        else "מבוסס על מקור יחיד בפיד — סטטוס דיווח עד להצלבה."
-    )
+    summary = _build_summary(title, headlines, names)
 
     blob = " ".join([title, *headlines])
     if re.search(r"הורמוז|איראן", blob):
-        background = "סוגיית מצר הורמוז ומתיחות אזורית מול איראן ממשיכות להשפיע על שיט ואנרגיה."
-        outlook = "לעקוב אחרי הצהרות איראן/ארה״ב ופתיחה או סגירה בפועל של המעבר."
+        background = (
+            "מצר הורמוז הוא נתיב שיט מרכזי לנפט ולסחר במפרץ. "
+            "מתיחות בין איראן לארה״ב ולמדינות האזור סביב פתיחה/סגירה של המעבר משפיעה על מחירים, ביטוח אוניות ויציבות אזורית — ולכן דיווחים כאלה נכנסים ללוח גם כשהאירוע רחוק גיאוגרפית מישראל."
+        )
+        outlook = (
+            "מה שחשוב לעקוב אחריו: האם יש הסכמה מעשית על פתיחת המעבר, ומה אומרות איראן, ארה״ב ומדינות המפרץ בפועל. "
+            "שינוי חד בהצהרות או בתנועת אוניות עשוי לעדכן את התמונה במהירות."
+        )
     elif re.search(r"חיזבאללה|לבנון|רחפן|יירוט", blob):
-        background = "זירת הצפון / לבנון פעילה; דיווחים על חילופי אש או יירוטים חוזרים."
-        outlook = "לעקוב אחרי אישור צה״ל, היקף האירוע והסלמה נוספת בגבול."
+        background = (
+            "זירת הצפון מול לבנון נשארת רגישה: דיווחים על רחפנים, יירוטים או חילופי אש משפיעים על תושבים, כוחות וסדרי עדיפויות ביטחוניים. "
+            "גם כשהאירוע נקודתי, הוא מגיע על רקע מתיחות מתמשכת ולא כאירוע מבודד."
+        )
+        outlook = (
+            "לעקוב אחרי אישור רשמי של צה״ל/פיקוד העורף, היקף הנזק או היירוט, והאם מגיע אירוע המשך באותה זירה. "
+            "שינוי בקצב התקריות הוא הסימן הכי שימושי לקורא."
+        )
     elif re.search(r"כנסת|ממשלה|פריימר|רע.?ם|בחיר", blob):
-        background = "מהלך פוליטי ישראלי פתוח — הכרעות בכנסת/מפלגות משפיעות על יציבות הקואליציה."
-        outlook = "לעקוב אחרי הצבעות, הודעות מפלגות וסיכומי פריימריז."
+        background = (
+            "בפוליטיקה הישראלית, מהלכי מפלגות, פריימריז והחלטות בכנסת משפיעים על יציבות הקואליציה ועל סדר היום הציבורי. "
+            "כותרת כזו בדרך כלל מסמנת מאבק כוח, מועמדות או הסדר פוליטי — לא רק ״רעש״ חד־יומי."
+        )
+        outlook = (
+            "השלב הבא הוא בדרך כלל הודעות רשמיות, הצבעות או סיכום מועמדים. "
+            "כדאי לבדוק אם יש הסכמה בין מקורות על העובדות הבסיסיות לפני שמסיקים על התוצאה הפוליטית."
+        )
     elif re.search(r"תייר|נופש|מלונ|חופשה", blob):
-        background = "ענף התיירות והנופש בישראל רגיש לביטחון, מחירים וחגים."
-        outlook = "לעקוב אחרי מבצעי מלונות, מדיניות משרד התיירות וביקוש לחגים."
-    elif re.search(r"ספורט|כדורגל|מכבי|הפועל|נבחרת", blob):
-        background = "עדכון ספורט שוטף — העברות, תוצאות או סגל."
-        outlook = "לעקוב אחרי אישור העסקה/תוצאה רשמית ולוח המשחקים."
-    elif re.search(r"בורסה|ריבית|מני|דולר|ברקשייר", blob):
-        background = "שווקים ותנודות הון — דיווח כלכלי עם השפעה על משקיעים."
-        outlook = "לעקוב אחרי תגובת שוק והודעות רשמיות נוספות."
+        background = (
+            "ענף התיירות והנופש בישראל רגיש לביטחון, מחירים ועונות חגים. "
+            "דיווחים על מלונות, מבצעים או מדיניות משרד התיירות משפיעים ישירות על מטיילים ועל עסקים מקומיים."
+        )
+        outlook = (
+            "לעקוב אחרי שינויי מחיר, זמינות חדרים לקראת חגים, והודעות רשמיות של משרד התיירות או הרשתות. "
+            "שינוי מדיניות ביטולים/הטבות הוא עדכון פרקטי לקוראים."
+        )
+    elif re.search(r"ספורט|כדורגל|מכבי|הפועל|נבחרת|פרמייר", blob):
+        background = (
+            "בספורט, כותרות על העברות, תוצאות או סגל משתנות במהירות ויש פער בין שמועה לאישור רשמי. "
+            "הערך לקורא הוא להפריד בין מה שסוכם לבין מה שעדיין בדיווח בלבד."
+        )
+        outlook = (
+            "לחכות לאישור המועדון/הליגה או לתוצאה הרשמית, ואז לראות איך זה משפיע על הסגל ועל לוח המשחקים. "
+            "עדכון חוזי או הודעת מועדון בדרך כלל סוגר את אי־הוודאות."
+        )
+    elif re.search(r"בורסה|ריבית|מני|דולר|ברקשייר|השקע", blob):
+        background = (
+            "דיווחים כלכליים על מניות, ריבית או מהלכי השקעה משפיעים על משקיעים ועל תחושת השוק. "
+            "חשוב להבחין בין עובדה שפורסמה (עסקה/נתון) לבין פרשנות או המלצה."
+        )
+        outlook = (
+            "לעקוב אחרי תגובת השוק והודעות רשמיות נוספות ביום־יומיים הקרובים. "
+            "נתון מאושר או דוח מעודכן ישנה את התמונה יותר מכותרת פרשנית."
+        )
     else:
-        background = "דיווח שוטף מפיד חדשות ישראל; הרקע המלא תלוי בהתפתחויות נוספות."
-        outlook = "לעקוב אחרי הצלבת מקורות ועדכונים רשמיים ביממה הקרובה."
+        background = (
+            f"הכותרת עוסקת ב־«{title}». "
+            "כדי להבין אותה חשוב לראות מי מדווח, אילו פרטים חוזרים בין מקורות, ומה עדיין לא מאומת. "
+            "הלוח מציג את זה ככרטיס עובדות יבש במקום אוסף כותרות מתחרות."
+        )
+        outlook = (
+            "המשך מעקב אחרי הצלבת מקורות ועדכונים רשמיים ביממה הקרובה. "
+            "אם יתווספו מספרים, שמות גורמים או הכחשה — הסטטוס והסיכום יתעדכנו בהתאם."
+        )
+
+    insight = (
+        f"יש חפיפה בין {len(names)} מקורות על אותו אירוע; הסיכום מנסה להציג את המשותף ולא את הספין."
+        if multi
+        else "מקור יחיד בפיד: הסיכום זהיר יותר עד שתהיה הצלבה."
+    )
 
     return {
         "title": title,
+        "summary": summary,
         "bullet_facts": bullets[:5],
         "background": background,
         "outlook": outlook,
@@ -244,12 +323,17 @@ def gemini_distill(item: dict) -> dict | None:
     background = str(data.get("background") or "").strip()
     outlook = str(data.get("outlook") or "").strip()
     insight = str(data.get("insight") or "").strip()
+    summary = str(data.get("summary") or "").strip()
     title = dry_title(str(data.get("title") or item.get("title") or ""))
     if not background or not outlook:
         return None
+    if not summary:
+        # soft fallback from background if model omitted summary
+        summary = background
 
     return {
         "title": title,
+        "summary": summary,
         "bullet_facts": bullets,
         "background": background,
         "outlook": outlook,
@@ -264,7 +348,13 @@ def distill_item(item: dict, cache: dict | None = None) -> dict:
     cache = cache if cache is not None else load_cache()
     fp = item_fingerprint(item)
     hit = cache.get(fp)
-    if isinstance(hit, dict) and hit.get("bullet_facts") and hit.get("background") and hit.get("outlook"):
+    if (
+        isinstance(hit, dict)
+        and hit.get("bullet_facts")
+        and hit.get("background")
+        and hit.get("outlook")
+        and hit.get("summary")
+    ):
         out = {k: v for k, v in hit.items() if not k.startswith("_")}
         return out
 
@@ -281,8 +371,8 @@ def enrich_items(items: list[dict]) -> list[dict]:
         d = distill_item(item, cache=cache)
         enriched = dict(item)
         enriched["distill"] = d
-        # flatten common fields for simpler clients
         enriched["dryTitle"] = d.get("title")
+        enriched["summary"] = d.get("summary")
         enriched["bullet_facts"] = d.get("bullet_facts")
         enriched["background"] = d.get("background")
         enriched["outlook"] = d.get("outlook")

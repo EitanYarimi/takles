@@ -371,10 +371,11 @@
     .lead-title.t-sport { color: var(--h-sport); }
     .lead-deck {
       margin: 0 0 0.65rem;
-      font-size: 1.02rem;
+      font-size: 1.05rem;
       font-weight: 500;
       color: var(--ink-soft);
-      line-height: 1.45;
+      line-height: 1.55;
+      max-width: 42rem;
     }
     .lead-meta {
       display: flex;
@@ -907,6 +908,7 @@
       }
       const names = [...new Set(lead.sources.map((s) => s.name))];
       const deck =
+        lead.summary ||
         lead.background ||
         (lead.bullet_facts && lead.bullet_facts[0]) ||
         lead.insight ||
@@ -947,6 +949,7 @@
       }
       const names = [...new Set(story.sources.map((s) => s.name))];
       const deck =
+        story.summary ||
         story.background ||
         (story.bullet_facts && story.bullet_facts[0]) ||
         story.insight ||
@@ -1628,6 +1631,10 @@
           ${c.bullet_facts.map((b) => `<li>${escapeHtml(b)}</li>`).join("")}
         </ul>
         <div class="block">
+          <h3>מה קרה</h3>
+          <p>${escapeHtml(c.summary || c.background || c.historical_context || "")}</p>
+        </div>
+        <div class="block">
           <h3>רקע</h3>
           <p>${escapeHtml(c.background || c.historical_context || "")}</p>
         </div>
@@ -1737,6 +1744,7 @@
           historical_context: pre.historical_context || pre.background || "",
           background: pre.background || pre.historical_context || "",
           outlook: pre.outlook || "",
+          summary: pre.summary || item.summary || pre.background || "",
           sources: item.sources,
           original_headlines: headlines,
           pubDate: item.pubDate,
@@ -1757,6 +1765,7 @@
           historical_context: item.historical_context || item.background,
           background: item.background,
           outlook: item.outlook,
+          summary: item.summary || item.background,
           sources: item.sources,
           original_headlines: headlines,
           pubDate: item.pubDate,
@@ -1806,7 +1815,8 @@
         insight,
         historical_context: context,
         background: context,
-        outlook: "לעקוב אחרי הצלבת מקורות ועדכונים רשמיים ביממה הקרובה.",
+        outlook: "לעקוב אחרי הצלבת מקורות ועדכונים רשמיים ביממה הקרובה. אם יתווספו מספרים או הכחשה — התמונה תתעדכן.",
+        summary: `לפי הדיווחים, ${dryTitle(item.title)}. ${insight}`,
         sources: item.sources,
         original_headlines: headlines,
         pubDate: item.pubDate,
