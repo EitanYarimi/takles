@@ -14,7 +14,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 CACHE_PATH = ROOT / "distill_cache.json"
-DISTILL_VERSION = "v5-why-strong"
+DISTILL_VERSION = "v6-cross-source"
 SSL_CTX = ssl._create_unverified_context()
 UA = "Mozilla/5.0 ClearNewsPOC/0.5"
 GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.0-flash")
@@ -34,6 +34,12 @@ DRAMATIC = (
     "מטורף",
     "קריסה",
     "נחשף",
+)
+KICKER_RE = re.compile(
+    r"^(?:מאחורי הקלעים|בלחץ אמריקני|בלעדי|דחוף|עכשיו|צפו|פרשנות|ניתוח|"
+    r"לאחר נסיגת צה[\"׳']?ל|הערב|הבוקר|הלילה|דיווח)"
+    r"\s*[:\-–—]\s*",
+    re.I,
 )
 
 PROMPT = """אתה עורך חדשות יבש לפורטל "תכל׳ס" (ישראל).
@@ -59,10 +65,11 @@ def _api_key() -> str:
 
 def dry_title(title: str) -> str:
     t = title or ""
+    t = KICKER_RE.sub("", t)
     for w in DRAMATIC:
         t = t.replace(w, "")
-    t = re.sub(r"\s{2,}", " ", t).strip(" -:·|")
-    return t or title
+    t = re.sub(r"\s{2,}", " ", t).strip(" -:·|\"״„“”?")
+    return t or (title or "").strip()
 
 
 def item_fingerprint(item: dict) -> str:
@@ -110,54 +117,71 @@ def _unique_lines(lines: list[str], limit: int = 5) -> list[str]:
     return out
 
 
+def _extract_fact_points(title: str, headlines: list[str]) -> list[str]:
+    """Pull concrete angles from source headlines instead of pasting spin."""
+    blob = " ".join([title, *headlines])
+    points: list[str] = []
+
+    def add(s: str) -> None:
+        s = s.strip()
+        if s and s not in points:
+            points.append(s)
+
+    if re.search(r"נסיגה|פריס|מוקדים|חלק מהרצועה", blob):
+        add("במערכת הביטחון / צה״ל נבחנת אפשרות לנסיגה מחלק מהמוקדים ברצועת עזה")
+    if re.search(r"אמריקנ|ארה[\"׳']?ב|וושינגטון|טראמפ", blob) and re.search(
+        r"נסיגה|לחץ|בוחן", blob
+    ):
+        add("הדיון מתואר כמתנהל גם תחת לחץ אמריקני")
+    if re.search(r"רב-?לאומי|כוח בינלאומי|כוח רב", blob):
+        add("נבחנת החלפת נוכחות צה״ל בחלק מהשטח בכוח רב־לאומי מצומצם")
+    if re.search(r"פירוז", blob):
+        add("מדווחים שתוכנית לפירוז עזה כבר מקודמת גם בלי הסכם סופי")
+    if re.search(r"מיליצי|מילצי", blob):
+        add("יש דיון נפרד איך ישראל תתייחס למיליציות מקומיות אחרי שינוי פריסה")
+    if re.search(r"חטופ|שבוי", blob):
+        add("המהלך נשקל על רקע סוגיית החטופים והלחימה ברצועה")
+
+    if not points:
+        points = _unique_lines([title, *headlines], limit=4)
+    return points[:5]
+
+
 def _build_summary(title: str, headlines: list[str], names: list[str]) -> str:
-    extras = _unique_lines([h for h in headlines if dry_title(h) != title], limit=3)
-    parts = [
-        f"לפי הדיווחים, {title.rstrip('.')}."
-    ]
-    if extras:
-        parts.append(
-            "פרטים נוספים שעולים מהמקורות: "
-            + "; ".join(extras[:2])
-            + "."
-        )
+    points = _extract_fact_points(title, headlines)
+    if len(points) >= 2:
+        core = points[0].rstrip(".")
+        more = "; ".join(p.rstrip(".") for p in points[1:3])
+        text = f"{core}. בנוסף עולה מהמקורות: {more}."
+    else:
+        text = f"לפי הדיווחים, {dry_title(title).rstrip('.')}."
     if len(names) >= 2:
-        parts.append(
-            f"הנושא מדווח במקביל ב־{len(names)} מקורות ({', '.join(names[:3])}"
-            + ("…" if len(names) > 3 else "")
-            + ")."
-        )
-    return " ".join(parts)
+        text += f" מדווח במקביל ב־{len(names)} מקורות."
+    return text
 
 
 def _substantive_fallback(title: str, headlines: list[str], names: list[str]) -> tuple[str, str, str]:
     """Build useful background/outlook/why — never product meta-text."""
-    extras = _unique_lines([h for h in headlines if dry_title(h) != title], limit=3)
+    points = _extract_fact_points(title, headlines)
     who = f" לפי {', '.join(names[:3])}" if names else ""
-    if extras:
+    if len(points) >= 2:
         background = (
-            f"הדיווח{who} עוסק ב־{title.rstrip('.')}. "
-            f"מהמקורות עולים גם הפרטים הבאים: {'; '.join(extras)}. "
-            "זה הרקע המינימלי להבין את ההתפתחות בלי להסתמך על כותרת בודדת."
+            f"הדיווח{who} מתרכז בכמה קווים: {'; '.join(points[:3])}. "
+            "ההצלבה בין המקורות חשובה כי כל כותרת מדגישה זווית אחרת של אותו דיון."
         )
         outlook = (
-            f"השלב הבא הוא האם הפרטים האלה ({extras[0]}) יתחזקו בהודעה רשמית או יתוקנו. "
-            "שינוי בשמות בעלי תפקידים, מועדים או היקף ההחלטה הוא מה שכדאי לבדוק בעדכון הבא."
+            f"השלב הבא: האם «{points[0]}» יתקדם להחלטה מאושרת או יישאר בבחינה בלבד. "
+            "פרטים על לוח זמנים, היקף והגורם המאשר ישנו את התמונה."
         )
-        why_matters = (
-            f"כי אם {extras[0].rstrip('.')} מתממש — יש לזה השלכה מעשית על מי שמעורב באירוע ועל המשך המעקב."
-        )
+        why_matters = f"כי {points[0]} — ואם זה יוצא לפועל יש לזה השלכה ישירה בשטח."
     else:
         background = (
-            f"הדיווח{who} מתאר: {title.rstrip('.')}. "
-            "אין עדיין פירוט נוסף ממקורות מצולבים בפיד, ולכן הרקע נשען על ניסוח הדיווח עצמו."
+            f"הדיווח{who} מתאר: {dry_title(title).rstrip('.')}. "
+            "עדיין חסר פירוט מצולב בפיד."
         )
-        outlook = (
-            "כדאי לחכות לאישור רשמי או לפירוט על לוח זמנים, סמכויות והשלכות מעשיות. "
-            "עדכון עם גורם מאשר, תאריך או תגובת צדדים רלוונטיים ישנה את התמונה."
-        )
+        outlook = "כדאי לחכות לאישור רשמי או לפירוט על לוח זמנים והשלכות מעשיות."
         why_matters = (
-            "כי הדיווח מתאר מהלך שעדיין לא סגור — ואם יאושר או יידחה, המציאות בשטח תשתנה בהתאם."
+            "כי הדיווח מתאר מהלך שעדיין לא סגור — אישור או דחייה ישנו את המציאות בשטח."
         )
     return background, outlook, why_matters
 
@@ -182,13 +206,17 @@ def heuristic_distill(item: dict) -> dict:
     if re.search(r"חשד|אולי|עשוי|נבדק", title):
         status = "review"
 
-    bullets = _unique_lines([title, *headlines], limit=4)
+    bullets = _extract_fact_points(title, headlines)
     while len(bullets) < 3:
-        bullets.append(
-            f"דיווח נוסף מ־{names[len(bullets)]}."
-            if len(bullets) < len(names)
-            else "חלק מהפרטים עדיין לא הובהרו במקורות שנבדקו."
-        )
+        extras = _unique_lines([title, *headlines], limit=5)
+        for e in extras:
+            if e not in bullets:
+                bullets.append(e)
+            if len(bullets) >= 3:
+                break
+        break
+    while len(bullets) < 3:
+        bullets.append("חלק מהפרטים עדיין לא הובהרו במקורות שנבדקו.")
 
     summary = _build_summary(title, headlines, names)
 
@@ -208,17 +236,21 @@ def heuristic_distill(item: dict) -> dict:
         blob,
     ):
         if re.search(r"עזה|חמאס|רצועת|נסיגה", blob):
+            points = _extract_fact_points(title, headlines)
             why_matters = (
-                "כי דיון על נסיגה או שינוי פריסה בעזה משפיע ישירות על הלחימה, על החטופים ועל הלחץ המדיני סביב הרצועה."
+                "כי נסיגה ממוקדים בעזה — במיוחד תחת לחץ אמריקני ובדיון על כוח רב־לאומי — משנה שליטה בשטח, לחימה ומיקוח מדיני."
+                if re.search(r"רב-?לאומי|אמריקנ", blob)
+                else "כי דיון על נסיגה או שינוי פריסה בעזה משפיע ישירות על הלחימה, על החטופים ועל הלחץ המדיני סביב הרצועה."
             )
             background = (
-                "ברצועת עזה כל שינוי בפריסת כוחות — גם אם עדיין בבדיקה — נוגע לשאלות של שליטה בשטח, "
-                "סיכון לכוחות, רציפות לחימה, ומגעים מדיניים. "
-                "כשמדווחים על בדיקת נסיגה ממוקדים, זה לא ספין בלבד: זה סימן לדיון מבצעי פתוח בתוך המערכת."
+                "ממקורות שונים עולה אותו דיון בכמה זוויות: "
+                + "; ".join(points[:4])
+                + ". "
+                "עדיין מדובר בבחינה/דיווח ולא בהכרח בהחלטה סופית מאושרת."
             )
             outlook = (
-                "השלב הבא: האם יש החלטה מאושרת, מאילו מוקדים, ובאיזה לוח זמנים — או שהבדיקה נגנזת. "
-                "תגובות פוליטיות ודיווחי שטח יבהירו אם מדובר במהלך ממשי או בבחינה בלבד."
+                "השלב הבא: האם יש החלטה מאושרת, מאילו מוקדים, האם נכנס כוח חלופי, ובאיזה לוח זמנים — או שהבדיקה נגנזת. "
+                "תגובות פוליטיות ודיווחי שטח יבהירו אם מדובר במהלך ממשי."
             )
         else:
             why_matters = "כי זה נוגע ישירות לביטחון תושבים ולמצב בגבול — לא לאירוע רחוק בלבד."
