@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img">
+  <rect width="1200" height="675" fill="#10243a"/>
+  <circle cx="620" cy="340" r="210" fill="#1f4f73"/>
+  <ellipse cx="620" cy="340" rx="210" ry="70" fill="none" stroke="#7fb0d0" stroke-width="6" opacity=".7"/>
+  <ellipse cx="620" cy="340" rx="70" ry="210" fill="none" stroke="#7fb0d0" stroke-width="6" opacity=".7"/>
+  <path d="M410 300 C470 260 520 290 560 270 C610 245 650 280 700 260 C760 235 800 280 830 300" fill="none" stroke="#d7eaf5" stroke-width="14" stroke-linecap="round"/>
+  <text x="60" y="100" fill="#e7f2fa" font-family="Arial,sans-serif" font-size="42" font-weight="700">הקשר בינלאומי</text>
+  <text x="60" y="155" fill="#8eb0c8" font-family="Arial,sans-serif" font-size="28">ארה״ב · זירה עולמית</text>
+</svg>

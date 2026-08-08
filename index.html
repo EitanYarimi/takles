@@ -1,0 +1,1854 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>תכלס — POC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --paper: #fafaf7;
+      --paper-edge: #e6e4de;
+      --ink: #111111;
+      --ink-soft: #2a2a2a;
+      --headline: #1f3350;
+      --h-security: #0d6b52;
+      --h-politics: #5b3d8a;
+      --h-region: #1d5f9c;
+      --h-world: #3a4a6b;
+      --h-economy: #6b7a1f;
+      --h-domestic: #9a4f1c;
+      --h-leisure: #7a4d6a;
+      --h-sport: #1a6b7a;
+      --muted: #5c5c5c;
+      --rule: #111111;
+      --rule-soft: #cfcfcf;
+      --spot: #9b1c1c;
+      --ok: #0f5c3b;
+      --warn: #8a5a00;
+      --info: #1e3f66;
+      --badge-bg: #f0f0ec;
+      --font: "Heebo", "Arial Hebrew", Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+
+    body {
+      font-family: var(--font);
+      color: var(--ink);
+      background: #eceae4;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .wrap {
+      width: min(880px, calc(100% - 1.5rem));
+      margin: 1.25rem auto 3rem;
+      padding: 1.5rem 1.5rem 2.2rem;
+      background: var(--paper);
+      border: 1px solid var(--paper-edge);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.06);
+    }
+
+    header.hero {
+      text-align: center;
+      padding: 0.15rem 0 1.1rem;
+      margin-bottom: 1.1rem;
+      border-top: 3px double var(--rule);
+      border-bottom: 3px double var(--rule);
+    }
+
+    .mast-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: baseline;
+      font-size: 0.78rem;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 0.55rem;
+    }
+
+    .brand {
+      font-family: var(--font);
+      font-size: clamp(3.2rem, 9vw, 4.8rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin: 0;
+      line-height: 0.95;
+      color: var(--ink);
+    }
+
+    .motto {
+      margin: 0.45rem 0 0.15rem;
+      font-size: 1.05rem;
+      font-style: normal;
+      font-weight: 500;
+      color: var(--ink-soft);
+    }
+
+    .tagline {
+      margin: 0.4rem auto 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+      max-width: 34rem;
+      line-height: 1.45;
+    }
+
+    .settings {
+      margin-top: 0.9rem;
+      display: grid;
+      gap: 0.35rem;
+      max-width: 34rem;
+      margin-inline: auto;
+      text-align: right;
+    }
+    .settings label {
+      font-size: 0.84rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .settings input {
+      width: 100%;
+      border: 1px solid var(--rule-soft);
+      border-radius: 2px;
+      padding: 0.6rem 0.75rem;
+      font: inherit;
+      background: #fff;
+      color: var(--ink);
+    }
+    .hint {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .status-line {
+      min-height: 1.3rem;
+      color: var(--muted);
+      font-size: 0.86rem;
+      margin: 0.65rem 0 0.85rem;
+      font-weight: 600;
+    }
+
+    .topics {
+      display: none;
+    }
+
+    .cubes {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.85rem;
+      margin-top: 0.35rem;
+    }
+    .topic-cube {
+      background: #fff;
+      border: 1px solid var(--rule-soft);
+      border-radius: 2px;
+      min-height: 220px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .topic-cube header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 0.5rem;
+      padding: 0.7rem 0.8rem;
+      border-bottom: 2px solid var(--rule);
+      background: #f5f5f1;
+      cursor: pointer;
+    }
+    .topic-cube header:hover {
+      filter: brightness(0.98);
+    }
+    .topic-cube header .n::after {
+      content: " · הכל";
+      font-weight: 600;
+      opacity: 0.75;
+    }
+    .topic-cube[data-topic="security"] header {
+      border-bottom-color: var(--h-security);
+      background: #eef7f3;
+    }
+    .topic-cube[data-topic="politics"] header {
+      border-bottom-color: var(--h-politics);
+      background: #f5f1f9;
+    }
+    .topic-cube[data-topic="region"] header {
+      border-bottom-color: var(--h-region);
+      background: #eef4fa;
+    }
+    .topic-cube[data-topic="world"] header {
+      border-bottom-color: var(--h-world);
+      background: #f0f2f6;
+    }
+    .topic-cube[data-topic="economy"] header {
+      border-bottom-color: var(--h-economy);
+      background: #f5f6ea;
+    }
+    .topic-cube[data-topic="domestic"] header {
+      border-bottom-color: var(--h-domestic);
+      background: #faf3ec;
+    }
+    .topic-cube[data-topic="leisure"] header {
+      border-bottom-color: var(--h-leisure);
+      background: #f8f1f5;
+    }
+    .topic-cube[data-topic="sport"] header {
+      border-bottom-color: var(--h-sport);
+      background: #eef6f7;
+    }
+    .topic-cube header h2 {
+      margin: 0;
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--headline);
+    }
+    .topic-cube header .n {
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+    .cube-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      flex: 1;
+    }
+    .cube-list li {
+      border-bottom: 1px solid var(--rule-soft);
+      padding: 0.65rem 0.8rem;
+      cursor: pointer;
+    }
+    .cube-list li:hover {
+      background: #f7f7f4;
+    }
+    .cube-list li:last-child { border-bottom: 0; }
+    .cube-list .item {
+      display: block;
+    }
+    .cube-list .item:hover .cube-title {
+      color: var(--ink-soft);
+    }
+    .cube-meta {
+      display: flex;
+      gap: 0.45rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.25rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--muted);
+    }
+    .cube-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      line-height: 1.3;
+      letter-spacing: -0.01em;
+      color: var(--headline);
+    }
+    .topic-cube[data-topic="security"] .cube-title,
+    .topic-cube[data-topic="security"] header h2,
+    h2.title.t-security { color: var(--h-security); }
+    .topic-cube[data-topic="politics"] .cube-title,
+    .topic-cube[data-topic="politics"] header h2,
+    h2.title.t-politics { color: var(--h-politics); }
+    .topic-cube[data-topic="region"] .cube-title,
+    .topic-cube[data-topic="region"] header h2,
+    h2.title.t-region { color: var(--h-region); }
+    .topic-cube[data-topic="world"] .cube-title,
+    .topic-cube[data-topic="world"] header h2,
+    h2.title.t-world { color: var(--h-world); }
+    .topic-cube[data-topic="economy"] .cube-title,
+    .topic-cube[data-topic="economy"] header h2,
+    h2.title.t-economy { color: var(--h-economy); }
+    .topic-cube[data-topic="domestic"] .cube-title,
+    .topic-cube[data-topic="domestic"] header h2,
+    h2.title.t-domestic { color: var(--h-domestic); }
+    .topic-cube[data-topic="leisure"] .cube-title,
+    .topic-cube[data-topic="leisure"] header h2,
+    h2.title.t-leisure { color: var(--h-leisure); }
+    .topic-cube[data-topic="sport"] .cube-title,
+    .topic-cube[data-topic="sport"] header h2,
+    h2.title.t-sport { color: var(--h-sport); }
+    .cube-empty {
+      padding: 1.2rem 0.8rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .grid {
+      display: none;
+    }
+
+    .detail-view {
+      display: none;
+      animation: rise 0.3s ease both;
+    }
+    .detail-view.active { display: block; }
+    .home-view.hidden { display: none; }
+
+    .lead {
+      display: none;
+      margin: 0.85rem 0 1rem;
+      padding: 1rem 1.05rem 1.1rem;
+      border: 1px solid var(--rule-soft);
+      border-top: 3px solid var(--rule);
+      background: #fff;
+      cursor: pointer;
+    }
+    .lead.visible { display: block; }
+    .lead:hover { background: #fafaf7; }
+    .lead-kicker {
+      margin: 0 0 0.35rem;
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .lead-title {
+      margin: 0 0 0.55rem;
+      font-size: clamp(1.55rem, 3.8vw, 2.15rem);
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: -0.025em;
+      color: var(--headline);
+    }
+    .lead-title.t-security { color: var(--h-security); }
+    .lead-title.t-politics { color: var(--h-politics); }
+    .lead-title.t-region { color: var(--h-region); }
+    .lead-title.t-world { color: var(--h-world); }
+    .lead-title.t-economy { color: var(--h-economy); }
+    .lead-title.t-domestic { color: var(--h-domestic); }
+    .lead-title.t-leisure { color: var(--h-leisure); }
+    .lead-title.t-sport { color: var(--h-sport); }
+    .lead-deck {
+      margin: 0 0 0.65rem;
+      font-size: 1.02rem;
+      font-weight: 500;
+      color: var(--ink-soft);
+      line-height: 1.45;
+    }
+    .lead-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem 0.75rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    .world-lead {
+      display: none;
+      margin: 0.85rem 0 0;
+      padding: 0.95rem 0 1.05rem;
+      border-top: 1px solid var(--rule-soft);
+      border-bottom: 1px solid var(--rule);
+      cursor: pointer;
+    }
+    .world-lead.visible { display: block; }
+    .world-lead:hover { background: #f7f7f4; }
+    .world-lead .lead-kicker {
+      color: var(--h-world);
+    }
+    .world-lead .lead-title {
+      font-size: clamp(1.2rem, 2.8vw, 1.55rem);
+      margin-bottom: 0.4rem;
+    }
+    .world-lead .lead-deck {
+      font-size: 0.95rem;
+      margin-bottom: 0.45rem;
+    }
+
+    .action-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 0.85rem 0 1rem;
+    }
+    .action-row .mark-seen {
+      background: var(--ink);
+      color: #fff;
+      border-color: var(--ink);
+    }
+    .action-row .mark-seen:hover { background: #000; }
+    .action-row .restore-seen {
+      background: #fff;
+    }
+
+    .topic-list-view {
+      display: none;
+      animation: rise 0.3s ease both;
+    }
+    .topic-list-view.active { display: block; }
+
+    .sort-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin: 0 0 0.85rem;
+    }
+    .sort-bar button {
+      border: 1px solid var(--rule-soft);
+      background: #fff;
+      color: var(--ink-soft);
+      font: inherit;
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 0.4rem 0.7rem;
+      cursor: pointer;
+    }
+    .sort-bar button.active {
+      background: var(--ink);
+      border-color: var(--ink);
+      color: #fff;
+    }
+
+    .topic-full-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      border: 1px solid var(--rule-soft);
+      background: #fff;
+    }
+    .topic-full-list li {
+      padding: 0.85rem 0.9rem;
+      border-bottom: 1px solid var(--rule-soft);
+      cursor: pointer;
+    }
+    .topic-full-list li:last-child { border-bottom: 0; }
+    .topic-full-list li:hover { background: #fafaf7; }
+    .topic-full-list li.is-seen {
+      background: #f0f0ee;
+      opacity: 0.72;
+    }
+    .topic-full-list li.is-seen .tfl-title {
+      color: #7a7a7a;
+    }
+    .tfl-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem 0.65rem;
+      margin-bottom: 0.3rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--muted);
+    }
+    .tfl-title {
+      font-size: 1.02rem;
+      font-weight: 800;
+      line-height: 1.3;
+      color: var(--headline);
+    }
+    .tfl-title.t-security { color: var(--h-security); }
+    .tfl-title.t-politics { color: var(--h-politics); }
+    .tfl-title.t-region { color: var(--h-region); }
+    .tfl-title.t-world { color: var(--h-world); }
+    .tfl-title.t-economy { color: var(--h-economy); }
+    .tfl-title.t-domestic { color: var(--h-domestic); }
+    .tfl-title.t-leisure { color: var(--h-leisure); }
+    .tfl-title.t-sport { color: var(--h-sport); }
+
+    .back-btn {
+      border: 1px solid var(--rule);
+      background: #fff;
+      color: var(--ink);
+      border-radius: 2px;
+      padding: 0.45rem 0.85rem;
+      font: inherit;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-bottom: 1rem;
+    }
+    .back-btn:hover { background: #f3f3f0; }
+    .action-row .mark-seen {
+      background: var(--ink);
+      color: #fff;
+      border-color: var(--ink);
+    }
+    .action-row .mark-seen:hover { background: #000; }
+
+    .detail-hero {
+      display: grid;
+      gap: 0.85rem;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--rule);
+    }
+    .detail-hero .media {
+      width: min(100%, 420px);
+      max-height: 200px;
+    }
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.55rem;
+      margin: 0.9rem 0;
+    }
+    .stat-box {
+      border: 1px solid var(--rule-soft);
+      background: #f7f7f4;
+      padding: 0.7rem 0.75rem;
+    }
+    .stat-box .val {
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      line-height: 1.1;
+    }
+    .stat-box .lbl {
+      margin-top: 0.25rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--muted);
+    }
+    .timeline {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      border: 1px solid var(--rule-soft);
+      background: #fff;
+    }
+    .timeline li {
+      display: grid;
+      grid-template-columns: 7.5rem 1fr;
+      gap: 0.75rem;
+      padding: 0.7rem 0.8rem;
+      border-bottom: 1px solid var(--rule-soft);
+    }
+    .timeline li:last-child { border-bottom: 0; }
+    .timeline .when {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--muted);
+    }
+    .timeline .what {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--ink-soft);
+    }
+    .detail-note {
+      margin-top: 0.85rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    @media (max-width: 720px) {
+      .cubes { grid-template-columns: 1fr; }
+      .stats-row { grid-template-columns: 1fr; }
+      .timeline li { grid-template-columns: 1fr; gap: 0.2rem; }
+    }
+
+    article.card {
+      background: transparent;
+      border: 0;
+      border-bottom: 1px solid var(--rule-soft);
+      border-radius: 0;
+      padding: 0;
+      box-shadow: none;
+      animation: rise 0.35s ease both;
+    }
+    article.card:last-child { border-bottom: 0; }
+    .card-body {
+      padding: 1.25rem 0 1.3rem;
+    }
+    .media {
+      display: block;
+      position: relative;
+      width: min(100%, 320px);
+      max-height: 160px;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      background: #e8e8e4;
+      border: 1px solid var(--rule-soft);
+      margin: 0 0 0.85rem;
+    }
+    .media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .media-credit {
+      position: absolute;
+      inset-inline-start: 0.65rem;
+      bottom: 0.6rem;
+      background: rgba(17, 17, 17, 0.82);
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.28rem 0.55rem;
+      border-radius: 2px;
+    }
+    .sources-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem 0.7rem;
+      margin-top: 0.9rem;
+      padding-top: 0.65rem;
+      border-top: 1px solid var(--rule-soft);
+    }
+    .source-chip {
+      display: inline-flex;
+      color: var(--muted);
+      border: 0;
+      background: transparent;
+      padding: 0;
+      font-size: 0.84rem;
+      font-weight: 700;
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: none; }
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      align-items: center;
+      margin-bottom: 0.55rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 2px;
+      padding: 0.18rem 0.48rem;
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      background: var(--badge-bg);
+      color: var(--ink-soft);
+      border: 1px solid var(--rule-soft);
+    }
+    .badge.reported { color: var(--warn); background: #fff7e8; border-color: #efd7a4; }
+    .badge.confirmed { color: var(--ok); background: #eaf6ef; border-color: #b7d8c5; }
+    .badge.denied { color: var(--spot); background: #f8eaea; border-color: #e2bcbc; }
+    .badge.review { color: var(--info); background: #eaf0f7; border-color: #bfd0e3; }
+    .badge.sources {
+      color: var(--muted);
+      font-weight: 600;
+      background: transparent;
+      border-color: transparent;
+      padding-inline: 0.15rem;
+    }
+
+    h2.title {
+      font-family: var(--font);
+      font-size: clamp(1.35rem, 3vw, 1.75rem);
+      margin: 0 0 0.65rem;
+      line-height: 1.25;
+      font-weight: 800;
+      color: var(--headline);
+      letter-spacing: -0.02em;
+    }
+
+    ul.facts {
+      margin: 0 0 0.75rem;
+      padding: 0 1.2rem 0 0;
+    }
+    ul.facts li {
+      margin: 0.35rem 0;
+      color: var(--ink);
+      font-size: 1.02rem;
+    }
+
+    .block {
+      margin-top: 0.75rem;
+      padding: 0.65rem 0.75rem;
+      border: 1px solid var(--rule-soft);
+      background: #f7f7f4;
+    }
+    .block + .block { margin-top: 0.45rem; }
+    .block h3 {
+      margin: 0 0 0.2rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 700;
+    }
+    .block p {
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: 0.98rem;
+    }
+
+    .time {
+      margin-top: 0.8rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    footer {
+      margin-top: 1.5rem;
+      padding-top: 0.8rem;
+      border-top: 3px double var(--rule);
+      color: var(--muted);
+      font-size: 0.82rem;
+      text-align: center;
+    }
+
+    @media (max-width: 640px) {
+      .wrap { margin: 0.5rem auto 1.5rem; padding: 1rem 0.9rem 1.4rem; }
+      .mast-top { font-size: 0.7rem; }
+      .brand { font-size: 3.1rem; }
+      ul.facts li { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero">
+      <div class="mast-top">
+        <span id="editionDate">מהדורה יומית</span>
+        <span>עובדות · בלי דרמה</span>
+      </div>
+      <h1 class="brand">תכלס</h1>
+      <p class="motto">״מה קרה בפועל״</p>
+      <p class="tagline">מה חשוב עכשיו — עובדות קצרות, בלי דרמה.</p>
+    </header>
+
+    <div class="home-view" id="homeView">
+      <article class="lead" id="lead" hidden></article>
+      <article class="world-lead" id="worldLead" hidden></article>
+      <p class="status-line" id="status">טוען…</p>
+      <div class="cubes" id="cubes"></div>
+    </div>
+    <div class="detail-view" id="detailView"></div>
+    <div class="topic-list-view" id="topicListView"></div>
+    <div class="grid" id="feed" hidden></div>
+
+    <footer>
+      מקור נתונים: Google News Israel · POC · כותרת ראשית לפי עדכניות+רלוונטיות
+    </footer>
+  </div>
+
+  <script>
+    const IS_PAGES = /github\.io$/i.test(location.hostname);
+    const NEWS_JSON = IS_PAGES ? "./news.json" : "/api/news";
+    const POLL_MS = 60_000;
+
+    const DRAMATIC = [
+      "שומט את הקרקע",
+      "על חודו של קול",
+      "הלם ענק",
+      "משתוללת",
+      "משתולל",
+      "מתפוצצת",
+      "מתפוצץ",
+      "דרמה",
+      "הלם",
+      "בלעדי",
+      "דחוף",
+      "הזוי",
+      "מטורף",
+      "קריסה",
+      "נחשף",
+    ];
+
+    const STATUS_HE = {
+      confirmed: "מאומת",
+      reported: "דיווח",
+      denied: "הכחשה",
+      review: "בבדיקה",
+    };
+
+    const TOPICS = [
+      { id: "all", label: "הכל" },
+      { id: "security", label: "ביטחון" },
+      { id: "politics", label: "פוליטיקה" },
+      { id: "region", label: "אזור" },
+      { id: "world", label: "בעולם" },
+      { id: "economy", label: "כלכלה" },
+      { id: "domestic", label: "פנים" },
+      { id: "leisure", label: "תיירות ונופש" },
+      { id: "sport", label: "ספורט" },
+    ];
+
+    const TOPIC_HE = Object.fromEntries(TOPICS.map((t) => [t.id, t.label]));
+
+    let activeTopic = "all";
+    let allCards = [];
+    let lastSourceLabel = "";
+
+    function cardTime(c) {
+      return new Date(c.pubDate || 0).getTime() || 0;
+    }
+
+    function importanceScore(c) {
+      const ageH = Math.max(0, (Date.now() - cardTime(c)) / 3600000);
+      // עדכניות: דעיכה חזקה — אירוע חי מנצח ישן באותה רמת חשיבות
+      const recency = Math.exp(-ageH / 5);
+      const sourcesN = (c.sources || []).length;
+      const topicScore = {
+        security: 100,
+        region: 88,
+        world: 70,
+        politics: 52,
+        economy: 38,
+        domestic: 18,
+        leisure: 10,
+        sport: 12,
+      }[c.topic] || 12;
+
+      let boost = 0;
+      const blob = [c.title, ...(c.original_headlines || [])].join(" ");
+      if (/הורמוז|איראן|חיזבאללה|יירוט|רחפן|מלחמ|טיל|פיקוד|חטופ/.test(blob)) boost += 40;
+      if (/דה\s*וויס|Bose|גלקסי|סמסונג|איירליינס|פייטן|QuietComfort/.test(blob)) boost -= 60;
+      if (c.status === "confirmed") boost += 10;
+      if (c.status === "review") boost += 5;
+
+      const relevance = topicScore + sourcesN * 7 + boost;
+      return relevance * recency;
+    }
+
+    const ISRAEL_TOPICS = new Set(["security", "politics", "region", "economy", "domestic"]);
+
+    function pickLeadStory(cards) {
+      const pool = cards.filter((c) => ISRAEL_TOPICS.has(c.topic));
+      if (!pool.length) return null;
+      return [...pool].sort((a, b) => {
+        const d = importanceScore(b) - importanceScore(a);
+        if (Math.abs(d) > 0.01) return d;
+        return cardTime(b) - cardTime(a);
+      })[0];
+    }
+
+    function pickTopByScore(cards) {
+      if (!cards.length) return null;
+      return [...cards].sort((a, b) => {
+        const d = importanceScore(b) - importanceScore(a);
+        if (Math.abs(d) > 0.01) return d;
+        return cardTime(b) - cardTime(a);
+      })[0];
+    }
+
+    function renderLead(cards) {
+      const lead = pickLeadStory(cards);
+      if (!els.lead) return;
+      if (!lead) {
+        els.lead.hidden = true;
+        els.lead.classList.remove("visible");
+        els.lead.innerHTML = "";
+        renderWorldLead(cards, null);
+        return;
+      }
+      const names = [...new Set(lead.sources.map((s) => s.name))];
+      const deck = (lead.bullet_facts && lead.bullet_facts[0]) || lead.insight || "";
+      els.lead.hidden = false;
+      els.lead.classList.add("visible");
+      els.lead.dataset.id = lead.id;
+      els.lead.innerHTML = `
+        <p class="lead-kicker">ישראל · ${escapeHtml(TOPIC_HE[lead.topic] || "")}</p>
+        <h2 class="lead-title t-${escapeHtml(lead.topic || "domestic")}">${escapeHtml(lead.title)}</h2>
+        <p class="lead-deck">${escapeHtml(deck)}</p>
+        <div class="lead-meta">
+          <span>${STATUS_HE[lead.status] || lead.status}</span>
+          <span>·</span>
+          <span>${names.length} מקורות</span>
+          <span>·</span>
+          <span>${escapeHtml(relativeTime(lead.pubDate))}</span>
+        </div>
+      `;
+      renderWorldLead(cards, lead.id);
+    }
+
+    function pickWorldStory(cards, excludeId) {
+      const pool = cards.filter((c) => c.topic === "world" && c.id !== excludeId);
+      if (!pool.length) return null;
+      return pickTopByScore(pool);
+    }
+
+    function renderWorldLead(cards, excludeId) {
+      if (!els.worldLead) return;
+      const story = pickWorldStory(cards, excludeId);
+      if (!story) {
+        els.worldLead.hidden = true;
+        els.worldLead.classList.remove("visible");
+        els.worldLead.innerHTML = "";
+        delete els.worldLead.dataset.id;
+        return;
+      }
+      const names = [...new Set(story.sources.map((s) => s.name))];
+      const deck = (story.bullet_facts && story.bullet_facts[0]) || story.insight || "";
+      els.worldLead.hidden = false;
+      els.worldLead.classList.add("visible");
+      els.worldLead.dataset.id = story.id;
+      els.worldLead.innerHTML = `
+        <p class="lead-kicker">בעולם</p>
+        <h2 class="lead-title t-world">${escapeHtml(story.title)}</h2>
+        <p class="lead-deck">${escapeHtml(deck)}</p>
+        <div class="lead-meta">
+          <span>${STATUS_HE[story.status] || story.status}</span>
+          <span>·</span>
+          <span>${names.length} מקורות</span>
+          <span>·</span>
+          <span>${escapeHtml(relativeTime(story.pubDate))}</span>
+        </div>
+      `;
+    }
+
+    function renderTopicCubes(cards) {
+      const topicIds = TOPICS.filter((t) => t.id !== "all");
+      els.cubes.innerHTML = topicIds
+        .map((topic) => {
+          const items = cards
+            .filter((c) => c.topic === topic.id)
+            .sort((a, b) => cardTime(b) - cardTime(a))
+            .slice(0, 4);
+          const list = items.length
+            ? `<ul class="cube-list">${items
+                .map((c) => {
+                  const names = [...new Set(c.sources.map((s) => s.name))];
+                  return `<li data-id="${escapeHtml(c.id)}">
+                    <div class="item">
+                      <div class="cube-meta">
+                        <span>${STATUS_HE[c.status] || c.status}</span>
+                        <span>·</span>
+                        <span>${names.length} מקורות</span>
+                        <span>·</span>
+                        <span>${escapeHtml(relativeTime(c.pubDate))}</span>
+                      </div>
+                      <div class="cube-title">${escapeHtml(c.title)}</div>
+                    </div>
+                  </li>`;
+                })
+                .join("")}</ul>`
+            : `<div class="cube-empty">אין עדכונים בנושא כרגע</div>`;
+          return `<section class="topic-cube" data-topic="${topic.id}">
+            <header>
+              <h2>${topic.label}</h2>
+              <span class="n">${items.length}/4</span>
+            </header>
+            ${list}
+          </section>`;
+        })
+        .join("");
+    }
+
+    function applyTopicFilter() {
+      const active = activeCards();
+      renderLead(active);
+      renderTopicCubes(active);
+      const seenN = seenCards().length;
+      const expiredN = allCards.filter((c) => !isSeen(c.id) && !isFreshOnBoard(c)).length;
+      els.status.textContent = `${active.length} על הלוח · ${expiredN} פגו תוקף · מקור: ${lastSourceLabel}`;
+    }
+
+    function classifyTopic(title, sources = []) {
+      const parts = [title || ""];
+      for (const s of sources || []) {
+        parts.push(s.headline || "");
+        parts.push(s.name || "");
+      }
+      const blob = parts.join(" ");
+
+      // תיירות / נופש בלבד (בלי בידור טלוויזיה)
+      if (
+        /תייר|נופש|מלונ|חופשה|אתר נופש|חבילת נופש|משרד התיירות|חדרי מלון|למטייל|ריזורט|אטרקצי/.test(
+          blob
+        ) &&
+        !/דה\s*וויס|The Voice|סדרת טלוויז|עונה \d|נטפליקס|מכבי|הפועל|איראן|מלחמ/.test(blob)
+      ) {
+        return "leisure";
+      }
+
+      // בידור רך → פנים (לא פנאי/תיירות)
+      if (/דה\s*וויס|The Voice|פייטן|לווי[יה]|סדרת טלוויז|עונה \d|נטפליקס|קונצרט/.test(blob)) {
+        return "domestic";
+      }
+
+      // ספורט
+      if (
+        /ספורט|כדורגל|כדורסל|מכבי|הפועל|בית.?ר|נבחרת|אליפות|ליגת|גמר|שער|NBA|FIFA|אולימפ|טניס|שחי[יה]|אימון|מאמן|שחקנ/.test(
+          blob
+        )
+      ) {
+        return "sport";
+      }
+
+      if (/בנק ישראל|ריבית|בורסה|אינפלצ|יוקר המחיה|תקציב|דולר|השקע|מני[וה]|אקזיט|ברקשייר|כלכל/.test(blob)) {
+        return "economy";
+      }
+
+      if (/חיזבאללה|לבנון|רחפן|צה["׳']?ל|יירוט|כיפת ברזל|חמאס|עזה|פיקוד העורף|מחבל|חטופ|שבוי/.test(blob)) {
+        return "security";
+      }
+
+      // אזור — מזרח תיכון / שכנים / נתיבים קרובים
+      if (
+        /הורמוז|איראן|מפרץ הפרסי|טורקיה|סעודיה|מצרים|החות|חות'?ים|עומאן|קטאר|איחוד האמירו|ירדן|סוריה|עיראק|פקיסטאן|ברית ההגנה|המפרץ/.test(
+          blob
+        )
+      ) {
+        return "region";
+      }
+
+      // בעולם — חוץ רחוק יותר (ארה"ב, אירופה, מוסדות בינלאומיים)
+      if (
+        /ארה["׳']?ב|טראמפ|ביידן|וושינגטון|סנאט|הבית הלבן|פנטגון|נאט.?ו|תובע הכללי|בלנש|בלאנש|Blanche|או["״]ם|איחוד האירופי|בריטניה|צרפת|גרמניה|רוסיה|סין|אוקראינ|הודו|ברזיל|אפריק|אוסטרלי|קנדה|הקונגרס|הנשיא האמריק|הבחירות בארה/.test(
+          blob
+        )
+      ) {
+        return "world";
+      }
+
+      // פוליטיקה ישראלית בלבד — בלי "שר " כללי
+      if (
+        /כנסת|ממשלת ישראל|הממשלה|קואליצ|אופוזיצ|פריימר|רע["׳']?ם|מפלג|נתניהו|לפיד|גנץ|סמוטריץ|בן גביר|בחירות|שר בממשלה|שר הביטחון|שר האוצר|שר החוץ הישראלי/.test(
+          blob
+        )
+      ) {
+        return "politics";
+      }
+
+      if (/מזג|חום|שרב|תחזית|גשם|שריפה|תאונה|משטרה|פשיעה|עירי|גלקסי|סמסונג/.test(blob)) {
+        return "domestic";
+      }
+
+      return "domestic";
+    }
+
+    const FALLBACK = {
+      fetchedAt: "2026-08-08T20:05:55Z",
+      items: [
+        {
+          title: "שר החוץ של טורקיה: מצרים עשויה להצטרף לברית שחתמנו עם סעודיה ופקיסטאן",
+          link: "https://news.google.com/",
+          pubDate: "Sat, 08 Aug 2026 17:57:00 GMT",
+          sources: [
+            { name: "הארץ", headline: "שר החוץ של טורקיה: מצרים עשויה להצטרף לברית שחתמנו עם סעודיה ופקיסטאן", url: "#" },
+            { name: "ynet.co.il", headline: "מצרים עשויה להצטרף לברית ההגנה החדשה: \"ההסכם לא מכוון נגד איראן\"", url: "#" },
+            { name: "כאן 11", headline: "במפרץ מברכים על \"הסכם מכה\": \"שומט את הקרקע מתחת לרגליה של איראן\"", url: "#" },
+            { name: "mako", headline: "המדינה החדשה שאולי תצטרף לברית ההגנה, והמסר של טורקיה לאיראן", url: "#" }
+          ]
+        },
+        {
+          title: "משמרות המהפכה: \"מצר הורמוז ייפתח כשארה\"ב תקבל את תנאיה של איראן\"",
+          link: "https://news.google.com/",
+          pubDate: "Sat, 08 Aug 2026 10:13:51 GMT",
+          sources: [
+            { name: "ynet.co.il", headline: "משמרות המהפכה: \"מצר הורמוז ייפתח כשארה\"ב תקבל את תנאיה של איראן\"", url: "#" },
+            { name: "הארץ", headline: "איראן: קרובים מאוד להסכם עם עומאן על מצר הורמוז, אך הוא לא ייפתח מייד", url: "#" },
+            { name: "מעריב", headline: "הקלף האיראני יורד מהשולחן? ואנס חושף התפתחות דרמטית בהורמוז", url: "#" },
+            { name: "mako", headline: "דיווח: עומאן ואיראן סיכמו על פתיחה זמנית של מצר הורמוז לתנועת אוניות", url: "#" }
+          ]
+        },
+        {
+          title: "עשן כבד מעל פתח תקווה: שריפה משתוללת באתר הבנייה של BIG",
+          link: "https://news.google.com/",
+          pubDate: "Sat, 08 Aug 2026 12:40:46 GMT",
+          sources: [
+            { name: "מעריב", headline: "עשן כבד מעל פתח תקווה: שריפה משתוללת באתר הבנייה של BIG", url: "#" },
+            { name: "ynet.co.il", headline: "שעות של מאבק באש בחניון מתחם קניות בבנייה בפתח תקווה, כבישים נחסמו", url: "#" },
+            { name: "mako", headline: "שריפה במתחם BIG שמוקם בפתח תקווה, צירים מרכזיים נחסמו", url: "#" },
+            { name: "news.walla.co.il", headline: "שעות של אש משתוללת: שריפה פרצה במתחם BIG בפתח תקווה, צירים באזור נחסמו", url: "#" }
+          ]
+        },
+        {
+          title: "בנו של ביידן: הסרטן התפשט לעצמות",
+          link: "https://news.google.com/",
+          pubDate: "Sat, 08 Aug 2026 17:18:00 GMT",
+          sources: [
+            { name: "חדשות", headline: "בנו של ביידן: הסרטן התפשט לעצמות", url: "#" }
+          ]
+        },
+        {
+          title: "התחזית למחר: חם יותר, עומסי חום כבדים יותר",
+          link: "https://news.google.com/",
+          pubDate: "Sat, 08 Aug 2026 15:59:00 GMT",
+          sources: [
+            { name: "הארץ", headline: "התחזית למחר: חם יותר, עומסי חום כבדים יותר", url: "#" },
+            { name: "ynet.co.il", headline: "הכבדה בעומסי החום, לקראת עלייה נוספת בטמפרטורות | התחזית", url: "#" }
+          ]
+        },
+        {
+          title: "טוד בלנש אושר רשמית לתפקיד התובע הכללי ה-88 של ארה\"ב",
+          link: "https://news.google.com/",
+          pubDate: "Sat, 08 Aug 2026 14:53:00 GMT",
+          sources: [
+            { name: "mako", headline: "טוד בלנש אושר רשמית לתפקיד התובע הכללי ה-88 של ארה\"ב", url: "#" },
+            { name: "הארץ", headline: "עורך דינו הפרטי לשעבר של טראמפ מונה לתובע הכללי של ארה\"ב", url: "#" },
+            { name: "גלובס", headline: "על חודו של קול: עוה\"ד לשעבר של טראמפ מונה לתובע הכללי בארה”ב", url: "#" }
+          ]
+        }
+      ]
+    };
+
+      const els = {
+      feed: document.getElementById("feed"),
+      cubes: document.getElementById("cubes"),
+      lead: document.getElementById("lead"),
+      worldLead: document.getElementById("worldLead"),
+      homeView: document.getElementById("homeView"),
+      detailView: document.getElementById("detailView"),
+      topicListView: document.getElementById("topicListView"),
+      status: document.getElementById("status"),
+    };
+
+    const SEEN_KEY = "takles_seen_map";
+    const SEEN_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 ימים בנצפו
+    const ACTIVE_TTL_H = {
+      security: 12,
+      region: 24,
+      world: 36,
+      politics: 36,
+      economy: 36,
+      domestic: 18,
+      leisure: 24,
+      sport: 18,
+    };
+    const ACTIVE_TTL_DEFAULT_H = 24;
+
+    function loadSeenMap() {
+      try {
+        const raw = JSON.parse(localStorage.getItem(SEEN_KEY) || "{}");
+        // migrate old array format
+        if (Array.isArray(raw)) {
+          const now = Date.now();
+          return Object.fromEntries(raw.map((id) => [id, now]));
+        }
+        return raw && typeof raw === "object" ? raw : {};
+      } catch {
+        return {};
+      }
+    }
+    function saveSeenMap(map) {
+      localStorage.setItem(SEEN_KEY, JSON.stringify(map));
+    }
+    function pruneSeenMap(map) {
+      const now = Date.now();
+      const next = {};
+      for (const [id, ts] of Object.entries(map)) {
+        if (now - Number(ts) <= SEEN_TTL_MS) next[id] = Number(ts);
+      }
+      return next;
+    }
+    let seenMap = pruneSeenMap(loadSeenMap());
+    saveSeenMap(seenMap);
+
+    function isSeen(id) {
+      const ts = seenMap[id];
+      if (!ts) return false;
+      if (Date.now() - Number(ts) > SEEN_TTL_MS) {
+        delete seenMap[id];
+        saveSeenMap(seenMap);
+        return false;
+      }
+      return true;
+    }
+
+    function ageHours(c) {
+      const t = cardTime(c);
+      if (!t) return 999;
+      return Math.max(0, (Date.now() - t) / 3600000);
+    }
+
+    function activeTtlHours(c) {
+      return ACTIVE_TTL_H[c.topic] ?? ACTIVE_TTL_DEFAULT_H;
+    }
+
+    function isFreshOnBoard(c) {
+      return ageHours(c) <= activeTtlHours(c);
+    }
+
+    function activeCards() {
+      return allCards.filter((c) => !isSeen(c.id) && isFreshOnBoard(c));
+    }
+
+    function seenCards() {
+      return allCards.filter((c) => isSeen(c.id));
+    }
+
+    function markSeen(id) {
+      seenMap[id] = Date.now();
+      seenMap = pruneSeenMap(seenMap);
+      saveSeenMap(seenMap);
+    }
+
+    function unmarkSeen(id) {
+      delete seenMap[id];
+      saveSeenMap(seenMap);
+    }
+
+    const editionEl = document.getElementById("editionDate");
+    if (editionEl) {
+      editionEl.textContent = new Date().toLocaleDateString("he-IL", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      });
+    }
+
+    function decodeHtml(s) {
+      const t = document.createElement("textarea");
+      t.innerHTML = s;
+      return t.value;
+    }
+
+    function stripTags(s) {
+      return decodeHtml(String(s || "").replace(/<[^>]+>/g, "")).trim();
+    }
+
+    function dryTitle(title) {
+      let t = title;
+      for (const w of DRAMATIC) {
+        t = t.split(w).join(" ").replace(/\s{2,}/g, " ").trim();
+      }
+      t = t
+        .replace(/\s+([:|,.!?״"])/g, "$1")
+        .replace(/^[:\-–|,\s]+|[:\-–|,\s]+$/g, "")
+        .replace(/\s{2,}/g, " ")
+        .trim();
+      const words = t.split(/\s+/).filter(Boolean);
+      if (words.length > 12) t = words.slice(0, 12).join(" ");
+      return t || title;
+    }
+
+    function relativeTime(dateStr) {
+      const d = new Date(dateStr);
+      if (Number.isNaN(d.getTime())) return dateStr || "";
+      const mins = Math.round((Date.now() - d.getTime()) / 60000);
+      if (mins < 1) return "עכשיו";
+      if (mins < 60) return `לפני ${mins} דק׳`;
+      const hours = Math.round(mins / 60);
+      if (hours < 24) return `לפני ${hours} שע׳`;
+      return d.toLocaleString("he-IL", { dateStyle: "short", timeStyle: "short" });
+    }
+
+    function parseGoogleRss(xmlText) {
+      const doc = new DOMParser().parseFromString(xmlText, "text/xml");
+      const nodes = [...doc.querySelectorAll("item")].slice(0, 10);
+      return nodes.map((item) => {
+        let title = (item.querySelector("title")?.textContent || "").trim();
+        const link = (item.querySelector("link")?.textContent || "").trim();
+        const pubDate = (item.querySelector("pubDate")?.textContent || "").trim();
+        const desc = item.querySelector("description")?.textContent || "";
+        let mainSource = "";
+        if (title.includes(" - ")) {
+          const parts = title.split(" - ");
+          mainSource = parts.pop().trim();
+          title = parts.join(" - ").trim();
+        }
+        const sources = [];
+        const re = /<a href="([^"]+)"[^>]*>(.*?)<\/a>\s*&nbsp;&nbsp;<font[^>]*>(.*?)<\/font>/g;
+        let m;
+        while ((m = re.exec(desc))) {
+          sources.push({
+            url: decodeHtml(m[1]),
+            headline: stripTags(m[2]),
+            name: decodeHtml(m[3]).trim(),
+          });
+        }
+        if (!sources.length) {
+          sources.push({ url: link, headline: title, name: mainSource || "Google News" });
+        }
+        return { title, link, pubDate, sources: sources.slice(0, 6) };
+      });
+    }
+
+    function buildExtras(title, topic, sources) {
+      const n = sources.length;
+      const statsByTopic = {
+        security: [
+          { val: String(n), lbl: "מקורות מצולבים" },
+          { val: "גבול צפון", lbl: "זירה עיקרית" },
+          { val: "שוטף", lbl: "קצב עדכון" },
+        ],
+        politics: [
+          { val: String(n), lbl: "מקורות מצולבים" },
+          { val: "כנסת", lbl: "זירה" },
+          { val: "פתוח", lbl: "סטטוס פוליטי" },
+        ],
+        region: [
+          { val: String(n), lbl: "מקורות מצולבים" },
+          { val: "~20%", lbl: "מתזת עולמית דרך הורמוז*" },
+          { val: "אזורי", lbl: "היקף השפעה" },
+        ],
+        world: [
+          { val: String(n), lbl: "מקורות מצולבים" },
+          { val: "גלובלי", lbl: "היקף" },
+          { val: "רחוק", lbl: "קרבה לישראל" },
+        ],
+        economy: [
+          { val: String(n), lbl: "מקורות מצולבים" },
+          { val: "₪/$", lbl: "שווקים רלוונטיים" },
+          { val: "יומי", lbl: "קצב מעקב" },
+        ],
+        domestic: [
+          { val: String(n), lbl: "מקורות מצולבים" },
+          { val: "מקומי", lbl: "היקף" },
+          { val: "אזרחי", lbl: "סוג אירוע" },
+        ],
+        leisure: [
+          { val: String(n), lbl: "מקורות מצולבים" },
+          { val: "פנאי", lbl: "סוג" },
+          { val: "רך", lbl: "עדיפות לוח" },
+        ],
+        sport: [
+          { val: String(n), lbl: "מקורות מצולבים" },
+          { val: "ספורט", lbl: "זירה" },
+          { val: "תוצאה", lbl: "מיקוד" },
+        ],
+      };
+      const timelineByTopic = {
+        security: [
+          { when: "רקע", what: "מתיחות מתמשכת בגבול / זירת לחימה פעילה." },
+          { when: "התפתחות", what: "דיווח שוטף על אירוע נקודתי או חילופי אש." },
+          { when: "עכשיו", what: dryTitle(title) },
+        ],
+        politics: [
+          { when: "רקע", what: "מחלוקת פוליטית או מהלך פרלמנטרי פתוח." },
+          { when: "התפתחות", what: "הודעות גורמים / הצבעות / מהלכי מפלגות." },
+          { when: "עכשיו", what: dryTitle(title) },
+        ],
+        region: [
+          { when: "רקע", what: "סכסוך אזורי ומתיחות סביב נתיבי שיט / בריתות." },
+          { when: "התפתחות", what: "הצהרות מדינות והצלבת דיווחים מהמזרח התיכון." },
+          { when: "עכשיו", what: dryTitle(title) },
+        ],
+        world: [
+          { when: "רקע", what: "אירוע בינלאומי מחוץ לאזור הקרוב." },
+          { when: "התפתחות", what: "דיווחים ממעצמות / מוסדות גלובליים." },
+          { when: "עכשיו", what: dryTitle(title) },
+        ],
+        economy: [
+          { when: "רקע", what: "מדדים כלכליים ותנודות שוק רלוונטיות." },
+          { when: "התפתחות", what: "פרסום נתון או החלטת מדיניות." },
+          { when: "עכשיו", what: dryTitle(title) },
+        ],
+        domestic: [
+          { when: "רקע", what: "אירוע אזרחי / מזג אוויר / מקומי." },
+          { when: "התפתחות", what: "עדכוני רשויות או דיווחי שטח." },
+          { when: "עכשיו", what: dryTitle(title) },
+        ],
+        leisure: [
+          { when: "רקע", what: "בידור, תרבות או תיירות." },
+          { when: "התפתחות", what: "פרסום / אירוע / עדכון צרכני." },
+          { when: "עכשיו", what: dryTitle(title) },
+        ],
+        sport: [
+          { when: "רקע", what: "משחק, תחרות או סגל." },
+          { when: "התפתחות", what: "תוצאה / העברה / הודעת מועדון." },
+          { when: "עכשיו", what: dryTitle(title) },
+        ],
+      };
+      return {
+        stats: statsByTopic[topic] || statsByTopic.domestic,
+        timeline: timelineByTopic[topic] || timelineByTopic.domestic,
+        stat_note:
+          topic === "region"
+            ? "*נתון הקשר כללי לPOC — לא אומדן חי מהאירוע הנוכחי."
+            : "נתוני הקשר ל-POC; בגרסה מלאה יגיעו ממקורות מאומתים.",
+      };
+    }
+
+    function enrichCard(card, item) {
+      const id =
+        "a" +
+        Math.abs(
+          Array.from(item.title || card.title || "")
+            .reduce((h, ch) => ((h << 5) - h + ch.charCodeAt(0)) | 0, 0)
+        ).toString(16);
+      const extras = buildExtras(card.title, card.topic, card.sources || []);
+      return { ...card, id, ...extras };
+    }
+
+    let listTopicId = null;
+    let listSort = "time"; // time | unseen | seen
+
+    function topicListCards(topicId) {
+      return allCards.filter(
+        (c) => c.topic === topicId && (isSeen(c.id) || isFreshOnBoard(c))
+      );
+    }
+
+    function sortTopicCards(cards, mode) {
+      const arr = [...cards];
+      if (mode === "unseen") {
+        arr.sort((a, b) => {
+          const sa = isSeen(a.id) ? 1 : 0;
+          const sb = isSeen(b.id) ? 1 : 0;
+          if (sa !== sb) return sa - sb;
+          return cardTime(b) - cardTime(a);
+        });
+      } else if (mode === "seen") {
+        arr.sort((a, b) => {
+          const sa = isSeen(a.id) ? 0 : 1;
+          const sb = isSeen(b.id) ? 0 : 1;
+          if (sa !== sb) return sa - sb;
+          return cardTime(b) - cardTime(a);
+        });
+      } else {
+        arr.sort((a, b) => cardTime(b) - cardTime(a));
+      }
+      return arr;
+    }
+
+    function showTopicList(topicId, sortMode = listSort) {
+      listTopicId = topicId;
+      listSort = sortMode || "time";
+      const topic = TOPICS.find((t) => t.id === topicId);
+      if (!topic || !els.topicListView) {
+        showHome();
+        return;
+      }
+      const cards = sortTopicCards(topicListCards(topicId), listSort);
+      els.homeView.classList.add("hidden");
+      els.detailView.classList.remove("active");
+      els.detailView.innerHTML = "";
+      els.topicListView.classList.add("active");
+      els.topicListView.innerHTML = `
+        <button type="button" class="back-btn" id="topicBackBtn">← חזרה ללוח</button>
+        <h2 class="title t-${escapeHtml(topicId)}" style="margin:0 0 0.35rem">${escapeHtml(topic.label)}</h2>
+        <p class="status-line" style="margin-top:0">${cards.length} עדכונים · נצפים באפור</p>
+        <div class="sort-bar" id="sortBar">
+          <button type="button" data-sort="time" class="${listSort === "time" ? "active" : ""}">לפי זמן</button>
+          <button type="button" data-sort="unseen" class="${listSort === "unseen" ? "active" : ""}">לא נצפו קודם</button>
+          <button type="button" data-sort="seen" class="${listSort === "seen" ? "active" : ""}">נצפו קודם</button>
+        </div>
+        <ul class="topic-full-list">
+          ${
+            cards.length
+              ? cards
+                  .map((c) => {
+                    const names = [...new Set(c.sources.map((s) => s.name))];
+                    const seen = isSeen(c.id);
+                    return `<li class="${seen ? "is-seen" : ""}" data-id="${escapeHtml(c.id)}">
+                      <div class="tfl-meta">
+                        <span>${seen ? "נצפה" : "על הלוח"}</span>
+                        <span>·</span>
+                        <span>${STATUS_HE[c.status] || c.status}</span>
+                        <span>·</span>
+                        <span>${names.length} מקורות</span>
+                        <span>·</span>
+                        <span>${escapeHtml(relativeTime(c.pubDate))}</span>
+                      </div>
+                      <div class="tfl-title t-${escapeHtml(c.topic)}">${escapeHtml(c.title)}</div>
+                    </li>`;
+                  })
+                  .join("")
+              : `<li style="cursor:default;color:var(--muted);font-weight:700">אין עדכונים בנושא</li>`
+          }
+        </ul>
+      `;
+      document.getElementById("topicBackBtn").addEventListener("click", showHome);
+      document.getElementById("sortBar").addEventListener("click", (e) => {
+        const btn = e.target.closest("[data-sort]");
+        if (!btn) return;
+        showTopicList(topicId, btn.dataset.sort);
+      });
+      els.topicListView.querySelectorAll("li[data-id]").forEach((li) => {
+        li.addEventListener("click", () => showDetail(li.dataset.id));
+      });
+      const hash = `#topic/${topicId}`;
+      if (location.hash !== hash) history.pushState({ topic: topicId }, "", hash);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function showHome() {
+      listTopicId = null;
+      els.homeView.classList.remove("hidden");
+      els.detailView.classList.remove("active");
+      els.detailView.innerHTML = "";
+      if (els.topicListView) {
+        els.topicListView.classList.remove("active");
+        els.topicListView.innerHTML = "";
+      }
+      if (location.hash.startsWith("#article/") || location.hash.startsWith("#topic/")) {
+        history.replaceState(null, "", location.pathname + location.search);
+      }
+      applyTopicFilter();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function showDetail(id) {
+      const c = allCards.find((x) => x.id === id);
+      if (!c) {
+        showHome();
+        return;
+      }
+      const names = [...new Set(c.sources.map((s) => s.name))];
+      const media = c.image?.url
+        ? `<div class="media">
+            <img src="${escapeHtml(c.image.url)}" alt="תמונת הקשר" loading="lazy" />
+            <span class="media-credit">${escapeHtml(c.image.credit || "איור הקשר")}</span>
+          </div>`
+        : "";
+      const stats = (c.stats || [])
+        .map(
+          (s) => `<div class="stat-box"><div class="val">${escapeHtml(s.val)}</div><div class="lbl">${escapeHtml(s.lbl)}</div></div>`
+        )
+        .join("");
+      const timeline = (c.timeline || [])
+        .map(
+          (t) =>
+            `<li><div class="when">${escapeHtml(t.when)}</div><div class="what">${escapeHtml(t.what)}</div></li>`
+        )
+        .join("");
+      const sourceChips = names
+        .map((name) => `<span class="source-chip">${escapeHtml(name)}</span>`)
+        .join("");
+      const seen = isSeen(id);
+
+      els.homeView.classList.add("hidden");
+      els.detailView.classList.add("active");
+      if (els.topicListView) {
+        els.topicListView.classList.remove("active");
+        els.topicListView.innerHTML = "";
+      }
+      els.detailView.innerHTML = `
+        <button type="button" class="back-btn" id="backBtn">← חזרה למהדורה</button>
+        <div class="action-row">
+          ${
+            seen
+              ? `<button type="button" class="back-btn restore-seen" id="restoreBtn">החזר ללוח</button>`
+              : `<button type="button" class="back-btn mark-seen" id="seenBtn">צפיתי — הורד מהלוח</button>`
+          }
+        </div>
+        <article class="detail-hero">
+          ${media}
+          <div class="meta">
+            <span class="badge ${escapeHtml(c.status)}">${STATUS_HE[c.status] || c.status}</span>
+            <span class="badge sources">${escapeHtml(TOPIC_HE[c.topic] || "פנים")}</span>
+            <span class="badge sources">מבוסס על ${names.length} מקורות</span>
+            ${seen ? `<span class="badge sources">נצפה</span>` : ""}
+          </div>
+          <h2 class="title t-${escapeHtml(c.topic || "domestic")}" style="margin:0">${escapeHtml(c.title)}</h2>
+          <div class="time" style="margin:0">עודכן ${escapeHtml(relativeTime(c.pubDate))}</div>
+        </article>
+        <ul class="facts">
+          ${c.bullet_facts.map((b) => `<li>${escapeHtml(b)}</li>`).join("")}
+        </ul>
+        <div class="block">
+          <h3>תובנה</h3>
+          <p>${escapeHtml(c.insight)}</p>
+        </div>
+        <div class="block">
+          <h3>הקשר</h3>
+          <p>${escapeHtml(c.historical_context)}</p>
+        </div>
+        <div class="block">
+          <h3>נתונים רלוונטיים</h3>
+          <div class="stats-row">${stats}</div>
+          <p class="detail-note">${escapeHtml(c.stat_note || "")}</p>
+        </div>
+        <div class="block">
+          <h3>היסטוריית אירוע</h3>
+          <ol class="timeline">${timeline}</ol>
+        </div>
+        <div class="sources-row">${sourceChips}</div>
+      `;
+      document.getElementById("backBtn").addEventListener("click", showHome);
+      const seenBtn = document.getElementById("seenBtn");
+      if (seenBtn) {
+        seenBtn.addEventListener("click", () => {
+          markSeen(id);
+          if (listTopicId) {
+            showTopicList(listTopicId, listSort);
+          } else {
+            showHome();
+          }
+          applyTopicFilter();
+        });
+      }
+      const restoreBtn = document.getElementById("restoreBtn");
+      if (restoreBtn) {
+        restoreBtn.addEventListener("click", () => {
+          unmarkSeen(id);
+          showDetail(id);
+          applyTopicFilter();
+        });
+      }
+      if (location.hash !== `#article/${id}`) {
+        history.pushState({ article: id }, "", `#article/${id}`);
+      }
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function openFromHash() {
+      const topicMatch = location.hash.match(/^#topic\/(.+)$/);
+      if (topicMatch && allCards.length) {
+        showTopicList(topicMatch[1], listSort);
+        return;
+      }
+      const m = location.hash.match(/^#article\/(.+)$/);
+      if (m && allCards.length) showDetail(m[1]);
+      else if (!m && !topicMatch) {
+        els.homeView.classList.remove("hidden");
+        els.detailView.classList.remove("active");
+        if (els.topicListView) {
+          els.topicListView.classList.remove("active");
+          els.topicListView.innerHTML = "";
+        }
+      }
+    }
+
+    function pickContextImage(title) {
+      const t = title || "";
+      if (/הורמוז|איראן|מפרץ|טורקיה|סעודיה|מצרים|חות/.test(t)) {
+        return { url: "media/iran.svg", credit: "איור הקשר · לא תיעוד", kind: "iran" };
+      }
+      if (/חיזבאללה|לבנון|רחפן|צה.?ל|יירוט|גבול|כיפת/.test(t)) {
+        return { url: "media/security.svg", credit: "איור הקשר · לא תיעוד", kind: "security" };
+      }
+      if (/כנסת|ממשלה|בחיר|רע.?ם|קואליצ|פריימר|מפלג/.test(t)) {
+        return { url: "media/politics.svg", credit: "איור הקשר · לא תיעוד", kind: "politics" };
+      }
+      if (/מזג|חום|שרב|תחזית|גשם/.test(t)) {
+        return { url: "media/weather.svg", credit: "איור הקשר · לא תיעוד", kind: "weather" };
+      }
+      if (/שריפה|תאונה|משטרה|פשיעה|פתח תקווה/.test(t)) {
+        return { url: "media/civil.svg", credit: "איור הקשר · לא תיעוד", kind: "civil" };
+      }
+      if (/ארה.?ב|טראמפ|ביידן|וושינגטון|סנאט|תובע/.test(t)) {
+        return { url: "media/world.svg", credit: "איור הקשר · לא תיעוד", kind: "world" };
+      }
+      return { url: "media/default.svg", credit: "איור הקשר · לא תיעוד", kind: "default" };
+    }
+
+    function localDistill(item) {
+      const headlines = item.sources.map((s) => s.headline);
+      const names = [...new Set(item.sources.map((s) => s.name))];
+      const quoted = /"|״|„|“|”/.test(item.title) || /:/.test(item.title);
+      const multi = names.length >= 2;
+      let status = "reported";
+      if (multi && !quoted && !/עשוי|אולי|חשד|דיווח|נמסר/.test(item.title)) status = "confirmed";
+      if (/הכחיש|הכחשה|דחה את/.test(item.title)) status = "denied";
+      if (/חשד|אולי|עשוי|נבדק/.test(item.title)) status = "review";
+
+      const bullets = [];
+      const seen = new Set();
+      for (const h of [item.title, ...headlines]) {
+        const dry = dryTitle(h);
+        const key = dry.slice(0, 40);
+        if (seen.has(key)) continue;
+        seen.add(key);
+        bullets.push(dry);
+        if (bullets.length >= 3) break;
+      }
+      while (bullets.length < 3) {
+        bullets.push(names[bullets.length]
+          ? `מקור נוסף: ${names[bullets.length]}`
+          : "פרטים נוספים טרם פורסמו במקורות שנבדקו");
+      }
+
+      const insight = multi
+        ? `אותו אירוע מדווח ב-${names.length} מקורות — מוצג ככרטיס אחד במקום כותרות מתחרות.`
+        : "מבוסס על מקור יחיד בפיד — סטטוס דיווח עד להצלבה.";
+
+      let context = "הקשר: דיווח שוטף מפיד חדשות ישראל.";
+      if (/הורמוז|איראן/.test(item.title)) context = "הקשר: סוגיית מצר הורמוז ומתיחות אזורית מול איראן.";
+      if (/חיזבאללה|לבנון|רחפן/.test(item.title)) context = "הקשר: אירוע בגבול הצפון / זירת לבנון.";
+      if (/שריפה|פתח תקווה|מזג|חום/.test(item.title)) context = "הקשר: אירוע אזרחי / מזג אוויר בישראל.";
+
+      return {
+        title: dryTitle(item.title),
+        bullet_facts: bullets,
+        status,
+        insight,
+        historical_context: context,
+        sources: item.sources,
+        original_headlines: headlines,
+        pubDate: item.pubDate,
+        link: item.link,
+        image: pickContextImage(item.title),
+        topic: item.topicHint || classifyTopic(item.title, item.sources),
+        mode: "local",
+      };
+    }
+
+    function escapeHtml(s) {
+      return String(s)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;");
+    }
+
+    function renderCards(cards) {
+      els.feed.innerHTML = cards
+        .map((c, i) => {
+          const names = [...new Set(c.sources.map((s) => s.name))];
+          const sourceChips = c.sources
+            .filter(
+              (s, idx, arr) =>
+                arr.findIndex((x) => x.name === s.name) === idx
+            )
+            .slice(0, 5)
+            .map(
+              (s) =>
+                `<span class="source-chip">${escapeHtml(s.name)}</span>`
+            )
+            .join("");
+          const media = c.image?.url
+            ? `<div class="media">
+                <img src="${escapeHtml(c.image.url)}" alt="תמונת הקשר" loading="lazy" />
+                <span class="media-credit">${escapeHtml(c.image.credit || "איור הקשר")}</span>
+              </div>`
+            : "";
+          return `
+          <article class="card" style="animation-delay:${i * 40}ms">
+            <div class="card-body">
+              ${media}
+              <div class="meta">
+                <span class="badge ${escapeHtml(c.status)}">${STATUS_HE[c.status] || c.status}</span>
+                <span class="badge sources">${escapeHtml(TOPIC_HE[c.topic] || "פנים")}</span>
+                <span class="badge sources">מבוסס על ${names.length} מקורות</span>
+              </div>
+              <h2 class="title t-${escapeHtml(c.topic || "domestic")}">${escapeHtml(c.title)}</h2>
+              <ul class="facts">
+                ${c.bullet_facts.map((b) => `<li>${escapeHtml(b)}</li>`).join("")}
+              </ul>
+              <div class="block">
+                <h3>תובנה</h3>
+                <p>${escapeHtml(c.insight)}</p>
+              </div>
+              <div class="block">
+                <h3>הקשר</h3>
+                <p>${escapeHtml(c.historical_context)}</p>
+              </div>
+              <div class="sources-row">${sourceChips}</div>
+              <div class="time">עודכן ${escapeHtml(relativeTime(c.pubDate))}</div>
+            </div>
+          </article>`;
+        })
+        .join("");
+    }
+
+    async function fetchLiveItems() {
+      const res = await fetch(NEWS_JSON, { cache: "no-store" });
+      if (!res.ok) throw new Error(`API ${res.status}`);
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+      if (!data.items?.length) throw new Error("RSS ריק");
+      return { items: data.items, meta: data };
+    }
+
+    function applyNewsPayload(data, sourceLabel) {
+      const items = data.items || [];
+      if (!items.length) return;
+      lastSourceLabel = sourceLabel;
+      allCards = items.map((item) => enrichCard(localDistill(item), item));
+      // Stay on current view if possible
+      if (listTopicId && !location.hash.startsWith("#article/")) {
+        applyTopicFilter();
+        showTopicList(listTopicId, listSort);
+      } else if (location.hash.startsWith("#article/")) {
+        applyTopicFilter();
+        openFromHash();
+      } else {
+        applyTopicFilter();
+      }
+    }
+
+    async function loadFallbackHttp() {
+      els.status.textContent = "מושך חדשות…";
+      try {
+        const liveData = await fetchLiveItems();
+        applyNewsPayload(
+          liveData.meta || liveData,
+          IS_PAGES ? "GitHub Pages · news.json" : "HTTP"
+        );
+      } catch (e) {
+        const items = FALLBACK.items;
+        lastSourceLabel = `גיבוי (${FALLBACK.fetchedAt})`;
+        allCards = items.map((item) => enrichCard(localDistill(item), item));
+        applyTopicFilter();
+        console.warn("news load failed", e);
+      }
+    }
+
+    function startPagesPolling() {
+      const tick = async () => {
+        try {
+          const liveData = await fetchLiveItems();
+          applyNewsPayload(liveData.meta || liveData, "GitHub Pages · רענון");
+        } catch (e) {
+          console.warn("pages poll failed", e);
+        }
+      };
+      setInterval(tick, POLL_MS);
+    }
+
+    function connectLiveSocket() {
+      if (IS_PAGES) {
+        startPagesPolling();
+        return;
+      }
+      const proto = location.protocol === "https:" ? "wss" : "ws";
+      const url = `${proto}://${location.host}/ws`;
+      let retryMs = 2000;
+      const connect = () => {
+        const ws = new WebSocket(url);
+        ws.addEventListener("open", () => {
+          retryMs = 2000;
+        });
+        ws.addEventListener("message", (ev) => {
+          try {
+            const msg = JSON.parse(ev.data);
+            if (msg.type === "news" && msg.payload) {
+              applyNewsPayload(msg.payload, "חי · WebSocket");
+            }
+          } catch (err) {
+            console.warn("bad ws message", err);
+          }
+        });
+        ws.addEventListener("close", () => {
+          setTimeout(connect, retryMs);
+          retryMs = Math.min(retryMs * 1.5, 20000);
+        });
+        ws.addEventListener("error", () => {
+          ws.close();
+        });
+      };
+      connect();
+    }
+
+    els.cubes.addEventListener("click", (e) => {
+      const header = e.target.closest(".topic-cube header");
+      if (header) {
+        const topic = header.closest(".topic-cube")?.dataset.topic;
+        if (topic) showTopicList(topic, "time");
+        return;
+      }
+      const row = e.target.closest("li[data-id]");
+      if (!row) return;
+      showDetail(row.dataset.id);
+    });
+
+    els.lead.addEventListener("click", () => {
+      if (els.lead.dataset.id) showDetail(els.lead.dataset.id);
+    });
+
+    if (els.worldLead) {
+      els.worldLead.addEventListener("click", () => {
+        if (els.worldLead.dataset.id) showDetail(els.worldLead.dataset.id);
+      });
+    }
+
+    window.addEventListener("popstate", openFromHash);
+    window.addEventListener("hashchange", openFromHash);
+
+    loadFallbackHttp().then(() => {
+      openFromHash();
+      connectLiveSocket();
+    });
+  </script>
+</body>
+</html>

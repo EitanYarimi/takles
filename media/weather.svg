@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img">
+  <defs><linearGradient id="s" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#f2b65a"/><stop offset="1" stop-color="#f06a3d"/></linearGradient></defs>
+  <rect width="1200" height="675" fill="url(#s)"/>
+  <circle cx="900" cy="160" r="70" fill="#ffe29a"/>
+  <ellipse cx="320" cy="520" rx="420" ry="70" fill="#c45a2d" opacity=".35"/>
+  <text x="60" y="100" fill="#fff7e8" font-family="Arial,sans-serif" font-size="42" font-weight="700">הקשר מזג אוויר</text>
+  <text x="60" y="155" fill="#ffe8c8" font-family="Arial,sans-serif" font-size="28">חום · שרב · תחזית</text>
+</svg>

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img">
+  <rect width="1200" height="675" fill="#1a1f24"/>
+  <rect x="0" y="500" width="1200" height="175" fill="#2a3138"/>
+  <path d="M220 500 L280 320 L340 500 Z" fill="#4b5560"/>
+  <path d="M520 500 L610 250 L700 500 Z" fill="#5a6570"/>
+  <path d="M820 500 L870 360 L920 500 Z" fill="#454e57"/>
+  <circle cx="180" cy="140" r="6" fill="#9aa3ad"/><circle cx="260" cy="180" r="4" fill="#9aa3ad"/>
+  <circle cx="980" cy="120" r="5" fill="#9aa3ad"/><circle cx="1040" cy="200" r="3" fill="#9aa3ad"/>
+  <text x="60" y="100" fill="#e8edf1" font-family="Arial,sans-serif" font-size="42" font-weight="700">הקשר ביטחוני</text>
+  <text x="60" y="155" fill="#9aa3ad" font-family="Arial,sans-serif" font-size="28">גבול · התרעה · זירה</text>
+</svg>

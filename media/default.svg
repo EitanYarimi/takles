@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img">
+  <rect width="1200" height="675" fill="#efeee9"/>
+  <rect x="80" y="160" width="460" height="28" fill="#1a1a1a"/>
+  <rect x="80" y="220" width="380" height="16" fill="#6a6a6a"/>
+  <rect x="80" y="260" width="420" height="16" fill="#6a6a6a"/>
+  <rect x="80" y="300" width="340" height="16" fill="#6a6a6a"/>
+  <rect x="620" y="160" width="500" height="320" fill="#d9d7cf"/>
+  <rect x="660" y="210" width="420" height="18" fill="#8a887f"/>
+  <rect x="660" y="250" width="360" height="14" fill="#a4a199"/>
+  <rect x="660" y="285" width="390" height="14" fill="#a4a199"/>
+  <text x="60" y="100" fill="#1a1a1a" font-family="Arial,sans-serif" font-size="42" font-weight="700">תמונת הקשר</text>
+  <text x="60" y="145" fill="#777" font-family="Arial,sans-serif" font-size="26">איור כללי · לא תיעוד מהאירוע</text>
+</svg>

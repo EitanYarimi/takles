@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img">
+  <rect width="1200" height="675" fill="#2b2b2b"/>
+  <rect x="0" y="430" width="1200" height="245" fill="#3a3a3a"/>
+  <path d="M180 430 C220 300 280 280 320 430" fill="#ff7a18"/>
+  <path d="M300 430 C350 250 430 240 470 430" fill="#ff9a3c"/>
+  <path d="M460 430 C500 310 560 300 600 430" fill="#ffb14d"/>
+  <path d="M700 200 C740 140 820 150 840 220 C900 210 940 260 900 310 C930 360 870 400 820 370 C780 420 700 390 700 200 Z" fill="#9aa0a6" opacity=".55"/>
+  <text x="60" y="100" fill="#f2f2f2" font-family="Arial,sans-serif" font-size="42" font-weight="700">הקשר אזרחי</text>
+  <text x="60" y="155" fill="#b8b8b8" font-family="Arial,sans-serif" font-size="28">שריפה · תאונה · אירוע מקומי</text>
+</svg>
