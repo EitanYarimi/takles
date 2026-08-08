@@ -14,7 +14,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 CACHE_PATH = ROOT / "distill_cache.json"
-DISTILL_VERSION = "v4-why-matters"
+DISTILL_VERSION = "v5-why-strong"
 SSL_CTX = ssl._create_unverified_context()
 UA = "Mozilla/5.0 ClearNewsPOC/0.5"
 GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.0-flash")
@@ -130,8 +130,8 @@ def _build_summary(title: str, headlines: list[str], names: list[str]) -> str:
     return " ".join(parts)
 
 
-def _substantive_fallback(title: str, headlines: list[str], names: list[str]) -> tuple[str, str]:
-    """Build useful background/outlook from headlines — never product meta-text."""
+def _substantive_fallback(title: str, headlines: list[str], names: list[str]) -> tuple[str, str, str]:
+    """Build useful background/outlook/why — never product meta-text."""
     extras = _unique_lines([h for h in headlines if dry_title(h) != title], limit=3)
     who = f" לפי {', '.join(names[:3])}" if names else ""
     if extras:
@@ -142,7 +142,10 @@ def _substantive_fallback(title: str, headlines: list[str], names: list[str]) ->
         )
         outlook = (
             f"השלב הבא הוא האם הפרטים האלה ({extras[0]}) יתחזקו בהודעה רשמית או יתוקנו. "
-            "שינוי בשמות בעלי תפקידים, מועדים או היקף הסמכות הוא מה שכדאי לבדוק בעדכון הבא."
+            "שינוי בשמות בעלי תפקידים, מועדים או היקף ההחלטה הוא מה שכדאי לבדוק בעדכון הבא."
+        )
+        why_matters = (
+            f"כי אם {extras[0].rstrip('.')} מתממש — יש לזה השלכה מעשית על מי שמעורב באירוע ועל המשך המעקב."
         )
     else:
         background = (
@@ -151,9 +154,12 @@ def _substantive_fallback(title: str, headlines: list[str], names: list[str]) ->
         )
         outlook = (
             "כדאי לחכות לאישור רשמי או לפירוט על לוח זמנים, סמכויות והשלכות מעשיות. "
-            "עדכון עם שם מלא של הגורם, תאריך כניסה לתפקיד או תגובת צדדים רלוונטיים ישנה את התמונה."
+            "עדכון עם גורם מאשר, תאריך או תגובת צדדים רלוונטיים ישנה את התמונה."
         )
-    return background, outlook
+        why_matters = (
+            "כי הדיווח מתאר מהלך שעדיין לא סגור — ואם יאושר או יידחה, המציאות בשטח תשתנה בהתאם."
+        )
+    return background, outlook, why_matters
 
 
 def heuristic_distill(item: dict) -> dict:
@@ -197,16 +203,33 @@ def heuristic_distill(item: dict) -> dict:
             "מה שחשוב לעקוב אחריו: האם יש הסכמה מעשית על פתיחת המעבר, ומה אומרות איראן, ארה״ב ומדינות המפרץ בפועל. "
             "שינוי חד בהצהרות או בתנועת אוניות עשוי לעדכן את התמונה במהירות."
         )
-    elif re.search(r"חיזבאללה|לבנון|רחפן|יירוט|פיקוד העורף|חטופ", blob):
-        why_matters = "זו כותרת כי היא נוגעת ישירות לביטחון תושבים ולמצב בגבול — לא לאירוע רחוק בלבד."
-        background = (
-            "זירת הצפון מול לבנון נשארת רגישה: דיווחים על רחפנים, יירוטים או חילופי אש משפיעים על תושבים וכוחות. "
-            "גם כשהאירוע נקודתי, הוא מגיע על רקע מתיחות מתמשכת."
-        )
-        outlook = (
-            "לעקוב אחרי אישור רשמי של צה״ל/פיקוד העורף, היקף הנזק או היירוט, והאם מגיע אירוע המשך. "
-            "שינוי בקצב התקריות הוא הסימן הכי שימושי."
-        )
+    elif re.search(
+        r"חיזבאללה|לבנון|רחפן|יירוט|פיקוד העורף|חטופ|עזה|חמאס|רצועת|נסיגה|צה[\"׳']?ל|מערכת הביטחון|כוחות|לחימ",
+        blob,
+    ):
+        if re.search(r"עזה|חמאס|רצועת|נסיגה", blob):
+            why_matters = (
+                "כי דיון על נסיגה או שינוי פריסה בעזה משפיע ישירות על הלחימה, על החטופים ועל הלחץ המדיני סביב הרצועה."
+            )
+            background = (
+                "ברצועת עזה כל שינוי בפריסת כוחות — גם אם עדיין בבדיקה — נוגע לשאלות של שליטה בשטח, "
+                "סיכון לכוחות, רציפות לחימה, ומגעים מדיניים. "
+                "כשמדווחים על בדיקת נסיגה ממוקדים, זה לא ספין בלבד: זה סימן לדיון מבצעי פתוח בתוך המערכת."
+            )
+            outlook = (
+                "השלב הבא: האם יש החלטה מאושרת, מאילו מוקדים, ובאיזה לוח זמנים — או שהבדיקה נגנזת. "
+                "תגובות פוליטיות ודיווחי שטח יבהירו אם מדובר במהלך ממשי או בבחינה בלבד."
+            )
+        else:
+            why_matters = "כי זה נוגע ישירות לביטחון תושבים ולמצב בגבול — לא לאירוע רחוק בלבד."
+            background = (
+                "זירת הצפון מול לבנון נשארת רגישה: דיווחים על רחפנים, יירוטים או חילופי אש משפיעים על תושבים וכוחות. "
+                "גם כשהאירוע נקודתי, הוא מגיע על רקע מתיחות מתמשכת."
+            )
+            outlook = (
+                "לעקוב אחרי אישור רשמי של צה״ל/פיקוד העורף, היקף הנזק או היירוט, והאם מגיע אירוע המשך. "
+                "שינוי בקצב התקריות הוא הסימן הכי שימושי."
+            )
     elif re.search(
         r"תובע הכללי|בא.?כוח הכללי|עוה\"?ד|עורך דין|סנאט|הבית הלבן|טראמפ|ביידן|בלנש|בלאנש|Blanche|ארה[\"׳']?ב|וושינגטון|פנטגון|נאט.?ו",
         blob,
@@ -261,11 +284,7 @@ def heuristic_distill(item: dict) -> dict:
             "נתון מאושר או דוח מעודכן משנה את התמונה יותר מכותרת פרשנית."
         )
     else:
-        background, outlook = _substantive_fallback(title, headlines, names)
-        why_matters = (
-            f"זה על הלוח כי הדיווח על «{title.rstrip('.')}» מסמן התפתחות שחוזרת במקורות "
-            "ועשויה להשפיע על המעקב הציבורי ביממה הקרובה."
-        )
+        background, outlook, why_matters = _substantive_fallback(title, headlines, names)
 
     insight = (
         f"יש חפיפה בין {len(names)} מקורות על אותו אירוע; מוצג המשותף ולא הספין."
@@ -370,7 +389,9 @@ def gemini_distill(item: dict) -> dict | None:
     if not summary:
         summary = background
     if not why_matters:
-        why_matters = "זה על הלוח כי מדובר בהתפתחות עם השלכה ציבורית שחוזרת במקורות עכשיו."
+        why_matters = (
+            "כי מדובר במהלך שעדיין פתוח — אישור או דחייה ישנו את המציאות בשטח או במדיניות."
+        )
 
     return {
         "title": title,
