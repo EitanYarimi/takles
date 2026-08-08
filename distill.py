@@ -318,11 +318,7 @@ def heuristic_distill(item: dict) -> dict:
     else:
         background, outlook, why_matters = _substantive_fallback(title, headlines, names)
 
-    insight = (
-        f"יש חפיפה בין {len(names)} מקורות על אותו אירוע; מוצג המשותף ולא הספין."
-        if multi
-        else "מקור מוגבל בפיד: הסיכום זהיר יותר עד שתהיה הצלבה."
-    )
+    insight = ""
 
     return {
         "title": title,

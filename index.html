@@ -1656,10 +1656,6 @@
           <p>${escapeHtml(c.outlook || "לעקוב אחרי עדכונים רשמיים.")}</p>
         </div>
         <div class="block">
-          <h3>תובנה</h3>
-          <p>${escapeHtml(c.insight)}</p>
-        </div>
-        <div class="block">
           <h3>נתונים רלוונטיים</h3>
           <div class="stats-row">${stats}</div>
           <p class="detail-note">${escapeHtml(c.stat_note || "")}</p>
@@ -1882,9 +1878,15 @@
                 <span class="badge sources">מבוסס על ${names.length} מקורות</span>
               </div>
               <h2 class="title t-${escapeHtml(c.topic || "domestic")}">${escapeHtml(c.title)}</h2>
-              <ul class="facts">
-                ${c.bullet_facts.map((b) => `<li>${escapeHtml(b)}</li>`).join("")}
-              </ul>
+              <div class="block">
+                <h3>מה בתכל׳ס</h3>
+                <p>${escapeHtml(c.summary || c.background || c.historical_context || "")}</p>
+                ${
+                  c.why_matters
+                    ? `<p class="why-matters"><strong>למה זה חשוב:</strong> ${escapeHtml(c.why_matters)}</p>`
+                    : ""
+                }
+              </div>
               <div class="block">
                 <h3>רקע</h3>
                 <p>${escapeHtml(c.background || c.historical_context || "")}</p>
@@ -1892,10 +1894,6 @@
               <div class="block">
                 <h3>מבט קדימה</h3>
                 <p>${escapeHtml(c.outlook || "")}</p>
-              </div>
-              <div class="block">
-                <h3>תובנה</h3>
-                <p>${escapeHtml(c.insight)}</p>
               </div>
               <div class="sources-row">${sourceChips}</div>
               <div class="time">עודכן ${escapeHtml(relativeTime(c.pubDate))}</div>
