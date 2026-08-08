@@ -358,6 +358,6 @@ if __name__ == "__main__":
     refresh_news(force_broadcast=False)
     threading.Thread(target=poll_loop, daemon=True).start()
     server = ThreadingHTTPServer(("127.0.0.1", PORT), Handler)
-    print(f"תכלס POC → http://127.0.0.1:{PORT}/")
+    print(f"תכל׳ס POC → http://127.0.0.1:{PORT}/")
     print(f"WebSocket → ws://127.0.0.1:{PORT}/ws (push every {POLL_SECONDS}s)")
     server.serve_forever()
