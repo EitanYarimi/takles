@@ -726,6 +726,17 @@
       color: var(--ink-soft);
       font-size: 0.98rem;
     }
+    .block p.why-matters {
+      margin-top: 0.75rem;
+      padding-top: 0.7rem;
+      border-top: 1px dashed var(--rule-soft);
+      font-weight: 500;
+      line-height: 1.5;
+    }
+    .block p.why-matters strong {
+      color: var(--ink);
+      font-weight: 800;
+    }
 
     .time {
       margin-top: 0.8rem;
@@ -771,9 +782,9 @@
     </div>
     <div class="about-view" id="aboutView">
       <button type="button" class="back-btn" id="aboutBackBtn">← חזרה ללוח</button>
-      <h2>מה תכלס עושה?</h2>
+      <h2>מה תכל׳ס עושה?</h2>
       <p>
-        תכלס הוא לוח חדשות יבש: בלי קליקבייט, בלי דרמה מנופחת — רק מה שקרה בפועל,
+        תכל׳ס הוא לוח חדשות יבש: בלי קליקבייט, בלי דרמה מנופחת — רק מה שקרה בפועל,
         בקצרה, כדי שתוכלו להבין מה חשוב עכשיו.
       </p>
       <ul>
@@ -782,7 +793,7 @@
         <li><strong>ריבועי נושאים</strong> — ביטחון, פוליטיקה, אזור, בעולם, כלכלה, פנים, תיירות ונופש, ספורט.</li>
         <li><strong>סיכום מראש</strong> — לכל כתבה: עובדות, רקע ומבט קדימה — בלי שהמשתמש יריץ דבר.</li>
         <li><strong>צפיתי</strong> — מוריד כתבה מהלוח הפעיל בלי למחוק אותה לגמרי.</li>
-        <li><strong>בלי לינקים החוצה</strong> — נשארים בתוך תכלס; העובדות מרוכזות כאן.</li>
+        <li><strong>בלי לינקים החוצה</strong> — נשארים בתוך תכל׳ס; העובדות מרוכזות כאן.</li>
       </ul>
       <p>POC · מקורות מ־Google News ישראל, מסוננים ומסווגים אוטומטית.</p>
     </div>
@@ -1633,6 +1644,11 @@
         <div class="block">
           <h3>מה בתכל׳ס</h3>
           <p>${escapeHtml(c.summary || c.background || c.historical_context || "")}</p>
+          ${
+            c.why_matters
+              ? `<p class="why-matters"><strong>למה זה חשוב:</strong> ${escapeHtml(c.why_matters)}</p>`
+              : ""
+          }
         </div>
         <div class="block">
           <h3>רקע</h3>
@@ -1745,6 +1761,7 @@
           background: pre.background || pre.historical_context || "",
           outlook: pre.outlook || "",
           summary: pre.summary || item.summary || pre.background || "",
+          why_matters: pre.why_matters || item.why_matters || "",
           sources: item.sources,
           original_headlines: headlines,
           pubDate: item.pubDate,
@@ -1766,6 +1783,7 @@
           background: item.background,
           outlook: item.outlook,
           summary: item.summary || item.background,
+          why_matters: item.why_matters || "",
           sources: item.sources,
           original_headlines: headlines,
           pubDate: item.pubDate,
@@ -1817,6 +1835,7 @@
         background: context,
         outlook: "כדאי לחכות לפירוט על לוח זמנים, סמכויות או תגובות רשמיות שיבהירו את ההשלכות.",
         summary: `לפי הדיווחים, ${dryTitle(item.title)}.`,
+        why_matters: "זה על הלוח כי מדובר בהתפתחות שמופיעה עכשיו במקורות ויש לה השלכה ציבורית.",
         sources: item.sources,
         original_headlines: headlines,
         pubDate: item.pubDate,
