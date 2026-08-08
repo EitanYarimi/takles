@@ -98,6 +98,46 @@
       line-height: 1.45;
     }
 
+    .about-link {
+      display: inline-block;
+      margin-top: 0.75rem;
+      color: var(--ink-soft);
+      font-size: 0.88rem;
+      font-weight: 700;
+      text-decoration: underline;
+      text-underline-offset: 0.18em;
+    }
+    .about-link:hover { color: var(--ink); }
+
+    .about-view {
+      display: none;
+      margin-top: 0.5rem;
+    }
+    .about-view.active { display: block; }
+    .about-view h2 {
+      margin: 0 0 0.75rem;
+      font-size: 1.55rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--headline);
+    }
+    .about-view p {
+      margin: 0 0 0.85rem;
+      color: var(--ink-soft);
+      font-size: 1.02rem;
+      line-height: 1.55;
+      max-width: 38rem;
+    }
+    .about-view ul {
+      margin: 0 0 1.1rem;
+      padding: 0 1.2rem 0 0;
+      color: var(--ink-soft);
+      font-size: 0.98rem;
+      line-height: 1.5;
+      max-width: 38rem;
+    }
+    .about-view li { margin-bottom: 0.45rem; }
+
     .settings {
       margin-top: 0.9rem;
       display: grid;
@@ -720,6 +760,7 @@
       <h1 class="brand">תכלס</h1>
       <p class="motto">״מה קרה בפועל״</p>
       <p class="tagline">מה חשוב עכשיו — עובדות קצרות, בלי דרמה.</p>
+      <a class="about-link" href="#about" id="aboutLink">מה האתר עושה?</a>
     </header>
 
     <div class="home-view" id="homeView">
@@ -728,12 +769,29 @@
       <p class="status-line" id="status">טוען…</p>
       <div class="cubes" id="cubes"></div>
     </div>
+    <div class="about-view" id="aboutView">
+      <button type="button" class="back-btn" id="aboutBackBtn">← חזרה ללוח</button>
+      <h2>מה תכלס עושה?</h2>
+      <p>
+        תכלס הוא לוח חדשות יבש: בלי קליקבייט, בלי דרמה מנופחת — רק מה שקרה בפועל,
+        בקצרה, כדי שתוכלו להבין מה חשוב עכשיו.
+      </p>
+      <ul>
+        <li><strong>כותרת ראשית</strong> — הסיפור הכי רלוונטי לישראל כרגע.</li>
+        <li><strong>כותרת בעולם</strong> — אירוע בינלאומי בולט, מופרד מהלוח הישראלי.</li>
+        <li><strong>ריבועי נושאים</strong> — ביטחון, פוליטיקה, אזור, בעולם, כלכלה, פנים, תיירות ונופש, ספורט.</li>
+        <li><strong>צפיתי</strong> — מוריד כתבה מהלוח הפעיל בלי למחוק אותה לגמרי.</li>
+        <li><strong>בלי לינקים החוצה</strong> — נשארים בתוך תכלס; העובדות מרוכזות כאן.</li>
+      </ul>
+      <p>POC · מקורות מ־Google News ישראל, מסוננים ומסווגים אוטומטית.</p>
+    </div>
     <div class="detail-view" id="detailView"></div>
     <div class="topic-list-view" id="topicListView"></div>
     <div class="grid" id="feed" hidden></div>
 
     <footer>
-      מקור נתונים: Google News Israel · POC · כותרת ראשית לפי עדכניות+רלוונטיות
+      מקור נתונים: Google News Israel · POC ·
+      <a class="about-link" href="#about" style="margin:0;font-size:inherit">מה האתר עושה?</a>
     </footer>
   </div>
 
@@ -1089,12 +1147,13 @@
       ]
     };
 
-      const els = {
+    const els = {
       feed: document.getElementById("feed"),
       cubes: document.getElementById("cubes"),
       lead: document.getElementById("lead"),
       worldLead: document.getElementById("worldLead"),
       homeView: document.getElementById("homeView"),
+      aboutView: document.getElementById("aboutView"),
       detailView: document.getElementById("detailView"),
       topicListView: document.getElementById("topicListView"),
       status: document.getElementById("status"),
@@ -1410,6 +1469,7 @@
       }
       const cards = sortTopicCards(topicListCards(topicId), listSort);
       els.homeView.classList.add("hidden");
+      hideAbout();
       els.detailView.classList.remove("active");
       els.detailView.innerHTML = "";
       els.topicListView.classList.add("active");
@@ -1461,8 +1521,27 @@
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
+    function hideAbout() {
+      if (els.aboutView) els.aboutView.classList.remove("active");
+    }
+
+    function showAbout() {
+      listTopicId = null;
+      els.homeView.classList.add("hidden");
+      els.detailView.classList.remove("active");
+      els.detailView.innerHTML = "";
+      if (els.topicListView) {
+        els.topicListView.classList.remove("active");
+        els.topicListView.innerHTML = "";
+      }
+      if (els.aboutView) els.aboutView.classList.add("active");
+      if (location.hash !== "#about") history.pushState({ about: true }, "", "#about");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
     function showHome() {
       listTopicId = null;
+      hideAbout();
       els.homeView.classList.remove("hidden");
       els.detailView.classList.remove("active");
       els.detailView.innerHTML = "";
@@ -1470,7 +1549,11 @@
         els.topicListView.classList.remove("active");
         els.topicListView.innerHTML = "";
       }
-      if (location.hash.startsWith("#article/") || location.hash.startsWith("#topic/")) {
+      if (
+        location.hash.startsWith("#article/") ||
+        location.hash.startsWith("#topic/") ||
+        location.hash === "#about"
+      ) {
         history.replaceState(null, "", location.pathname + location.search);
       }
       applyTopicFilter();
@@ -1507,6 +1590,7 @@
       const seen = isSeen(id);
 
       els.homeView.classList.add("hidden");
+      hideAbout();
       els.detailView.classList.add("active");
       if (els.topicListView) {
         els.topicListView.classList.remove("active");
@@ -1582,6 +1666,11 @@
     }
 
     function openFromHash() {
+      if (location.hash === "#about") {
+        showAbout();
+        return;
+      }
+      hideAbout();
       const topicMatch = location.hash.match(/^#topic\/(.+)$/);
       if (topicMatch && allCards.length) {
         showTopicList(topicMatch[1], listSort);
@@ -1841,6 +1930,8 @@
         if (els.worldLead.dataset.id) showDetail(els.worldLead.dataset.id);
       });
     }
+
+    document.getElementById("aboutBackBtn")?.addEventListener("click", showHome);
 
     window.addEventListener("popstate", openFromHash);
     window.addEventListener("hashchange", openFromHash);
