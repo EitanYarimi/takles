@@ -1026,7 +1026,7 @@
       renderTopicCubes(active);
       const seenN = seenCards().length;
       const expiredN = allCards.filter((c) => !isSeen(c.id) && !isFreshOnBoard(c)).length;
-      els.status.textContent = `${active.length} על הלוח · ${expiredN} פגו תוקף · מקור: ${lastSourceLabel}`;
+      els.status.textContent = `${active.length} על הלוח · ${expiredN} פגו תוקף`;
     }
 
     function classifyTopic(title, sources = []) {

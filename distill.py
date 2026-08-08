@@ -14,7 +14,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 CACHE_PATH = ROOT / "distill_cache.json"
-DISTILL_VERSION = "v3-substantive"
+DISTILL_VERSION = "v4-why-matters"
 SSL_CTX = ssl._create_unverified_context()
 UA = "Mozilla/5.0 ClearNewsPOC/0.5"
 GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.0-flash")
@@ -40,15 +40,16 @@ PROMPT = """אתה עורך חדשות יבש לפורטל "תכל׳ס" (ישר�
 קלט: כותרת מקבץ + כותרות מקורות.
 החזר JSON בלבד (בלי markdown) עם השדות:
 - title: כותרת יבשה בעברית, בלי דרמה/קליקבייט
-- summary: פסקה של 2–4 משפטים שמסבירה לקורא מה קרה בפועל ולמה זה משנה — לא חזרה על הכותרת במילה אחת, אלא הסבר קריא
-- bullet_facts: מערך 3–5 עובדות ברורות (מי/מה/איפה/מתי/מספרים אם יש) — כל פריט משפט מלא, לא שבריר כותרת
-- background: 2–3 משפטים של ידע מקדים (רקע שהקורא צריך כדי להבין את הכותרת)
-- outlook: 2 משפטים זהירים על מה לעקוב / השלכות אפשריות (בלי סנסציה)
+- summary: פסקה של 2–4 משפטים שמסבירה מה קרה בפועל — הסבר קריא, לא חזרה על הכותרת
+- why_matters: משפט אחד ברור לצופה: למה זה בכלל כותרת / למה שים לב עכשיו (השלכה פרקטית או ציבורית, בלי דרמה)
+- bullet_facts: מערך 3–5 עובדות ברורות (מי/מה/איפה/מתי/מספרים אם יש) — משפט מלא לכל פריט
+- background: 2–3 משפטים של ידע מקדים
+- outlook: 2 משפטים זהירים על מה לעקוב
 - insight: תובנה קצרה על מה שמוסכם או חלוק בין המקורות
 - status: אחד מ־confirmed | reported | denied | review
 
 כללים: עברית, יבש, בלי פעלים דרמטיים, בלי לינקים, אל תמציא מספרים שלא מופיעים בקלט.
-אל תכתוב משפטים של 4–6 מילים בלבד — תן הסבר מספיק כדי שאפשר להבין בלי לקרוא את המקור.
+why_matters חייב להיות משפט עצמאי שמסביר חשיבות — לא "כי זה חדשות" ולא מטא על האתר.
 """
 
 
@@ -187,6 +188,7 @@ def heuristic_distill(item: dict) -> dict:
 
     blob = " ".join([title, *headlines])
     if re.search(r"הורמוז|איראן", blob):
+        why_matters = "זה משפיע על שיט ואנרגיה גלובליים — ולכן גם על מחירים ויציבות שנוגעים לישראל ולשווקים."
         background = (
             "מצר הורמוז הוא נתיב שיט מרכזי לנפט ולסחר במפרץ. "
             "מתיחות בין איראן לארה״ב ולמדינות האזור סביב פתיחה/סגירה של המעבר משפיעה על מחירים, ביטוח אוניות ויציבות אזורית."
@@ -196,6 +198,7 @@ def heuristic_distill(item: dict) -> dict:
             "שינוי חד בהצהרות או בתנועת אוניות עשוי לעדכן את התמונה במהירות."
         )
     elif re.search(r"חיזבאללה|לבנון|רחפן|יירוט|פיקוד העורף|חטופ", blob):
+        why_matters = "זו כותרת כי היא נוגעת ישירות לביטחון תושבים ולמצב בגבול — לא לאירוע רחוק בלבד."
         background = (
             "זירת הצפון מול לבנון נשארת רגישה: דיווחים על רחפנים, יירוטים או חילופי אש משפיעים על תושבים וכוחות. "
             "גם כשהאירוע נקודתי, הוא מגיע על רקע מתיחות מתמשכת."
@@ -208,6 +211,7 @@ def heuristic_distill(item: dict) -> dict:
         r"תובע הכללי|בא.?כוח הכללי|עוה\"?ד|עורך דין|סנאט|הבית הלבן|טראמפ|ביידן|בלנש|בלאנש|Blanche|ארה[\"׳']?ב|וושינגטון|פנטגון|נאט.?ו",
         blob,
     ):
+        why_matters = "מינוי בכיר בוושינגטון קובע מדיניות אכיפה ותיקים רגישים — ולכן משפיע גם על זירה בינלאומית שישראל עוקבת אחריה."
         background = (
             "במערכת האמריקאית, מינוי לתפקיד בכיר כמו תובע כללי עובר בדרך כלל דרך נשיא וסנאט, "
             "ומשפיע על מדיניות אכיפה, תיקים רגישים ויחסי חוץ. "
@@ -218,6 +222,7 @@ def heuristic_distill(item: dict) -> dict:
             "תגובות במפלגות ובמערכת המשפט האמריקאית יבהירו כמה שנוי במחלוקת המינוי בפועל."
         )
     elif re.search(r"כנסת|ממשלת ישראל|קואליצ|פריימר|רע.?ם|מפלג|נתניהו|לפיד|גנץ", blob):
+        why_matters = "זה על סדר היום כי מהלכים פוליטיים כאן משנים יציבות שלטון והחלטות שנוגעות לכולם."
         background = (
             "בפוליטיקה הישראלית, מהלכי מפלגות, פריימריז והחלטות בכנסת משפיעים על יציבות הקואליציה ועל סדר היום. "
             "כותרת כזו בדרך כלל מסמנת מאבק כוח, מועמדות או הסדר פוליטי."
@@ -227,6 +232,7 @@ def heuristic_distill(item: dict) -> dict:
             "כדאי לבדוק אם יש הסכמה בין מקורות על העובדות לפני מסקנה על התוצאה הפוליטית."
         )
     elif re.search(r"תייר|נופש|מלונ|חופשה|משרד התיירות", blob):
+        why_matters = "זה רלוונטי לכיס ולתוכניות חופשה — מחירים, זמינות ומדיניות שמשפיעים על מטיילים עכשיו."
         background = (
             "ענף התיירות והנופש בישראל רגיש לביטחון, מחירים ועונות חגים. "
             "דיווחים על מלונות, מבצעים או מדיניות משפיעים ישירות על מטיילים ועל עסקים מקומיים."
@@ -236,6 +242,7 @@ def heuristic_distill(item: dict) -> dict:
             "שינוי במדיניות ביטולים או הטבות הוא עדכון פרקטי."
         )
     elif re.search(r"ספורט|כדורגל|מכבי|הפועל|נבחרת|פרמייר|העברה|שחקנ", blob):
+        why_matters = "זו כותרת לספורט כי יש כאן שינוי בסגל או בתוצאה שעשוי להשפיע על המשך העונה."
         background = (
             "בספורט יש פער תכוף בין שמועה לאישור רשמי של מועדון או ליגה. "
             "הערך לקורא הוא להפריד בין מה שסוכם לבין מה שעדיין בדיווח בלבד."
@@ -244,6 +251,7 @@ def heuristic_distill(item: dict) -> dict:
             "לחכות לאישור המועדון/הליגה או לתוצאה הרשמית, ואז לראות השפעה על הסגל ועל לוח המשחקים."
         )
     elif re.search(r"בורסה|ריבית|מני|דולר|ברקשייר|השקע|בנק ישראל", blob):
+        why_matters = "זה על הלוח כי מהלך כלכלי כזה יכול להזיז מחירים, חיסכון או תחושת שוק בטווח קצר."
         background = (
             "דיווחים על מניות, ריבית או מהלכי השקעה משפיעים על משקיעים ועל תחושת השוק. "
             "חשוב להבחין בין עובדה שפורסמה לבין פרשנות או המלצה."
@@ -254,6 +262,10 @@ def heuristic_distill(item: dict) -> dict:
         )
     else:
         background, outlook = _substantive_fallback(title, headlines, names)
+        why_matters = (
+            f"זה על הלוח כי הדיווח על «{title.rstrip('.')}» מסמן התפתחות שחוזרת במקורות "
+            "ועשויה להשפיע על המעקב הציבורי ביממה הקרובה."
+        )
 
     insight = (
         f"יש חפיפה בין {len(names)} מקורות על אותו אירוע; מוצג המשותף ולא הספין."
@@ -264,6 +276,7 @@ def heuristic_distill(item: dict) -> dict:
     return {
         "title": title,
         "summary": summary,
+        "why_matters": why_matters,
         "bullet_facts": bullets[:5],
         "background": background,
         "outlook": outlook,
@@ -350,16 +363,19 @@ def gemini_distill(item: dict) -> dict | None:
     outlook = str(data.get("outlook") or "").strip()
     insight = str(data.get("insight") or "").strip()
     summary = str(data.get("summary") or "").strip()
+    why_matters = str(data.get("why_matters") or data.get("whyItMatters") or "").strip()
     title = dry_title(str(data.get("title") or item.get("title") or ""))
     if not background or not outlook:
         return None
     if not summary:
-        # soft fallback from background if model omitted summary
         summary = background
+    if not why_matters:
+        why_matters = "זה על הלוח כי מדובר בהתפתחות עם השלכה ציבורית שחוזרת במקורות עכשיו."
 
     return {
         "title": title,
         "summary": summary,
+        "why_matters": why_matters,
         "bullet_facts": bullets,
         "background": background,
         "outlook": outlook,
@@ -380,6 +396,7 @@ def distill_item(item: dict, cache: dict | None = None) -> dict:
         and hit.get("background")
         and hit.get("outlook")
         and hit.get("summary")
+        and hit.get("why_matters")
     ):
         out = {k: v for k, v in hit.items() if not k.startswith("_")}
         return out
@@ -399,6 +416,7 @@ def enrich_items(items: list[dict]) -> list[dict]:
         enriched["distill"] = d
         enriched["dryTitle"] = d.get("title")
         enriched["summary"] = d.get("summary")
+        enriched["why_matters"] = d.get("why_matters")
         enriched["bullet_facts"] = d.get("bullet_facts")
         enriched["background"] = d.get("background")
         enriched["outlook"] = d.get("outlook")
