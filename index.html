@@ -244,19 +244,6 @@
       letter-spacing: 0.02em;
     }
 
-    .board-tools {
-      display: grid;
-      gap: 0.65rem;
-      margin: 0 0 1rem;
-      padding: 0 0.35rem;
-    }
-    .board-tools-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.45rem;
-      align-items: center;
-    }
-    .board-chip,
     .audio-brief-btn {
       border: 1px solid var(--rule-soft);
       background: var(--panel);
@@ -268,26 +255,20 @@
       border-radius: 999px;
       cursor: pointer;
       transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+      margin-top: 0.55rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
     }
-    .board-chip:hover,
     .audio-brief-btn:hover {
       border-color: rgba(11, 110, 92, 0.35);
       color: var(--accent);
       background: rgba(11, 110, 92, 0.06);
     }
-    .board-chip.active,
     .audio-brief-btn.is-playing {
       background: var(--ink);
       border-color: var(--ink);
       color: #fff;
-    }
-    .audio-brief-btn {
-      margin-top: 0.55rem;
-    }
-    .lead-copy .audio-brief-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
     }
 
     .insights {
@@ -629,10 +610,10 @@
     .lead.visible { display: block; }
     .lead:hover { transform: translateY(-1px); }
     .lead:hover .lead-title { color: var(--accent); }
-    .lead .viz,
-    .lead .title-cover,
-    .lead .lead-meta,
-    .lead .audio-brief-btn { display: none; }
+    .lead .viz {
+      border-radius: 14px;
+      margin-bottom: 0.35rem;
+    }
 
     .lead-copy {
       padding: 0.35rem 0.15rem 0.15rem;
@@ -1142,9 +1123,6 @@
         <article class="world-lead" id="worldLead" hidden></article>
       </div>
       <p class="status-line" id="status">טוען…</p>
-      <div class="board-tools" id="boardTools">
-        <div class="board-tools-row" id="tagFilters" aria-label="סינון מהיר"></div>
-      </div>
       <p class="board-label">לפי נושא</p>
       <div class="cubes" id="cubes"></div>
       <section class="insights" id="insightsSection" aria-label="תובנות">
@@ -1170,7 +1148,6 @@
         <li><strong>תובנות</strong> — נתונים מאומתים (תפקוד הממשלה, מזג אוויר…) עם ניתוח קצר ומקורות, בלי כותרות.</li>
         <li><strong>צפיתי</strong> — מוריד כתבה מהלוח הפעיל; נשמר ב־localStorage גם אחרי רענון.</li>
         <li><strong>תקציר קולי</strong> — השמעת הכותרת הראשית + סיכום קצר (TTS).</li>
-        <li><strong>סינון מהיר</strong> — תגיות כמו הייטק, נדל״ן, תחבורה.</li>
         <li><strong>מצב כהה</strong> — כפתור בראש העמוד; נשמר בדפדפן.</li>
         <li><strong>בלי לינקים החוצה</strong> — נשארים בתוך תכל׳ס; העובדות מרוכזות כאן.</li>
       </ul>
@@ -1500,13 +1477,19 @@
       els.lead.classList.add("visible");
       els.lead.dataset.id = lead.id;
       els.lead.innerHTML = `
+        ${storyVisual(lead)}
         <div class="lead-copy">
           <p class="lead-kicker">ישראל · ${escapeHtml(TOPIC_HE[lead.topic] || "")}</p>
           <h2 class="lead-title t-${escapeHtml(lead.topic || "domestic")}">${escapeHtml(lead.title)}</h2>
           ${deck ? `<p class="lead-deck">${escapeHtml(deck)}</p>` : ""}
+          <button type="button" class="audio-brief-btn" id="leadAudioBtn" title="השמע תקציר">השמע תקציר</button>
           <div class="lead-cta">לקרוא בתכל׳ס ←</div>
         </div>
       `;
+      document.getElementById("leadAudioBtn")?.addEventListener("click", (e) => {
+        e.stopPropagation();
+        speakBriefing(lead, e.currentTarget);
+      });
       renderWorldLead(cards, lead.id);
     }
 
@@ -1901,12 +1884,9 @@
 
     function applyTopicFilter() {
       const active = activeCards();
-      const visible = boardVisibleCards(active);
-      renderLead(visible.length ? visible : active);
-      renderTopicCubes(visible);
-      const bits = [`${active.length} עדכונים פעילים`];
-      if (boardTag) bits.push(`${visible.length} אחרי סינון`);
-      els.status.textContent = bits.join(" · ");
+      renderLead(active);
+      renderTopicCubes(active);
+      els.status.textContent = `${active.length} עדכונים פעילים`;
     }
 
     function classifyTopic(title, sources = []) {
@@ -2076,15 +2056,6 @@
     };
     const ACTIVE_TTL_DEFAULT_H = 24;
 
-    const QUICK_TAGS = [
-      { id: "hi-tech", label: "הייטק", re: /היי.?טק|סייבר|סטארט.?אפ|בינה מלאכות|תוכנ|טכנולוג|AI\b/i },
-      { id: "realestate", label: "נדל״ן", re: /נדל|דיור|דירות|שכירות|מחירי דיר|משכנת/ },
-      { id: "transport", label: "תחבורה", re: /תחבור|רכבת|כביש 6|מטרו|אוטובוס|נמל תעופ|כבישים/ },
-      { id: "health", label: "בריאות", re: /בריאות|קופ.?ח|בית חולים|רופא|רפוא/ },
-      { id: "education", label: "חינוך", re: /חינוך|בית ספר|אוניברסיט|סטודנט|משרד החינוך/ },
-    ];
-
-    let boardTag = "";
     let speakingUtterance = null;
     const THEME_KEY = "takles_theme";
 
@@ -2109,30 +2080,6 @@
 
     function toggleTheme() {
       applyTheme(currentTheme() === "dark" ? "light" : "dark");
-    }
-
-    function cardSearchBlob(c) {
-      return [
-        c.title,
-        c.summary,
-        c.background,
-        c.historical_context,
-        c.outlook,
-        c.why_matters,
-        TOPIC_HE[c.topic] || "",
-        ...(c.bullet_facts || []),
-      ]
-        .filter(Boolean)
-        .join(" ");
-    }
-
-    function boardVisibleCards(base) {
-      let cards = base || activeCards();
-      if (boardTag) {
-        const tag = QUICK_TAGS.find((t) => t.id === boardTag);
-        if (tag) cards = cards.filter((c) => tag.re.test(cardSearchBlob(c)));
-      }
-      return cards;
     }
 
     function briefingLines(card) {
@@ -2368,15 +2315,6 @@
       } finally {
         if (token === briefingToken) stopBriefing();
       }
-    }
-
-    function renderTagFilters() {
-      const host = document.getElementById("tagFilters");
-      if (!host) return;
-      host.innerHTML = QUICK_TAGS.map(
-        (t) =>
-          `<button type="button" class="board-chip${boardTag === t.id ? " active" : ""}" data-tag="${t.id}">${t.label}</button>`
-      ).join("");
     }
 
     function loadSeenMap() {
@@ -3053,16 +2991,6 @@
     }
 
     document.getElementById("aboutBackBtn")?.addEventListener("click", showHome);
-
-    renderTagFilters();
-    document.getElementById("tagFilters")?.addEventListener("click", (e) => {
-      const btn = e.target.closest("[data-tag]");
-      if (!btn) return;
-      const id = btn.dataset.tag;
-      boardTag = boardTag === id ? "" : id;
-      renderTagFilters();
-      applyTopicFilter();
-    });
 
     applyTheme(currentTheme());
     document.getElementById("themeToggle")?.addEventListener("click", toggleTheme);
