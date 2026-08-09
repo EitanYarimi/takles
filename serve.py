@@ -24,6 +24,9 @@ POLL_SECONDS = 45
 SSL_CTX = ssl._create_unverified_context()
 UA = "Mozilla/5.0 ClearNewsPOC/0.4"
 GOOGLE_RSS = "https://news.google.com/rss?hl=he&gl=IL&ceid=IL:he"
+GOOGLE_WORLD = (
+    "https://news.google.com/rss/headlines/section/topic/WORLD?hl=he&gl=IL&ceid=IL:he"
+)
 GOOGLE_SPORTS = (
     "https://news.google.com/rss/headlines/section/topic/SPORTS?hl=he&gl=IL&ceid=IL:he"
 )
@@ -180,10 +183,11 @@ def build_payload() -> dict:
     from distill import enrich_items
 
     main = safe_feed(GOOGLE_RSS, 20)
+    world = safe_feed(GOOGLE_WORLD, 12, "world")
     sports = safe_feed(GOOGLE_SPORTS, 8, "sport")
     # מושכים יותר ואז מסננים לרלוונטי תיירות/נופש
     leisure = safe_feed(GOOGLE_TRAVEL, 25, "leisure")[:6]
-    clusters = enrich_items(merge_items(main, sports, leisure))
+    clusters = enrich_items(merge_items(main, world, sports, leisure))
     return {
         "fetchedAt": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "count": len(clusters),
