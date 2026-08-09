@@ -14,7 +14,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 CACHE_PATH = ROOT / "distill_cache.json"
-DISTILL_VERSION = "v7-no-meta-insight"
+DISTILL_VERSION = "v8-facts-analysis"
 SSL_CTX = ssl._create_unverified_context()
 UA = "Mozilla/5.0 ClearNewsPOC/0.5"
 GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.0-flash")
@@ -42,20 +42,24 @@ KICKER_RE = re.compile(
     re.I,
 )
 
-PROMPT = """אתה עורך חדשות יבש לפורטל "תכל׳ס" (ישראל).
-קלט: כותרת מקבץ + כותרות מקורות.
+PROMPT = """אתה עורך זיקוק עובדתי לפורטל "תכל׳ס" (ישראל).
+קלט: כותרת מקבץ + כותרות ממקורות שונים על אותו אירוע.
 החזר JSON בלבד (בלי markdown) עם השדות:
 - title: כותרת יבשה בעברית, בלי דרמה/קליקבייט
-- summary: פסקה של 2–4 משפטים שמסבירה מה קרה בפועל — הסבר קריא, לא חזרה על הכותרת
-- why_matters: משפט אחד ברור לצופה: למה זה בכלל כותרת / למה שים לב עכשיו (השלכה פרקטית או ציבורית, בלי דרמה)
-- bullet_facts: מערך 3–5 עובדות ברורות (מי/מה/איפה/מתי/מספרים אם יש) — משפט מלא לכל פריט
-- background: 2–3 משפטים של ידע מקדים
-- outlook: 2 משפטים זהירים על מה לעקוב
+- bullet_facts: מערך 4–6 נתונים/עובדות שניתן לגזור מהקלט בלבד (מי/מה/איפה/מתי/מספרים/סטטוס דיווח). כל פריט = משפט עובדתי קצר. אם מספר לא מופיע בקלט — אל תמציא.
+- summary: ניתוח יבש של 3–5 משפטים: מה משותף בין המקורות, מה מדווח רק בחלק מהם, ומה עדיין לא מאושר. זה לא דעה ולא המלצה.
+- why_matters: משפט אחד על השלכה עובדתית/ציבורית שנגזרת מהנתונים (לא פרשנות פוליטית, לא ניחוש)
+- background: 2–3 משפטים הקשר עובדתי מקדים (רק אם נתמך מהקלט או ידע כללי יציב כמו שמות מוסדות/מקומות)
+- outlook: 2 משפטים — שאלות פתוחות / מה עוד חסר לאימות (לא תחזית)
 - status: אחד מ־confirmed | reported | denied | review
 
-כללים: עברית, יבש, בלי פעלים דרמטיים, בלי לינקים, אל תמציא מספרים שלא מופיעים בקלט.
-why_matters חייב להיות משפט עצמאי שמסביר חשיבות — לא "כי זה חדשות" ולא מטא על האתר.
-אל תכתוב תובנות מטא כמו "יש חפיפה בין מקורות" או "מוצג המשותף ולא הספין".
+כללים מחמירים:
+- עברית יבשה, בלי פעלים דרמטיים, בלי לינקים, בלי ספינים.
+- אסור להמציא עובדות, מספרים, ציטוטים או כוונות שלא בקלט.
+- אם המקורות חלוקים — ציין את המחלוקת במפורש ב־summary; אל תבחר צד.
+- אל תכתוב דעה, שיפוט מוסרי, או "צריך/ראוי".
+- אל תכתוב מטא על האתר ("תכלס", "לוח", "ספין").
+- confirmed רק אם לפחות שני מקורות מציגים אותה עובדה בלי לשון ספק; אחרת reported/review.
 """
 
 
@@ -123,9 +127,18 @@ def _extract_fact_points(title: str, headlines: list[str]) -> list[str]:
     points: list[str] = []
 
     def add(s: str) -> None:
-        s = s.strip()
+        s = dry_title(s).strip(" .")
+        if not s:
+            return
         if s and s not in points:
             points.append(s)
+
+    # מספרים / כמויות שמופיעים בקלט בלבד
+    for m in re.finditer(
+        r"(\d+(?:[.,]\d+)?)\s*(%|אחוז|הרוג|הרוגים|פצוע|פצועים|רקטות?|יירוטים?|שעות?|ימים?|ק[\"׳']?מ)",
+        blob,
+    ):
+        add(f"נתון מהדיווחים: {m.group(0)}")
 
     if re.search(r"נסיגה|פריס|מוקדים|חלק מהרצועה", blob):
         add("במערכת הביטחון / צה״ל נבחנת אפשרות לנסיגה מחלק מהמוקדים ברצועת עזה")
@@ -141,23 +154,54 @@ def _extract_fact_points(title: str, headlines: list[str]) -> list[str]:
         add("יש דיון נפרד איך ישראל תתייחס למיליציות מקומיות אחרי שינוי פריסה")
     if re.search(r"חטופ|שבוי", blob):
         add("המהלך נשקל על רקע סוגיית החטופים והלחימה ברצועה")
+    if re.search(r"הורמוז", blob):
+        add("הדיווח נוגע למעבר השיט במצר הורמוז")
+    if re.search(r"איראן", blob) and re.search(r"הסכם|עומאן|פתיח", blob):
+        add("מדווח על דיונים/הסכמות הקשורים לאיראן ולפתיחת נתיב שיט")
 
-    if not points:
-        points = _unique_lines([title, *headlines], limit=4)
-    return points[:5]
+    # זוויות ייחודיות מכותרות המקור (בלי כפילות)
+    for line in _unique_lines([title, *headlines], limit=6):
+        add(line)
+
+    return points[:6]
 
 
 def _build_summary(title: str, headlines: list[str], names: list[str]) -> str:
+    """Dry cross-source analysis — no opinion, no invented facts."""
     points = _extract_fact_points(title, headlines)
-    if len(points) >= 2:
-        core = points[0].rstrip(".")
-        more = "; ".join(p.rstrip(".") for p in points[1:3])
-        text = f"{core}. בנוסף עולה מהמקורות: {more}."
+    n = len(names)
+    unique_heads = _unique_lines(headlines or [title], limit=4)
+
+    parts: list[str] = []
+    if n >= 2:
+        parts.append(
+            f"הצלבה בין {n} מקורות ({', '.join(names[:4])}{'…' if n > 4 else ''}) על אותו מקבץ."
+        )
     else:
-        text = f"לפי הדיווחים, {dry_title(title).rstrip('.')}."
-    if len(names) >= 2:
-        text += f" מדווח במקביל ב־{len(names)} מקורות."
-    return text
+        parts.append("מבוסס על מקור יחיד בפיד — עדיין בלי הצלבה מספקת.")
+
+    if len(unique_heads) >= 2:
+        parts.append(
+            "הקו המשותף בכותרות: "
+            + "; ".join(h.rstrip(".") for h in unique_heads[:2])
+            + "."
+        )
+        if len(unique_heads) >= 3:
+            parts.append(
+                "זווית נוספת שמופיעה רק בחלק מהמקורות: "
+                + unique_heads[2].rstrip(".")
+                + "."
+            )
+    elif points:
+        parts.append(f"מהדיווח עולה: {points[0].rstrip('.')}.")
+
+    soft = re.search(r"עשוי|אולי|חשד|דיווח|נמסר|לפי גורמ|לטענת|לא אושר|טרם אושר", title)
+    if soft or n < 2:
+        parts.append("חלק מהפרטים עדיין ברמת דיווח ולא אושרו סופית במקורות שנבדקו.")
+    else:
+        parts.append("אין בקלט הבהרה מלאה של לוח זמנים, היקף או גורם מאשר.")
+
+    return " ".join(parts)
 
 
 def _substantive_fallback(title: str, headlines: list[str], names: list[str]) -> tuple[str, str, str]:
@@ -166,22 +210,23 @@ def _substantive_fallback(title: str, headlines: list[str], names: list[str]) ->
     who = f" לפי {', '.join(names[:3])}" if names else ""
     if len(points) >= 2:
         background = (
-            f"הדיווח{who} מתרכז בכמה קווים: {'; '.join(points[:3])}. "
-            "ההצלבה בין המקורות חשובה כי כל כותרת מדגישה זווית אחרת של אותו דיון."
+            f"הדיווח{who} מתרכז בכמה קווים עובדתיים: {'; '.join(points[:3])}."
         )
         outlook = (
-            f"השלב הבא: האם «{points[0]}» יתקדם להחלטה מאושרת או יישאר בבחינה בלבד. "
-            "פרטים על לוח זמנים, היקף והגורם המאשר ישנו את התמונה."
+            f"עדיין פתוח: האם «{points[0]}» יאושר רשמית, ובאיזה היקף ולוח זמנים. "
+            "חסרים פרטים על הגורם המאשר ועל ההשלכות המעשיות."
         )
-        why_matters = f"כי {points[0]} — ואם זה יוצא לפועל יש לזה השלכה ישירה בשטח."
+        why_matters = (
+            f"הדיווח נוגע ל־{points[0]} — שינוי במצב הזה ישפיע ישירות על המציאות בשטח או במדיניות."
+        )
     else:
         background = (
             f"הדיווח{who} מתאר: {dry_title(title).rstrip('.')}. "
             "עדיין חסר פירוט מצולב בפיד."
         )
-        outlook = "כדאי לחכות לאישור רשמי או לפירוט על לוח זמנים והשלכות מעשיות."
+        outlook = "חסר אישור רשמי או פירוט על לוח זמנים, היקף והשלכות מעשיות."
         why_matters = (
-            "כי הדיווח מתאר מהלך שעדיין לא סגור — אישור או דחייה ישנו את המציאות בשטח."
+            "הדיווח מתאר מהלך שעדיין לא סגור — אישור או דחייה ישנו את המצב בפועל."
         )
     return background, outlook, why_matters
 

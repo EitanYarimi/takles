@@ -2733,22 +2733,48 @@
         </article>
         <div class="detail-body">
           <div class="block">
-            <h3>מה בתכל׳ס</h3>
-            <p>${escapeHtml(c.summary || c.background || c.historical_context || "")}</p>
+            <h3>נתונים</h3>
+            ${
+              (c.bullet_facts || []).length
+                ? `<ul class="facts">${(c.bullet_facts || [])
+                    .map((f) => `<li>${escapeHtml(f)}</li>`)
+                    .join("")}</ul>`
+                : `<p>אין עדיין נתונים מצולבים מספיק מהמקורות.</p>`
+            }
+          </div>
+          <div class="block">
+            <h3>ניתוח</h3>
+            <p>${escapeHtml(c.summary || "")}</p>
             ${
               c.why_matters
-                ? `<p class="why-matters"><strong>למה זה חשוב</strong> — ${escapeHtml(c.why_matters)}</p>`
+                ? `<p class="why-matters"><strong>השלכה</strong> — ${escapeHtml(c.why_matters)}</p>`
                 : ""
             }
+            <p class="hint" style="margin:0.65rem 0 0">מבוסס על הצלבת מקורות בלבד · בלי דעה · בלי המצאת נתונים</p>
           </div>
           <div class="block">
             <h3>רקע</h3>
             <p>${escapeHtml(c.background || c.historical_context || "")}</p>
           </div>
           <div class="block">
-            <h3>מבט קדימה</h3>
-            <p>${escapeHtml(c.outlook || "לעקוב אחרי עדכונים רשמיים.")}</p>
+            <h3>מה עוד לא ברור</h3>
+            <p>${escapeHtml(c.outlook || "חסרים אישור רשמי ופרטי היקף / לוח זמנים.")}</p>
           </div>
+          ${
+            (c.sources || []).some((s) => s.headline)
+              ? `<div class="block">
+            <h3>כותרות מקורות</h3>
+            <ul class="facts">${(c.sources || [])
+              .filter((s) => s.headline)
+              .slice(0, 6)
+              .map(
+                (s) =>
+                  `<li>${escapeHtml(`${s.name ? s.name + ": " : ""}${s.headline}`)}</li>`
+              )
+              .join("")}</ul>
+          </div>`
+              : ""
+          }
           <div class="sources-row">${sourceChips}</div>
         </div>
       `;
@@ -2866,39 +2892,86 @@
 
       const bullets = [];
       const seen = new Set();
-      for (const h of [item.title, ...headlines]) {
-        const dry = dryTitle(h);
-        const key = dry.slice(0, 40);
-        if (seen.has(key)) continue;
+      const pushBullet = (raw) => {
+        const dry = dryTitle(raw);
+        if (!dry) return;
+        const key = dry.slice(0, 48);
+        if (seen.has(key)) return;
         seen.add(key);
         bullets.push(dry);
-        if (bullets.length >= 3) break;
+      };
+      // נתונים מספריים מהכותרות אם קיימים
+      const blobAll = [item.title, ...headlines].join(" ");
+      const numRe =
+        /(\d+(?:[.,]\d+)?)\s*(%|אחוז|הרוג|הרוגים|פצוע|פצועים|רקטות?|יירוטים?|שעות?|ימים?)/g;
+      let nm;
+      while ((nm = numRe.exec(blobAll)) && bullets.length < 2) {
+        pushBullet(`נתון מהדיווחים: ${nm[0]}`);
+      }
+      for (const h of [item.title, ...headlines]) {
+        pushBullet(h);
+        if (bullets.length >= 5) break;
       }
       while (bullets.length < 3) {
-        bullets.push(names[bullets.length]
-          ? `מקור נוסף: ${names[bullets.length]}`
-          : "פרטים נוספים טרם פורסמו במקורות שנבדקו");
+        bullets.push("חלק מהפרטים עדיין לא הובהרו במקורות שנבדקו");
       }
 
-      const insight = multi
-        ? `אותו אירוע מדווח ב-${names.length} מקורות — מוצג ככרטיס אחד במקום כותרות מתחרות.`
-        : "מבוסס על מקור יחיד בפיד — סטטוס דיווח עד להצלבה.";
+      const uniqueHeads = [];
+      const seenH = new Set();
+      for (const h of headlines.length ? headlines : [item.title]) {
+        const dry = dryTitle(h);
+        const key = dry.slice(0, 40);
+        if (!dry || seenH.has(key)) continue;
+        seenH.add(key);
+        uniqueHeads.push(dry);
+      }
+
+      let summary;
+      if (multi) {
+        summary =
+          `הצלבה בין ${names.length} מקורות (${names.slice(0, 4).join(", ")}${
+            names.length > 4 ? "…" : ""
+          }). ` +
+          (uniqueHeads.length
+            ? `הקו המשותף בכותרות: ${uniqueHeads.slice(0, 2).join("; ")}. `
+            : "") +
+          (uniqueHeads.length >= 3
+            ? `זווית נוספת בחלק מהמקורות: ${uniqueHeads[2]}. `
+            : "") +
+          (softClaim || status !== "confirmed"
+            ? "חלק מהפרטים עדיין ברמת דיווח ולא אושרו סופית."
+            : "חסרים עדיין פרטי לוח זמנים / היקף / גורם מאשר.");
+      } else {
+        summary =
+          `מבוסס על מקור יחיד${names[0] ? ` (${names[0]})` : ""}. ` +
+          `לפי הדיווח: ${dryTitle(item.title)}. ` +
+          "עדיין בלי הצלבה מספקת מול מקורות נוספים.";
+      }
 
       let context = "הקשר: דיווח שוטף מפיד חדשות ישראל.";
       if (/הורמוז|איראן/.test(item.title)) context = "הקשר: סוגיית מצר הורמוז ומתיחות אזורית מול איראן.";
       if (/חיזבאללה|לבנון|רחפן/.test(item.title)) context = "הקשר: אירוע בגבול הצפון / זירת לבנון.";
       if (/שריפה|פתח תקווה|מזג|חום/.test(item.title)) context = "הקשר: אירוע אזרחי / מזג אוויר בישראל.";
 
+      const outlook =
+        "עדיין פתוח: אישור רשמי, היקף, לוח זמנים והשלכות מעשיות. " +
+        "עדכונים נוספים מהמקורות יבהירו מה אומת ומה נשאר דיווח.";
+
+      const why =
+        bullets[0] && bullets[0] !== "חלק מהפרטים עדיין לא הובהרו במקורות שנבדקו"
+          ? `הדיווח נוגע ל־${bullets[0]} — שינוי במצב הזה ישפיע על המציאות בשטח או במדיניות.`
+          : "הדיווח מתאר מהלך שעדיין לא סגור — אישור או דחייה ישנו את המצב בפועל.";
+
       return {
         title: dryTitle(item.title),
-        bullet_facts: bullets,
+        bullet_facts: bullets.slice(0, 6),
         status,
-        insight,
+        insight: "",
         historical_context: context,
         background: context,
-        outlook: "כדאי לחכות לפירוט על לוח זמנים, סמכויות או תגובות רשמיות שיבהירו את ההשלכות.",
-        summary: `לפי הדיווחים, ${dryTitle(item.title)}.`,
-        why_matters: "כי מדובר במהלך שעדיין פתוח — אישור או דחייה ישנו את המציאות בשטח או במדיניות.",
+        outlook,
+        summary,
+        why_matters: why,
         sources: item.sources,
         original_headlines: headlines,
         pubDate: item.pubDate,
@@ -2965,22 +3038,90 @@
         .join("");
     }
 
-    async function fetchLiveItems() {
-      if (IS_PAGES) {
-        try {
-          const live = await fetchGoogleNewsLive();
-          if (live.items?.length) {
-            return { items: live.items, meta: live, sourceKind: "live" };
-          }
-        } catch (e) {
-          console.warn("live google feed failed, falling back to news.json", e);
+    function normTitleKey(title) {
+      return String(title || "")
+        .toLowerCase()
+        .replace(/[״"„“”]/g, "")
+        .replace(/[^\u0590-\u05ffa-z0-9]+/gi, " ")
+        .replace(/\s+/g, " ")
+        .trim()
+        .slice(0, 64);
+    }
+
+    function pickDistillFields(from) {
+      if (!from) return {};
+      const d = from.distill || {};
+      return {
+        distill: from.distill || null,
+        dryTitle: from.dryTitle || d.title,
+        summary: from.summary || d.summary,
+        why_matters: from.why_matters || d.why_matters,
+        bullet_facts: from.bullet_facts || d.bullet_facts,
+        background: from.background || d.background,
+        outlook: from.outlook || d.outlook,
+        historical_context: from.historical_context || d.historical_context || d.background,
+        insight: from.insight || d.insight || "",
+        status: from.status || d.status,
+        distillMode: from.distillMode || d.mode,
+      };
+    }
+
+    function hydrateWithDistill(liveItems, staticItems) {
+      if (!liveItems?.length) return liveItems || [];
+      const byKey = new Map();
+      for (const it of staticItems || []) {
+        const keys = [normTitleKey(it.dryTitle || it.title), normTitleKey(it.title)];
+        for (const k of keys) {
+          if (k) byKey.set(k, it);
         }
       }
+      return liveItems.map((item) => {
+        const hit =
+          byKey.get(normTitleKey(item.title)) ||
+          [...byKey.entries()].find(([k]) => {
+            const live = normTitleKey(item.title);
+            return live && k && (live.includes(k.slice(0, 28)) || k.includes(live.slice(0, 28)));
+          })?.[1];
+        if (!hit || !(hit.bullet_facts || hit.distill || hit.summary)) return item;
+        return { ...item, ...pickDistillFields(hit) };
+      });
+    }
+
+    async function fetchStaticNewsJson() {
       const res = await fetch(NEWS_JSON, { cache: "no-store" });
       if (!res.ok) throw new Error(`API ${res.status}`);
       const data = await res.json();
       if (data.error) throw new Error(data.error);
       if (!data.items?.length) throw new Error("RSS ריק");
+      return data;
+    }
+
+    async function fetchLiveItems() {
+      if (IS_PAGES) {
+        let staticData = null;
+        try {
+          staticData = await fetchStaticNewsJson();
+        } catch (e) {
+          console.warn("news.json unavailable", e);
+        }
+        try {
+          const live = await fetchGoogleNewsLive();
+          if (live.items?.length) {
+            const items = hydrateWithDistill(live.items, staticData?.items || []);
+            return {
+              items,
+              meta: { ...live, items, count: items.length },
+              sourceKind: "live",
+            };
+          }
+        } catch (e) {
+          console.warn("live google feed failed, falling back to news.json", e);
+        }
+        if (staticData?.items?.length) {
+          return { items: staticData.items, meta: staticData, sourceKind: "static" };
+        }
+      }
+      const data = await fetchStaticNewsJson();
       return { items: data.items, meta: data, sourceKind: "static" };
     }
 
