@@ -16,8 +16,11 @@ import time
 import urllib.error
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from datetime import datetime, timezone
+from email.utils import parsedate_to_datetime
 from html import unescape
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 ROOT = Path(__file__).resolve().parent
 CACHE_PATH = ROOT / "distill_cache.json"
@@ -938,3 +941,318 @@ def enrich_items(items: list[dict]) -> list[dict]:
     save_cache(cache)
     save_article_cache(article_cache)
     return out
+
+
+IL_TZ = ZoneInfo("Asia/Jerusalem")
+DAILY_BRIEF_MIN = 4
+DAILY_BRIEF_MAX = 7
+DAILY_BRIEF_CANDIDATES = 8
+
+_TOPIC_SCORE = {
+    "security": 100,
+    "region": 86,
+    "world": 68,
+    "politics": 54,
+    "economy": 40,
+    "domestic": 22,
+    "leisure": 12,
+    "sport": 14,
+}
+
+_SECURITY_RE = re.compile(
+    r"חיזבאללה|לבנון|רחפן|צה[\"׳']?ל|יירוט|כיפת ברזל|חמאס|עזה|"
+    r"פיקוד העורף|מחבל|חטופ|שבוי|רקטות?|אזעק|הורמוז|איראן|מלחמ|טיל",
+    re.I,
+)
+_REGION_RE = re.compile(
+    r"סוריה|עיראק|ירדן|מצרים|סעודיה|קטאר|עומאן|תימן|חתי|רפיח|גבול הצפון",
+    re.I,
+)
+_WORLD_RE = re.compile(
+    r"ארה[\"״]?ב|וושינגטון|אירופה|סין|רוסיה|אוקראינה|נאט[\"״]?ו|טראמפ|ביידן",
+    re.I,
+)
+_POLITICS_RE = re.compile(
+    r"כנסת|ממשלה|שר ה|ראש הממשלה|בחירות|קואליציה|אופוזיציה|חוק",
+    re.I,
+)
+_ECONOMY_RE = re.compile(
+    r"בורסה|ריבית|אינפלצי|דולר|שקל|מס|תקציב|משק|כלכל",
+    re.I,
+)
+
+DAILY_BRIEF_PROMPT = """אתה עורך חדשות יבש בעברית לתכל׳ס.
+כתוב סיכום יומי קצר של הדברים החשובים ביותר שהיום — עובדות בלבד.
+כללים:
+- 4 עד 7 נקודות קצרות (משפט אחד לכל נקודה).
+- בלי דרמה, בלי דעה, בלי פרשנות, בלי אימוג׳י.
+- בלי קישורים ובלי שמות אתרים.
+- העדף ביטחון, אירועים רב־מקוריים ואמינות גבוהה.
+- כל נקודה = עובדה אחת ברורה מהסיפורים שסופקו.
+החזר JSON בלבד:
+{"points":["...","..."]}
+"""
+
+
+def _parse_item_time(item: dict) -> datetime | None:
+    raw = (item.get("pubDate") or item.get("published") or "").strip()
+    if not raw:
+        return None
+    try:
+        dt = parsedate_to_datetime(raw)
+    except (TypeError, ValueError, IndexError):
+        try:
+            dt = datetime.fromisoformat(raw.replace("Z", "+00:00"))
+        except ValueError:
+            return None
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    return dt
+
+
+def _is_today_israel(item: dict, *, now: datetime | None = None) -> bool:
+    dt = _parse_item_time(item)
+    if not dt:
+        return False
+    now = now or datetime.now(IL_TZ)
+    return dt.astimezone(IL_TZ).date() == now.date()
+
+
+def _item_text_blob(item: dict) -> str:
+    parts = [item.get("dryTitle") or "", item.get("title") or "", item.get("summary") or ""]
+    for s in item.get("sources") or []:
+        parts.append(s.get("headline") or "")
+        parts.append(s.get("name") or "")
+    for b in item.get("bullet_facts") or []:
+        parts.append(str(b))
+    return " ".join(parts)
+
+
+def _infer_topic(item: dict) -> str:
+    hint = (item.get("topicHint") or "").strip()
+    if hint in _TOPIC_SCORE:
+        return hint
+    blob = _item_text_blob(item)
+    if _SECURITY_RE.search(blob):
+        return "security"
+    if re.search(r"ספורט|כדורגל|כדורסל|NBA|FIFA", blob, re.I):
+        return "sport"
+    if re.search(r"תיירות|נופש|מלונ", blob) and not _SECURITY_RE.search(blob):
+        return "leisure"
+    if _ECONOMY_RE.search(blob) or hint == "economy":
+        return "economy"
+    if _POLITICS_RE.search(blob):
+        return "politics"
+    if _REGION_RE.search(blob):
+        return "region"
+    if _WORLD_RE.search(blob) or hint == "world":
+        return "world"
+    return "domestic"
+
+
+def _reliability_factor(item: dict) -> float:
+    rel = str(item.get("reliability") or "").lower()
+    if rel == "high":
+        return 1.2
+    if rel == "medium":
+        return 1.05
+    if rel == "low":
+        return 0.7
+    status = str(item.get("status") or "reported")
+    topic = _infer_topic(item)
+    allow = topic == "security"
+    if status == "confirmed":
+        return 1.15
+    if status == "denied":
+        return 0.75 if allow else 0.55
+    if status == "review":
+        return 1.05 if allow else 0.42
+    if status == "reported":
+        return 1.0 if allow else 0.55
+    return 0.9 if allow else 0.55
+
+
+def _importance_score(item: dict, *, now: datetime | None = None) -> float:
+    now = now or datetime.now(IL_TZ)
+    dt = _parse_item_time(item)
+    if dt:
+        age_h = max(0.0, (now - dt.astimezone(IL_TZ)).total_seconds() / 3600.0)
+    else:
+        age_h = 12.0
+    today = _is_today_israel(item, now=now)
+    recency = (2.718281828 ** (-age_h / 10.0)) if today else (2.718281828 ** (-age_h / 4.0)) * 0.12
+    sources_n = len(item.get("sources") or [])
+    topic = _infer_topic(item)
+    topic_score = _TOPIC_SCORE.get(topic, 14)
+    boost = 0.0
+    blob = _item_text_blob(item)
+    if _SECURITY_RE.search(blob):
+        boost += 36
+    if sources_n >= 3:
+        boost += 18
+    elif sources_n >= 2:
+        boost += 10
+    if str(item.get("digest_basis") or "") == "fulltext":
+        boost += 8
+    relevance = topic_score + sources_n * 6 + boost
+    return relevance * recency * _reliability_factor(item)
+
+
+def _short_point(text: str, max_len: int = 140) -> str:
+    raw = dry_title(re.sub(r"\s+", " ", str(text or "")).strip())
+    if not raw:
+        return ""
+    sentence = re.split(r"(?<=[.!?…])\s+", raw)[0] or raw
+    sentence = sentence.strip(" -:·|")
+    if len(sentence) <= max_len:
+        return sentence
+    return sentence[: max_len - 1].rsplit(" ", 1)[0] + "…"
+
+
+def _heuristic_daily_points(items: list[dict]) -> list[str]:
+    points: list[str] = []
+    seen: set[str] = set()
+    for item in items:
+        candidates = []
+        bullets = item.get("bullet_facts") or []
+        if bullets:
+            candidates.append(str(bullets[0]))
+        if item.get("summary"):
+            candidates.append(str(item.get("summary")))
+        candidates.append(str(item.get("dryTitle") or item.get("title") or ""))
+        point = ""
+        for c in candidates:
+            point = _short_point(c)
+            if point:
+                break
+        if not point:
+            continue
+        key = re.sub(r"\W+", "", point.lower())[:48]
+        if key in seen:
+            continue
+        seen.add(key)
+        points.append(point)
+        if len(points) >= DAILY_BRIEF_MAX:
+            break
+    return points
+
+
+def _gemini_daily_points(items: list[dict]) -> list[str] | None:
+    global _LAST_GEMINI_TS
+    key = _api_key()
+    if not key or not items:
+        return None
+    lines = ["סיפורים לדירוג (מהחשוב לפחות):", ""]
+    for idx, item in enumerate(items, 1):
+        topic = _infer_topic(item)
+        title = item.get("dryTitle") or item.get("title") or ""
+        summary = (item.get("summary") or "")[:280]
+        bullets = item.get("bullet_facts") or []
+        sources_n = len(item.get("sources") or [])
+        lines.append(f"{idx}. [{topic}] {title}")
+        lines.append(
+            f"   אמינות={item.get('reliability') or 'unknown'} · "
+            f"סטטוס={item.get('status') or 'reported'} · מקורות={sources_n}"
+        )
+        if summary:
+            lines.append(f"   סיכום: {summary}")
+        if bullets:
+            lines.append("   נתונים: " + " · ".join(str(b) for b in bullets[:3]))
+        lines.append("")
+    body = {
+        "contents": [
+            {
+                "role": "user",
+                "parts": [{"text": DAILY_BRIEF_PROMPT + "\n\n" + "\n".join(lines)}],
+            }
+        ],
+        "generationConfig": {
+            "temperature": 0.2,
+            "responseMimeType": "application/json",
+        },
+    }
+    url = (
+        f"https://generativelanguage.googleapis.com/v1beta/models/"
+        f"{GEMINI_MODEL}:generateContent?key={key}"
+    )
+    payload = json.dumps(body).encode("utf-8")
+    raw = None
+    for attempt in range(3):
+        wait = GEMINI_MIN_INTERVAL - (time.time() - _LAST_GEMINI_TS)
+        if wait > 0:
+            time.sleep(wait)
+        req = urllib.request.Request(
+            url,
+            data=payload,
+            headers={"Content-Type": "application/json", "User-Agent": UA},
+            method="POST",
+        )
+        try:
+            _LAST_GEMINI_TS = time.time()
+            with urllib.request.urlopen(req, timeout=60, context=SSL_CTX) as resp:
+                raw = json.loads(resp.read().decode("utf-8"))
+            break
+        except urllib.error.HTTPError as exc:
+            detail = ""
+            try:
+                detail = exc.read().decode("utf-8", "replace")[:200]
+            except Exception:  # noqa: BLE001
+                pass
+            if exc.code == 429 and attempt < 2:
+                time.sleep(8.0 * (attempt + 1))
+                continue
+            print(f"[distill] daily brief gemini failed: {exc} {detail}")
+            return None
+        except (urllib.error.URLError, TimeoutError, json.JSONDecodeError) as exc:
+            print(f"[distill] daily brief gemini failed: {exc}")
+            return None
+    if not raw:
+        return None
+    try:
+        text = raw["candidates"][0]["content"]["parts"][0]["text"]
+    except (KeyError, IndexError, TypeError):
+        return None
+    data = _extract_json(text)
+    if not data:
+        return None
+    points = data.get("points") or data.get("bullets") or []
+    if isinstance(points, str):
+        points = [points]
+    cleaned = []
+    for p in points:
+        s = _short_point(str(p), max_len=160)
+        if s:
+            cleaned.append(s)
+    if len(cleaned) < DAILY_BRIEF_MIN:
+        return None
+    return cleaned[:DAILY_BRIEF_MAX]
+
+
+def build_daily_brief(items: list[dict]) -> dict:
+    """Rank today's stories and produce a short factual daily brief."""
+    now = datetime.now(IL_TZ)
+    today_items = [it for it in items if _is_today_israel(it, now=now)]
+    pool = today_items if today_items else list(items)
+    ranked = sorted(pool, key=lambda it: _importance_score(it, now=now), reverse=True)
+    top = ranked[:DAILY_BRIEF_CANDIDATES]
+
+    mode = "heuristic"
+    points = _gemini_daily_points(top) if top and _api_key() else None
+    if points:
+        mode = "gemini"
+    else:
+        points = _heuristic_daily_points(top)
+
+    points = [p for p in (points or []) if p][:DAILY_BRIEF_MAX]
+    print(
+        f"[distill] daily brief: {len(points)} points "
+        f"(mode={mode}, today={len(today_items)}/{len(items)}, candidates={len(top)})"
+    )
+    return {
+        "date": now.date().isoformat(),
+        "headline": "סיכום היום",
+        "dek": "הדברים הכי חשובים שהיום",
+        "points": points,
+        "mode": mode,
+        "storyCount": len(top),
+    }

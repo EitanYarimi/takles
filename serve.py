@@ -218,7 +218,7 @@ def safe_feed(url: str, limit: int, topic_hint: str | None = None) -> list[dict]
 
 
 def build_payload() -> dict:
-    from distill import enrich_items
+    from distill import build_daily_brief, enrich_items
 
     main = safe_feed(GOOGLE_RSS, 18)
     # בלי topicHint קשיח — הסיווג בצד הלקוח/enrich יפריד אזור/עולם/ביטחון
@@ -234,6 +234,7 @@ def build_payload() -> dict:
         "count": len(clusters),
         "withImages": 0,
         "items": clusters,
+        "dailyBrief": build_daily_brief(clusters),
     }
 
 

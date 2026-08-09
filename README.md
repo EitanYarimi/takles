@@ -1,6 +1,6 @@
 # תכל׳ס (ClearNews) — POC
 
-פורטל חדשות ישראלי יבש: כותרת ראשית לישראל, כותרת בעולם, ריבועי נושאים, ותובנות מדדיות.
+פורטל חדשות ישראלי יבש: כותרת ראשית לישראל, כותרת בעולם, ריבועי נושאים, סיכום היום, ותובנות מדדיות.
 
 **עקרון יסוד:** השרת מושך · קורא · מצליב · מזקק. הדפדפן רק מציג.
 
@@ -31,6 +31,7 @@ Live: [eitanyarimi.github.io/takles](https://eitanyarimi.github.io/takles/) · R
 │    parse → filter → merge_items (dedupe)                    │
 │    distill.enrich_items()                                   │
 │      scrub opinions → hydrate articles → Gemini/heuristic   │
+│    distill.build_daily_brief() → dailyBrief on payload      │
 └────────────────────────────┬────────────────────────────────┘
                              ▼
               ┌──────────────┴──────────────┐
@@ -41,7 +42,7 @@ Live: [eitanyarimi.github.io/takles](https://eitanyarimi.github.io/takles/) · R
               └──────────────┬──────────────┘
                              ▼
                     index.html (render only)
-                    topics · freshness · seen · detail · TTS
+                    topics · daily brief · freshness · seen · detail · TTS
 ```
 
 | Path | Entry | News data | Refresh | TTS |
@@ -64,9 +65,23 @@ Live: [eitanyarimi.github.io/takles](https://eitanyarimi.github.io/takles/) · R
    - `hydrate_item_sources` — פענוח `news.google.com/rss/articles/…` (`googlenewsdecoder`) + משיכת HTML → טקסט
    - `distill_item` — Gemini אם יש מפתח, אחרת heuristic; מטמון לפי fingerprint
    - סילוק `excerpt` מהמקורות לפני שליחה ללקוח (רק שם/כותרת/url)
-5. **Payload** — `{ fetchedAt, count, withImages, items }` → API או `news.json`
+5. **Payload** — `{ fetchedAt, count, withImages, items, dailyBrief }` → API או `news.json`
 
 גרסת זיקוק נוכחית: **`DISTILL_VERSION = v11-flash-latest-throttle`**.
+
+### Daily brief (`dailyBrief`)
+
+נבנה בשרת אחרי `enrich_items()` מתוך פריטי היום (`Asia/Jerusalem`), מדורגים לפי חשיבות (ביטחון / רב־מקור / אמינות / רלוונטיות).
+
+| Field | Meaning |
+|-------|---------|
+| `date` | תאריך ישראל `YYYY-MM-DD` |
+| `headline` / `dek` | כותרת ותת־כותרת ל־UI |
+| `points` | 4–7 נקודות יבשות (בלי קישורים) |
+| `mode` | `gemini` או `heuristic` |
+| `storyCount` | כמה סיפורים שימשו כמועמדים |
+
+עם מפתח Gemini — סיכום AI קצר מהסיפורים המובילים; אחרת נקודות מ־`summary` / `bullet_facts` / כותרת.
 
 ---
 
@@ -75,9 +90,9 @@ Live: [eitanyarimi.github.io/takles](https://eitanyarimi.github.io/takles/) · R
 | File | Responsibility |
 |------|----------------|
 | `serve.py` | HTTP סטטי + `/api/news`, `/api/tts`, `/ws`; משיכת פידים; `build_payload()`; לולאת רענון |
-| `distill.py` | סינון דעות, משיכת גופי כתבות, זיקוק Gemini/heuristic, caches |
+| `distill.py` | סינון דעות, משיכת גופי כתבות, זיקוק Gemini/heuristic, `build_daily_brief`, caches |
 | `scripts/build_news.py` | בנייה אופליין ל־Pages: `build_payload()` → `news.json` |
-| `index.html` | UI בלבד: דירוג, נושאים, TTL, נצפו, פירוט, תובנות, TTS |
+| `index.html` | UI בלבד: דירוג, נושאים, סיכום היום, TTL, נצפו, פירוט, תובנות, TTS |
 | `insights.json` | פאנלים מדדיים קורטיים (למשל תפקוד ממשלה); מזג אוויר נמשך בלקוח (Open-Meteo) |
 | `requirements.txt` | `edge-tts`, `googlenewsdecoder` |
 | `.github/workflows/deploy-pages.yml` | cron כל שעה + push → build + deploy Pages |
@@ -135,6 +150,7 @@ Live: [eitanyarimi.github.io/takles](https://eitanyarimi.github.io/takles/) · R
 - **Hero / lead** — כותרת ישראל + תקציר קצר
 - **World lead** — כותרת בעולם
 - **Topic cubes** — כניסה לנושא (ביטחון, פוליטיקה, אזור, בעולם, כלכלה, פנים, תיירות ונופש, ספורט)
+- **Daily brief** — «סיכום היום»: 4–7 נקודות מהשרת (`dailyBrief`)
 - **Insights** — מדדים קורטיים + מזג אוויר חי
 - **Detail** — כרטיס מלא בלי יציאה לאתר חיצוני
 

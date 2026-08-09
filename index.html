@@ -271,6 +271,71 @@
       color: #fff;
     }
 
+    .daily-brief {
+      margin: 1.6rem 0.35rem 0.35rem;
+      padding-top: 1.2rem;
+      border-top: 1px solid var(--rule-soft);
+      animation: cube-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation-delay: 0.28s;
+    }
+    .daily-brief[hidden] { display: none; }
+    .daily-brief-head {
+      margin: 0 0 0.85rem;
+      padding: 0 0.15rem;
+    }
+    .daily-brief-head h2 {
+      margin: 0 0 0.25rem;
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 400;
+      color: var(--headline);
+      letter-spacing: -0.02em;
+    }
+    .daily-brief-head p {
+      margin: 0;
+      font-size: 0.88rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .daily-brief-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      counter-reset: day-brief;
+    }
+    .daily-brief-list li {
+      counter-increment: day-brief;
+      position: relative;
+      padding: 0.72rem 0.15rem 0.72rem 0;
+      padding-inline-start: 2.1rem;
+      border-bottom: 1px solid var(--rule-soft);
+      font-size: 1.02rem;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1.45;
+    }
+    .daily-brief-list li:last-child { border-bottom: 0; }
+    .daily-brief-list li::before {
+      content: counter(day-brief);
+      position: absolute;
+      inset-inline-start: 0;
+      top: 0.78rem;
+      width: 1.45rem;
+      height: 1.45rem;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: var(--accent);
+      background: rgba(11, 110, 92, 0.1);
+      border: 1px solid rgba(11, 110, 92, 0.18);
+    }
+    html[data-theme="dark"] .daily-brief-list li::before {
+      background: rgba(61, 190, 163, 0.12);
+      border-color: rgba(61, 190, 163, 0.28);
+    }
+
     .insights {
       margin: 1.75rem 0.35rem 0.5rem;
       padding-top: 1.25rem;
@@ -1102,7 +1167,7 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      header.hero, .lead, .topic-cube, .detail-view, .topic-list-view, article.card {
+      header.hero, .lead, .topic-cube, .daily-brief, .detail-view, .topic-list-view, article.card {
         animation: none !important;
       }
     }
@@ -1129,6 +1194,13 @@
       <p class="status-line" id="status">טוען…</p>
       <p class="board-label">לפי נושא</p>
       <div class="cubes" id="cubes"></div>
+      <section class="daily-brief" id="dailyBriefSection" hidden aria-label="סיכום היום">
+        <div class="daily-brief-head">
+          <h2 id="dailyBriefHeadline">סיכום היום</h2>
+          <p id="dailyBriefDek">הדברים הכי חשובים שהיום</p>
+        </div>
+        <ol class="daily-brief-list" id="dailyBriefList"></ol>
+      </section>
       <section class="insights" id="insightsSection" aria-label="תובנות">
         <div class="insights-head">
           <h2>תובנות</h2>
@@ -1148,6 +1220,7 @@
         <li><strong>כותרת ראשית</strong> — הסיפור הכי רלוונטי לישראל כרגע.</li>
         <li><strong>כותרת בעולם</strong> — אירוע בינלאומי בולט, מופרד מהלוח הישראלי.</li>
         <li><strong>ריבועי נושאים</strong> — ביטחון, פוליטיקה, אזור, בעולם, כלכלה, פנים, תיירות ונופש, ספורט.</li>
+        <li><strong>סיכום היום</strong> — 4–7 נקודות יבשות על הדברים החשובים ביותר שהיום (נבנה בשרת).</li>
         <li><strong>סיכום מראש</strong> — לכל כתבה: עובדות, רקע ומבט קדימה — בלי שהמשתמש יריץ דבר.</li>
         <li><strong>תובנות</strong> — נתונים מאומתים (תפקוד הממשלה, מזג אוויר…) עם ניתוח קצר ומקורות, בלי כותרות.</li>
         <li><strong>צפיתי</strong> — מוריד כתבה מהלוח הפעיל; נשמר ב־localStorage גם אחרי רענון.</li>
@@ -1922,6 +1995,28 @@
       }
     }
 
+    function renderDailyBrief(brief) {
+      if (!els.dailyBriefSection || !els.dailyBriefList) return;
+      const points = Array.isArray(brief?.points)
+        ? brief.points.map((p) => String(p || "").trim()).filter(Boolean).slice(0, 7)
+        : [];
+      if (!points.length) {
+        els.dailyBriefSection.hidden = true;
+        els.dailyBriefList.innerHTML = "";
+        return;
+      }
+      if (els.dailyBriefHeadline) {
+        els.dailyBriefHeadline.textContent = brief.headline || "סיכום היום";
+      }
+      if (els.dailyBriefDek) {
+        els.dailyBriefDek.textContent = brief.dek || "הדברים הכי חשובים שהיום";
+      }
+      els.dailyBriefSection.hidden = false;
+      els.dailyBriefList.innerHTML = points
+        .map((p) => `<li>${escapeHtml(p)}</li>`)
+        .join("");
+    }
+
     function renderTopicCubes(cards) {
       const topicIds = TOPICS.filter((t) => t.id !== "all");
       els.cubes.innerHTML = topicIds
@@ -2147,7 +2242,13 @@
       topicListView: document.getElementById("topicListView"),
       status: document.getElementById("status"),
       insights: document.getElementById("insights"),
+      dailyBriefSection: document.getElementById("dailyBriefSection"),
+      dailyBriefList: document.getElementById("dailyBriefList"),
+      dailyBriefHeadline: document.getElementById("dailyBriefHeadline"),
+      dailyBriefDek: document.getElementById("dailyBriefDek"),
     };
+
+    let dailyBriefData = null;
 
     const SEEN_KEY = "takles_seen_map";
     const SEEN_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 ימים בנצפו
@@ -2965,6 +3066,8 @@
         return;
       }
       lastSourceLabel = sourceLabel;
+      dailyBriefData = data.dailyBrief || null;
+      renderDailyBrief(dailyBriefData);
       allCards = items.map((item) => enrichCard(localDistill(item), item));
       if (listTopicId && !location.hash.startsWith("#article/")) {
         applyTopicFilter();
@@ -2988,6 +3091,8 @@
       } catch (e) {
         const items = FALLBACK.items || [];
         lastSourceLabel = `גיבוי מקומי (${FALLBACK.fetchedAt || ""})`;
+        dailyBriefData = FALLBACK.dailyBrief || null;
+        renderDailyBrief(dailyBriefData);
         allCards = items.map((item) => enrichCard(localDistill(item), item));
         applyTopicFilter();
         console.warn("news load failed", e);
