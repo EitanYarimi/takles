@@ -47,7 +47,7 @@ Live: [eitanyarimi.github.io/takles](https://eitanyarimi.github.io/takles/) · R
 | Path | Entry | News data | Refresh | TTS |
 |------|--------|-----------|---------|-----|
 | **Local** | `python3 serve.py` → `http://127.0.0.1:8765/` | `GET /api/news` | WS every ~45s + HTTP poll 60s | Edge TTS `/api/tts` |
-| **Pages** | static `_site/` | `./news.json` | HTTP poll every 5 min | Browser `speechSynthesis` |
+| **Pages** | static `_site/` | `./news.json` | HTTP poll every 5 min (rebuild is hourly) | Browser `speechSynthesis` |
 
 זיהוי סביבה בלקוח: `IS_PAGES = /github\.io$/i.test(location.hostname)`.
 
@@ -66,7 +66,7 @@ Live: [eitanyarimi.github.io/takles](https://eitanyarimi.github.io/takles/) · R
    - סילוק `excerpt` מהמקורות לפני שליחה ללקוח (רק שם/כותרת/url)
 5. **Payload** — `{ fetchedAt, count, withImages, items }` → API או `news.json`
 
-גרסת זיקוק נוכחית: **`DISTILL_VERSION = v10-article-reliability`**.
+גרסת זיקוק נוכחית: **`DISTILL_VERSION = v11-flash-latest-throttle`**.
 
 ---
 
@@ -80,7 +80,7 @@ Live: [eitanyarimi.github.io/takles](https://eitanyarimi.github.io/takles/) · R
 | `index.html` | UI בלבד: דירוג, נושאים, TTL, נצפו, פירוט, תובנות, TTS |
 | `insights.json` | פאנלים מדדיים קורטיים (למשל תפקוד ממשלה); מזג אוויר נמשך בלקוח (Open-Meteo) |
 | `requirements.txt` | `edge-tts`, `googlenewsdecoder` |
-| `.github/workflows/deploy-pages.yml` | cron כל 5 דק׳ + push → build + deploy Pages |
+| `.github/workflows/deploy-pages.yml` | cron כל שעה + push → build + deploy Pages |
 
 מטמונים מקומיים (ב־`.gitignore`, לא ב־CI בין ריצות):
 
@@ -173,8 +173,10 @@ Workflow: `.github/workflows/deploy-pages.yml`
 | Trigger | Schedule |
 |---------|----------|
 | `push` to `main` | מיידי |
-| `schedule` | `*/5 * * * *` |
+| `schedule` | `0 * * * *` (top of every hour) |
 | `workflow_dispatch` | ידני |
+
+`news.json` rebuilds hourly on the schedule (and on every push). The client on Pages may still poll `./news.json` every 5 minutes; between rebuilds that poll just reloads the same file.
 
 Steps: checkout → Python 3.12 → `pip install -r requirements.txt` → `scripts/build_news.py` (timeout 12m, `GEMINI_API_KEY` מ־Secrets) → stage `_site/` (`index.html`, `news.json`, `insights.json`, `media/`) → upload artifact → deploy Pages.
 
