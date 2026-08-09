@@ -27,6 +27,12 @@ GOOGLE_RSS = "https://news.google.com/rss?hl=he&gl=IL&ceid=IL:he"
 GOOGLE_WORLD = (
     "https://news.google.com/rss/headlines/section/topic/WORLD?hl=he&gl=IL&ceid=IL:he"
 )
+GOOGLE_WORLD_FOCUS = (
+    "https://news.google.com/rss/search?hl=he&gl=IL&ceid=IL:he&q="
+    "%D7%90%D7%A8%D7%94%22%D7%91%20OR%20%D7%90%D7%95%D7%A7%D7%A8%D7%90%D7%99%D7%A0%D7%94%20OR%20"
+    "%D7%A1%D7%99%D7%9F%20OR%20%D7%A8%D7%95%D7%A1%D7%99%D7%94%20OR%20%D7%A0%D7%90%D7%98%22%D7%95%20OR%20"
+    "%D7%91%D7%99%D7%99%D7%93%D7%9F%20OR%20%D7%90%D7%99%D7%A8%D7%95%D7%A4%D7%94%20OR%20%D7%A7%D7%95%D7%A0%D7%92%D7%A8%D7%A1"
+)
 GOOGLE_NATION = (
     "https://news.google.com/rss/headlines/section/topic/NATION?hl=he&gl=IL&ceid=IL:he"
 )
@@ -216,12 +222,13 @@ def build_payload() -> dict:
 
     main = safe_feed(GOOGLE_RSS, 18)
     # בלי topicHint קשיח — הסיווג בצד הלקוח/enrich יפריד אזור/עולם/ביטחון
-    world = safe_feed(GOOGLE_WORLD, 10)
+    world = safe_feed(GOOGLE_WORLD, 8)
+    world_focus = safe_feed(GOOGLE_WORLD_FOCUS, 10)
     nation = safe_feed(GOOGLE_NATION, 12)
     business = safe_feed(GOOGLE_BUSINESS, 12, "economy")[:8]
     sports = safe_feed(GOOGLE_SPORTS, 8, "sport")
     leisure = safe_feed(GOOGLE_TRAVEL, 25, "leisure")[:5]
-    clusters = enrich_items(merge_items(main, world, nation, business, sports, leisure))
+    clusters = enrich_items(merge_items(main, world, world_focus, nation, business, sports, leisure))
     return {
         "fetchedAt": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "count": len(clusters),
