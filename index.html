@@ -2044,17 +2044,18 @@
 
     const SEEN_KEY = "takles_seen_map";
     const SEEN_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 ימים בנצפו
+    // לוח טרי: רק כתבות משעתיים האחרונות (לפי pubDate)
     const ACTIVE_TTL_H = {
-      security: 12,
-      region: 24,
-      world: 36,
-      politics: 36,
-      economy: 36,
-      domestic: 18,
-      leisure: 24,
-      sport: 18,
+      security: 2,
+      region: 2,
+      world: 2,
+      politics: 2,
+      economy: 2,
+      domestic: 2,
+      leisure: 2,
+      sport: 2,
     };
-    const ACTIVE_TTL_DEFAULT_H = 24;
+    const ACTIVE_TTL_DEFAULT_H = 2;
 
     let speakingUtterance = null;
     const THEME_KEY = "takles_theme";
