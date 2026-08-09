@@ -1242,31 +1242,103 @@
       return new Date(c.pubDate || 0).getTime() || 0;
     }
 
+    function israelDayKey(ts = Date.now()) {
+      try {
+        return new Intl.DateTimeFormat("en-CA", {
+          timeZone: "Asia/Jerusalem",
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+        }).format(new Date(ts));
+      } catch {
+        const d = new Date(ts);
+        return d.toISOString().slice(0, 10);
+      }
+    }
+
+    function isTodayIsrael(c) {
+      const t = cardTime(c);
+      if (!t) return false;
+      return israelDayKey(t) === israelDayKey(Date.now());
+    }
+
+    function cardTextBlob(c) {
+      return [
+        c.title,
+        c.summary,
+        c.why_matters,
+        ...(c.original_headlines || []),
+        ...(c.bullet_facts || []),
+      ]
+        .filter(Boolean)
+        .join(" ");
+    }
+
+    function isSecurityish(c) {
+      if (c.topic === "security") return true;
+      return /יירוט|אזעק|רקטות?|מטח|שיגור|כטב|רחפן|חיזבאללה|חמאס|פיגוע|חטופ|מלחמ|טיל|פיקוד העורף|ג['׳]יהאד/.test(
+        cardTextBlob(c)
+      );
+    }
+
+    function isRollingEvent(c) {
+      const blob = cardTextBlob(c);
+      if (
+        /מתפתח|מתגלגל|עדכון\s*חי|בזמן אמת|בשעה זו|ברגעי|דקות האחרונות|סבב|מטח|אזעק|יירוט|שיגור|התרע|ירי רקטות|כטב״?מ|כטבמ|חירום|פיקוד העורף/.test(
+          blob
+        )
+      ) {
+        return true;
+      }
+      // דיווח טרי + כמה מקורות בנושא ביטחוני = אירוע פתוח
+      if (isSecurityish(c) && (c.sources || []).length >= 2 && ageHours(c) <= 6) return true;
+      return false;
+    }
+
+    function verificationFactor(c) {
+      const allowUnverified = isSecurityish(c) || isRollingEvent(c);
+      const status = c.status || "reported";
+      if (status === "confirmed") return 1.15;
+      if (status === "denied") return allowUnverified ? 0.75 : 0.55;
+      if (status === "review") return allowUnverified ? 1.05 : 0.42;
+      if (status === "reported") return allowUnverified ? 1.0 : 0.48;
+      return allowUnverified ? 0.9 : 0.55;
+    }
+
     function importanceScore(c) {
       const ageH = Math.max(0, (Date.now() - cardTime(c)) / 3600000);
-      // עדכניות: דעיכה חזקה — אירוע חי מנצח ישן באותה רמת חשיבות
-      const recency = Math.exp(-ageH / 5);
+      // בתוך היום: דעיכה עדינה; מחוץ ליום כמעט לא רלוונטי
+      const recency = isTodayIsrael(c) ? Math.exp(-ageH / 10) : Math.exp(-ageH / 4) * 0.12;
       const sourcesN = (c.sources || []).length;
-      const topicScore = {
-        security: 100,
-        region: 88,
-        world: 70,
-        politics: 52,
-        economy: 38,
-        domestic: 18,
-        leisure: 10,
-        sport: 12,
-      }[c.topic] || 12;
+      const topicScore =
+        {
+          security: 100,
+          region: 86,
+          world: 68,
+          politics: 54,
+          economy: 40,
+          domestic: 22,
+          leisure: 12,
+          sport: 14,
+        }[c.topic] || 14;
 
       let boost = 0;
-      const blob = [c.title, ...(c.original_headlines || [])].join(" ");
-      if (/הורמוז|איראן|חיזבאללה|יירוט|רחפן|מלחמ|טיל|פיקוד|חטופ/.test(blob)) boost += 40;
+      const blob = cardTextBlob(c);
+      if (/הורמוז|איראן|חיזבאללה|יירוט|רחפן|מלחמ|טיל|פיקוד|חטופ|אזעק|מטח/.test(blob)) boost += 36;
+      if (isRollingEvent(c)) boost += 28;
       if (/דה\s*וויס|Bose|גלקסי|סמסונג|איירליינס|פייטן|QuietComfort/.test(blob)) boost -= 60;
-      if (c.status === "confirmed") boost += 10;
-      if (c.status === "review") boost += 5;
+      // מקורות חוצים = אמינות גבוהה יותר
+      if (sourcesN >= 3) boost += 18;
+      else if (sourcesN >= 2) boost += 10;
 
-      const relevance = topicScore + sourcesN * 7 + boost;
-      return relevance * recency;
+      const relevance = topicScore + sourcesN * 6 + boost;
+      return relevance * recency * verificationFactor(c);
+    }
+
+    function compareByRelevance(a, b) {
+      const d = importanceScore(b) - importanceScore(a);
+      if (Math.abs(d) > 0.01) return d;
+      return cardTime(b) - cardTime(a);
     }
 
     const ISRAEL_TOPICS = new Set(["security", "politics", "region", "economy", "domestic"]);
@@ -1274,20 +1346,12 @@
     function pickLeadStory(cards) {
       const pool = cards.filter((c) => ISRAEL_TOPICS.has(c.topic));
       if (!pool.length) return null;
-      return [...pool].sort((a, b) => {
-        const d = importanceScore(b) - importanceScore(a);
-        if (Math.abs(d) > 0.01) return d;
-        return cardTime(b) - cardTime(a);
-      })[0];
+      return [...pool].sort(compareByRelevance)[0];
     }
 
     function pickTopByScore(cards) {
       if (!cards.length) return null;
-      return [...cards].sort((a, b) => {
-        const d = importanceScore(b) - importanceScore(a);
-        if (Math.abs(d) > 0.01) return d;
-        return cardTime(b) - cardTime(a);
-      })[0];
+      return [...cards].sort(compareByRelevance)[0];
     }
 
     function shortDeck(text, max = 110) {
@@ -1877,7 +1941,7 @@
         .map((topic) => {
           const items = cards
             .filter((c) => c.topic === topic.id)
-            .sort((a, b) => cardTime(b) - cardTime(a))
+            .sort(compareByRelevance)
             .slice(0, 3);
           const list = items.length
             ? `<ul class="cube-list">${items
@@ -1911,7 +1975,9 @@
       const active = activeCards();
       renderLead(active);
       renderTopicCubes(active);
-      els.status.textContent = `${active.length} עדכונים פעילים`;
+      els.status.textContent = `${active.length} עדכונים מהיום${
+        lastSourceLabel ? ` · ${lastSourceLabel}` : ""
+      }`;
     }
 
     function classifyTopic(title, sources = []) {
@@ -2069,18 +2135,8 @@
 
     const SEEN_KEY = "takles_seen_map";
     const SEEN_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 ימים בנצפו
-    // לוח טרי: רק כתבות משעתיים האחרונות (לפי pubDate)
-    const ACTIVE_TTL_H = {
-      security: 2,
-      region: 2,
-      world: 2,
-      politics: 2,
-      economy: 2,
-      domestic: 2,
-      leisure: 2,
-      sport: 2,
-    };
-    const ACTIVE_TTL_DEFAULT_H = 2;
+    // לוח יומי: כתבות מהיום (שעון ישראל). ביטחון/אירוע מתגלגל — עד 12ש׳ גם אחרי חצות.
+    const ROLLING_TTL_H = 12;
 
     let speakingUtterance = null;
     const THEME_KEY = "takles_theme";
@@ -2387,12 +2443,12 @@
       return Math.max(0, (Date.now() - t) / 3600000);
     }
 
-    function activeTtlHours(c) {
-      return ACTIVE_TTL_H[c.topic] ?? ACTIVE_TTL_DEFAULT_H;
-    }
-
     function isFreshOnBoard(c) {
-      return ageHours(c) <= activeTtlHours(c);
+      if (!cardTime(c)) return false;
+      if (isTodayIsrael(c)) return true;
+      // אירוע ביטחוני/מתגלגל יכול להישאר גם אחרי חצות אם עדיין טרי
+      if ((isSecurityish(c) || isRollingEvent(c)) && ageHours(c) <= ROLLING_TTL_H) return true;
+      return false;
     }
 
     function activeCards() {
@@ -2517,17 +2573,17 @@
           const sa = isSeen(a.id) ? 1 : 0;
           const sb = isSeen(b.id) ? 1 : 0;
           if (sa !== sb) return sa - sb;
-          return cardTime(b) - cardTime(a);
+          return compareByRelevance(a, b);
         });
       } else if (mode === "seen") {
         arr.sort((a, b) => {
           const sa = isSeen(a.id) ? 0 : 1;
           const sb = isSeen(b.id) ? 0 : 1;
           if (sa !== sb) return sa - sb;
-          return cardTime(b) - cardTime(a);
+          return compareByRelevance(a, b);
         });
       } else {
-        arr.sort((a, b) => cardTime(b) - cardTime(a));
+        arr.sort(compareByRelevance);
       }
       return arr;
     }
@@ -2552,7 +2608,7 @@
         <h2 class="title t-${escapeHtml(topicId)}" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">${escapeHtml(topic.label)}</h2>
         <p class="status-line" style="margin-top:0">${cards.length} עדכונים · נצפים באפור</p>
         <div class="sort-bar" id="sortBar">
-          <button type="button" data-sort="time" class="${listSort === "time" ? "active" : ""}">לפי זמן</button>
+          <button type="button" data-sort="time" class="${listSort === "time" ? "active" : ""}">לפי רלוונטיות</button>
           <button type="button" data-sort="unseen" class="${listSort === "unseen" ? "active" : ""}">לא נצפו קודם</button>
           <button type="button" data-sort="seen" class="${listSort === "seen" ? "active" : ""}">נצפו קודם</button>
         </div>
@@ -2797,11 +2853,16 @@
       }
 
       const quoted = /"|״|„|“|”/.test(item.title) || /:/.test(item.title);
+      const softClaim =
+        /עשוי|אולי|חשד|דיווח|נמסר|לפי גורמ|לטענת|גורמים|לא אושר|טרם אושר|על פי דיווח/.test(
+          item.title
+        );
       const multi = names.length >= 2;
       let status = "reported";
-      if (multi && !quoted && !/עשוי|אולי|חשד|דיווח|נמסר/.test(item.title)) status = "confirmed";
+      if (multi && !quoted && !softClaim) status = "confirmed";
       if (/הכחיש|הכחשה|דחה את/.test(item.title)) status = "denied";
-      if (/חשד|אולי|עשוי|נבדק/.test(item.title)) status = "review";
+      if (/חשד|אולי|עשוי|נבדק|בבדיקה|לא אושר|טרם אושר/.test(item.title)) status = "review";
+      if (softClaim && status === "confirmed") status = "reported";
 
       const bullets = [];
       const seen = new Set();
