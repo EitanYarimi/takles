@@ -1785,8 +1785,8 @@
           timezone: "Asia/Jerusalem",
         });
       const [landRes, seaRes] = await Promise.all([
-        fetch(landUrl, { cache: "no-store" }),
-        fetch(seaUrl, { cache: "no-store" }),
+        fetchWithTimeout(landUrl, 8000),
+        fetchWithTimeout(seaUrl, 8000),
       ]);
       if (!landRes.ok) throw new Error(`weather ${landRes.status}`);
       const data = await landRes.json();
@@ -3178,8 +3178,18 @@
       });
     }
 
+    async function fetchWithTimeout(url, ms = 8000, opts = {}) {
+      const ctrl = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), ms);
+      try {
+        return await fetch(url, { ...opts, signal: ctrl.signal, cache: "no-store" });
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+
     async function fetchStaticNewsJson() {
-      const res = await fetch(NEWS_JSON, { cache: "no-store" });
+      const res = await fetchWithTimeout(NEWS_JSON, 10000);
       if (!res.ok) throw new Error(`API ${res.status}`);
       const data = await res.json();
       if (data.error) throw new Error(data.error);
@@ -3188,32 +3198,30 @@
     }
 
     async function fetchLiveItems() {
-      if (IS_PAGES) {
-        let staticData = null;
-        try {
-          staticData = await fetchStaticNewsJson();
-        } catch (e) {
-          console.warn("news.json unavailable", e);
-        }
-        try {
-          const live = await fetchGoogleNewsLive();
-          if (live.items?.length) {
-            const items = hydrateWithDistill(live.items, staticData?.items || []);
-            return {
-              items,
-              meta: { ...live, items, count: items.length },
-              sourceKind: "live",
-            };
-          }
-        } catch (e) {
-          console.warn("live google feed failed, falling back to news.json", e);
-        }
-        if (staticData?.items?.length) {
-          return { items: staticData.items, meta: staticData, sourceKind: "static" };
-        }
-      }
+      // תמיד קודם news.json — בלי לחכות לפרוקסי חי
       const data = await fetchStaticNewsJson();
       return { items: data.items, meta: data, sourceKind: "static" };
+    }
+
+    async function tryLiveGoogleRefresh() {
+      if (!IS_PAGES) return;
+      try {
+        const live = await fetchGoogleNewsLive();
+        if (!live.items?.length) return;
+        let distillBase = [];
+        try {
+          distillBase = (await fetchStaticNewsJson()).items || [];
+        } catch (_) {}
+        const items = hydrateWithDistill(live.items, distillBase);
+        if (items.length) {
+          applyNewsPayload(
+            { ...live, items, count: items.length },
+            "חי · Google News · רענון"
+          );
+        }
+      } catch (e) {
+        console.warn("background live refresh skipped", e);
+      }
     }
 
     function stripTags(text) {
@@ -3269,13 +3277,13 @@
 
     async function fetchRssViaProxy(feedUrl) {
       const proxies = [
-        (u) => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
         (u) => `https://corsproxy.io/?${encodeURIComponent(u)}`,
+        (u) => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
       ];
       let lastErr = null;
       for (const make of proxies) {
         try {
-          const res = await fetch(make(feedUrl), { cache: "no-store" });
+          const res = await fetchWithTimeout(make(feedUrl), 7000);
           if (!res.ok) throw new Error(`proxy ${res.status}`);
           const text = await res.text();
           if (!text.includes("<item")) throw new Error("empty rss");
@@ -3288,7 +3296,7 @@
     }
 
     async function fetchGoogleNewsLive() {
-      const groups = await Promise.all(
+      const results = await Promise.allSettled(
         GOOGLE_FEEDS.map(async (feed) => {
           const xml = await fetchRssViaProxy(feed.url);
           let items = parseGoogleRss(xml, feed.limit, feed.topicHint || null);
@@ -3298,6 +3306,10 @@
           return items;
         })
       );
+      const groups = results
+        .filter((r) => r.status === "fulfilled")
+        .map((r) => r.value);
+      if (!groups.length) throw new Error("all feeds failed");
       const seen = new Set();
       const merged = [];
       for (const group of groups) {
@@ -3310,6 +3322,7 @@
           merged.push(scrubbed);
         }
       }
+      if (!merged.length) throw new Error("no usable live items");
       return {
         fetchedAt: new Date().toISOString(),
         count: merged.length,
@@ -3321,7 +3334,10 @@
     function applyNewsPayload(data, sourceLabel) {
       const raw = data.items || [];
       const items = raw.map(scrubItemSources).filter(Boolean);
-      if (!items.length) return;
+      if (!items.length) {
+        els.status.textContent = "לא נמצאו עדכונים עובדתיים כרגע";
+        return;
+      }
       lastSourceLabel = sourceLabel;
       allCards = items.map((item) => enrichCard(localDistill(item), item));
       // Stay on current view if possible
@@ -3354,18 +3370,24 @@
         applyTopicFilter();
         console.warn("news load failed", e);
       }
+      // רענון חי ברקע — לא חוסם את הלוח
+      if (IS_PAGES) {
+        tryLiveGoogleRefresh();
+      }
     }
 
     function startPagesPolling() {
       const tick = async () => {
         try {
           const liveData = await fetchLiveItems();
-          const label =
-            liveData.sourceKind === "live" ? "חי · Google News · רענון" : "GitHub Pages · רענון";
-          applyNewsPayload(liveData.meta || liveData, label);
+          applyNewsPayload(
+            liveData.meta || liveData,
+            IS_PAGES ? "GitHub Pages · רענון" : "רענון"
+          );
         } catch (e) {
           console.warn("pages poll failed", e);
         }
+        if (IS_PAGES) tryLiveGoogleRefresh();
       };
       setInterval(tick, POLL_MS);
     }
