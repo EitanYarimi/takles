@@ -14,7 +14,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 CACHE_PATH = ROOT / "distill_cache.json"
-DISTILL_VERSION = "v8-facts-analysis"
+DISTILL_VERSION = "v9-no-opinion-clusters"
 SSL_CTX = ssl._create_unverified_context()
 UA = "Mozilla/5.0 ClearNewsPOC/0.5"
 GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.0-flash")
@@ -41,25 +41,139 @@ KICKER_RE = re.compile(
     r"\s*[:\-–—]\s*",
     re.I,
 )
+OPINION_LABEL_RE = re.compile(
+    r"(?:\|\s*)?(?:דעה|פרשנות|טור(?:\s+דעה)?)\s*$|"
+    r"(?:\|\s*)(?:דעה|פרשנות|טור)\b|"
+    r"^(?:דעה|פרשנות|טור)\s*[:\-–—]",
+    re.I,
+)
+OPINION_COLOR_RE = re.compile(
+    r"הצצה לתוך|השיגעון|רק מחזק את הזעזוע|לא מחדשות דבר",
+    re.I,
+)
+FACT_SIGNAL_RE = re.compile(
+    r"מגיב|הודיע|מסר|נמסר|אישר|הכחיש|דחה|נעצר|נפצע|נהרג|הורשע|"
+    r"הצביע|אושר|מינה|פיטר|חתם|שיגר|ירה|יי.?רט|התרע|אזעק|"
+    r"העלה|הוריד|קבע|פרסם|דיווח|חק[רה]|הגיש|התפטר|הכריז",
+    re.I,
+)
+QUOTE_REACTION_RE = re.compile(
+    r"(מגיב|בתגובה|תוקף|מתוקף).{0,40}[:\"״]|[\"״].{15,}[\"״]",
+    re.I,
+)
+
+
+def _strip_quotes_and_tail(text: str) -> str:
+    t = text or ""
+    t = re.sub(r"[\"״„“”].*?[\"״„“”]", " ", t)
+    t = re.split(r"[:\-–—]\s*", t, maxsplit=1)[0]
+    return re.sub(r"\s+", " ", t).strip()
+
+
+def is_opinion_text(text: str) -> bool:
+    t = text or ""
+    if OPINION_LABEL_RE.search(t):
+        return True
+    core = _strip_quotes_and_tail(t)
+    if FACT_SIGNAL_RE.search(core):
+        return False
+    if OPINION_COLOR_RE.search(t) or OPINION_COLOR_RE.search(core):
+        return True
+    # כותרת רטורית/מטאפורית בלי פועל עובדתי
+    if len(core) < 48 and not FACT_SIGNAL_RE.search(core) and not re.search(r"\d", core):
+        if re.search(r"[?!]|שיגעון|זעזוע|הלם|דרמה", t):
+            return True
+    return False
+
+
+def looks_like_fact_line(text: str) -> bool:
+    t = dry_title(text or "")
+    if not t or len(t) < 12:
+        return False
+    if is_opinion_text(t):
+        return False
+    if FACT_SIGNAL_RE.search(t) or re.search(r"\d", t):
+        return True
+    # משפט עם שני שמות/תפקידים לפחות ופעלת דיווח עדינה
+    if re.search(r"של |מול |בין ", t) and re.search(r"על |לגבי |בנוגע", t):
+        return True
+    return False
+
+
+def factual_core_title(title: str) -> str:
+    """Strip quoted spin after a reaction lead-in."""
+    t = dry_title(title or "")
+    # יועץ X מגיב ל-Y: "ספין..." → שמור רק את הליבה
+    m = re.match(
+        r'^(.{8,80}?(?:מגיב|הודיע|מסר|אישר|הכחיש)\s+ל[^:\"״]{2,40})\s*[:\-–—]\s*[\"״].*',
+        t,
+    )
+    if m:
+        return m.group(1).strip(" -:·")
+    # חתוך ציטוט ארוך אחרי נקודתיים
+    if re.search(r'[:\-–—]\s*[\"״]', t):
+        t = re.split(r'[:\-–—]\s*[\"״]', t, maxsplit=1)[0].strip(" -:·")
+    return t or dry_title(title or "")
+
+
+def scrub_item_sources(item: dict) -> dict | None:
+    """Keep hard-news sources only. Drop opinion-only clusters."""
+    sources = list(item.get("sources") or [])
+    factual = []
+    opinion = []
+    for s in sources:
+        head = s.get("headline") or ""
+        if is_opinion_text(head):
+            opinion.append(s)
+        else:
+            factual.append(s)
+    title = item.get("title") or ""
+    if not factual:
+        # אם הכותרת עצמה עובדתית — שמור מקור יחיד סינתטי
+        if looks_like_fact_line(title) and not is_opinion_text(title):
+            factual = [
+                {
+                    "url": item.get("link") or "",
+                    "headline": factual_core_title(title),
+                    "name": (sources[0].get("name") if sources else None) or "Google News",
+                }
+            ]
+            opinion = sources
+        else:
+            return None
+
+    # רעש פוליטי: תגובת ציטוט + בעיקר דעות
+    core = factual_core_title(title)
+    if (
+        QUOTE_REACTION_RE.search(title)
+        and len(opinion) >= max(1, len(factual))
+        and not re.search(r"יי.?רט|אזעק|רקטות?|חטופ|מלחמ|פיגוע", title)
+    ):
+        return None
+
+    out = dict(item)
+    out["title"] = core
+    out["sources"] = factual[:6]
+    if opinion:
+        out["opinion_sources"] = opinion[:6]
+    return out
+
 
 PROMPT = """אתה עורך זיקוק עובדתי לפורטל "תכל׳ס" (ישראל).
-קלט: כותרת מקבץ + כותרות ממקורות שונים על אותו אירוע.
+קלט: כותרת מקבץ + כותרות ממקורות חדשותיים בלבד (בלי דעות).
 החזר JSON בלבד (בלי markdown) עם השדות:
-- title: כותרת יבשה בעברית, בלי דרמה/קליקבייט
-- bullet_facts: מערך 4–6 נתונים/עובדות שניתן לגזור מהקלט בלבד (מי/מה/איפה/מתי/מספרים/סטטוס דיווח). כל פריט = משפט עובדתי קצר. אם מספר לא מופיע בקלט — אל תמציא.
-- summary: ניתוח יבש של 3–5 משפטים: מה משותף בין המקורות, מה מדווח רק בחלק מהם, ומה עדיין לא מאושר. זה לא דעה ולא המלצה.
-- why_matters: משפט אחד על השלכה עובדתית/ציבורית שנגזרת מהנתונים (לא פרשנות פוליטית, לא ניחוש)
-- background: 2–3 משפטים הקשר עובדתי מקדים (רק אם נתמך מהקלט או ידע כללי יציב כמו שמות מוסדות/מקומות)
-- outlook: 2 משפטים — שאלות פתוחות / מה עוד חסר לאימות (לא תחזית)
-- status: אחד מ־confirmed | reported | denied | review
+- title: כותרת יבשה בעברית, בלי דרמה/קליקבייט/ציטוטי ספין
+- bullet_facts: מערך 3–6 נתונים שניתן לגזור מהקלט בלבד. אסור להעתיק כותרות דעה/פרשנות. אסור ציטוטי התקפה פוליטית כעובדה — רק מי אמר/הגיב למי אם זה הדיווח.
+- summary: ניתוח יבש 2–4 משפטים: מה אומת יחסית, מה דיווח יחיד, מה חסר. בלי דעה.
+- why_matters: השלכה עובדתית אחת שנגזרת מהנתונים, או מחרוזת ריקה אם אין השלכה ברורה
+- background: הקשר עובדתי קצר ורק אם נתמך; אחרת משפט אחד "חסר הקשר מצולב בקלט"
+- outlook: מה עוד לא ברור לאימות (לא תחזית)
+- status: confirmed | reported | denied | review
 
-כללים מחמירים:
-- עברית יבשה, בלי פעלים דרמטיים, בלי לינקים, בלי ספינים.
-- אסור להמציא עובדות, מספרים, ציטוטים או כוונות שלא בקלט.
-- אם המקורות חלוקים — ציין את המחלוקת במפורש ב־summary; אל תבחר צד.
-- אל תכתוב דעה, שיפוט מוסרי, או "צריך/ראוי".
-- אל תכתוב מטא על האתר ("תכלס", "לוח", "ספין").
-- confirmed רק אם לפחות שני מקורות מציגים אותה עובדה בלי לשון ספק; אחרת reported/review.
+כללים:
+- אל תמציא. אל תבחר צד. אל תשתמש במילות דרמה.
+- אם הקלט הוא בעיקר תגובה פוליטית/ציטוט — כתוב רק את ליבת האירוע (מי הגיב למי) וציין שחסר פירוט עובדתי.
+- confirmed רק עם לפחות שני מקורות על אותה עובדה בלי לשון ספק.
 """
 
 
@@ -122,16 +236,21 @@ def _unique_lines(lines: list[str], limit: int = 5) -> list[str]:
 
 
 def _extract_fact_points(title: str, headlines: list[str]) -> list[str]:
-    """Pull concrete angles from source headlines instead of pasting spin."""
-    blob = " ".join([title, *headlines])
+    """Pull concrete angles from hard-news headlines only."""
+    factual_heads = [h for h in headlines if looks_like_fact_line(h)]
+    blob = " ".join([title, *factual_heads])
     points: list[str] = []
 
     def add(s: str) -> None:
         s = dry_title(s).strip(" .")
-        if not s:
+        if not s or is_opinion_text(s):
             return
         if s and s not in points:
             points.append(s)
+
+    core = factual_core_title(title)
+    if looks_like_fact_line(core):
+        add(core)
 
     # מספרים / כמויות שמופיעים בקלט בלבד
     for m in re.finditer(
@@ -159,48 +278,38 @@ def _extract_fact_points(title: str, headlines: list[str]) -> list[str]:
     if re.search(r"איראן", blob) and re.search(r"הסכם|עומאן|פתיח", blob):
         add("מדווח על דיונים/הסכמות הקשורים לאיראן ולפתיחת נתיב שיט")
 
-    # זוויות ייחודיות מכותרות המקור (בלי כפילות)
-    for line in _unique_lines([title, *headlines], limit=6):
-        add(line)
+    for line in _unique_lines(factual_heads, limit=6):
+        if looks_like_fact_line(line):
+            add(line)
 
     return points[:6]
 
 
 def _build_summary(title: str, headlines: list[str], names: list[str]) -> str:
     """Dry cross-source analysis — no opinion, no invented facts."""
-    points = _extract_fact_points(title, headlines)
+    factual_heads = [h for h in headlines if looks_like_fact_line(h)]
+    points = _extract_fact_points(title, factual_heads)
     n = len(names)
-    unique_heads = _unique_lines(headlines or [title], limit=4)
+    unique_heads = _unique_lines(factual_heads or ([factual_core_title(title)] if title else []), limit=4)
 
     parts: list[str] = []
     if n >= 2:
         parts.append(
-            f"הצלבה בין {n} מקורות ({', '.join(names[:4])}{'…' if n > 4 else ''}) על אותו מקבץ."
+            f"הצלבה בין {n} מקורות חדשותיים ({', '.join(names[:4])}{'…' if n > 4 else ''})."
         )
     else:
-        parts.append("מבוסס על מקור יחיד בפיד — עדיין בלי הצלבה מספקת.")
+        parts.append("מבוסס על מקור חדשותי יחיד — בלי הצלבה מספקת.")
 
-    if len(unique_heads) >= 2:
-        parts.append(
-            "הקו המשותף בכותרות: "
-            + "; ".join(h.rstrip(".") for h in unique_heads[:2])
-            + "."
-        )
-        if len(unique_heads) >= 3:
-            parts.append(
-                "זווית נוספת שמופיעה רק בחלק מהמקורות: "
-                + unique_heads[2].rstrip(".")
-                + "."
-            )
+    if unique_heads:
+        parts.append("מה שניתן לגזור מהדיווחים: " + "; ".join(h.rstrip(".") for h in unique_heads[:3]) + ".")
     elif points:
         parts.append(f"מהדיווח עולה: {points[0].rstrip('.')}.")
+    else:
+        parts.append("לא נמצאו עובדות יציבות מעבר לכותרת המקבץ.")
 
     soft = re.search(r"עשוי|אולי|חשד|דיווח|נמסר|לפי גורמ|לטענת|לא אושר|טרם אושר", title)
-    if soft or n < 2:
-        parts.append("חלק מהפרטים עדיין ברמת דיווח ולא אושרו סופית במקורות שנבדקו.")
-    else:
-        parts.append("אין בקלט הבהרה מלאה של לוח זמנים, היקף או גורם מאשר.")
-
+    if soft or n < 2 or QUOTE_REACTION_RE.search(title or ""):
+        parts.append("חלק מהפרטים ברמת דיווח/תגובה — לא אומתו מעבר לכך במקורות שנבדקו.")
     return " ".join(parts)
 
 
@@ -232,151 +341,112 @@ def _substantive_fallback(title: str, headlines: list[str], names: list[str]) ->
 
 
 def heuristic_distill(item: dict) -> dict:
-    title = dry_title(item.get("title") or "")
+    title = factual_core_title(item.get("title") or "")
     sources = item.get("sources") or []
-    headlines = [s.get("headline") or "" for s in sources]
+    headlines = [
+        s.get("headline") or ""
+        for s in sources
+        if not is_opinion_text(s.get("headline") or "")
+    ]
+    if not headlines:
+        headlines = [title] if title else []
     names = []
     for s in sources:
+        if is_opinion_text(s.get("headline") or ""):
+            continue
         n = (s.get("name") or "").strip()
         if n and n not in names:
             names.append(n)
 
-    quoted = bool(re.search(r"\"|״|„|“|”|:", title))
+    raw_title = item.get("title") or ""
+    quoted = bool(re.search(r"\"|״|„|“|”", raw_title))
+    soft_claim = bool(
+        re.search(r"עשוי|אולי|חשד|דיווח|נמסר|לפי גורמ|לטענת|לא אושר|טרם אושר", title)
+    )
     multi = len(names) >= 2
     status = "reported"
-    if multi and not quoted and not re.search(r"עשוי|אולי|חשד|דיווח|נמסר", title):
+    if multi and not quoted and not soft_claim and not QUOTE_REACTION_RE.search(raw_title):
         status = "confirmed"
     if re.search(r"הכחיש|הכחשה|דחה את", title):
         status = "denied"
-    if re.search(r"חשד|אולי|עשוי|נבדק", title):
+    if re.search(r"חשד|אולי|עשוי|נבדק", title) or QUOTE_REACTION_RE.search(raw_title):
         status = "review"
 
-    bullets = _extract_fact_points(title, headlines)
+    bullets = [
+        b
+        for b in _extract_fact_points(title, headlines)
+        if looks_like_fact_line(b) or str(b).startswith("נתון")
+    ]
+    if not bullets and title:
+        bullets = [title]
     while len(bullets) < 3:
-        extras = _unique_lines([title, *headlines], limit=5)
-        for e in extras:
-            if e not in bullets:
-                bullets.append(e)
-            if len(bullets) >= 3:
-                break
-        break
-    while len(bullets) < 3:
-        bullets.append("חלק מהפרטים עדיין לא הובהרו במקורות שנבדקו.")
+        bullets.append("חלק מהפרטים העובדתיים עדיין לא הובהרו במקורות החדשותיים שנבדקו.")
 
     summary = _build_summary(title, headlines, names)
-
     blob = " ".join([title, *headlines])
-    if re.search(r"הורמוז|איראן", blob):
-        why_matters = "זה משפיע על שיט ואנרגיה גלובליים — ולכן גם על מחירים ויציבות שנוגעים לישראל ולשווקים."
+    thin_reaction = bool(QUOTE_REACTION_RE.search(raw_title)) and len(headlines) <= 2
+
+    if thin_reaction:
+        background = "חסר הקשר מצולב מעבר לדיווח על התגובה עצמה."
+        outlook = "חסר פירוט עובדתי: על מה בדיוק הגיבו, ומה אומת מעבר לציטוט."
+        why_matters = ""
+    elif re.search(r"הורמוז|איראן", blob):
+        why_matters = "הדיווח נוגע לנתיב שיט מרכזי — שינוי שם משפיע על אנרגיה ומחירים."
         background = (
             "מצר הורמוז הוא נתיב שיט מרכזי לנפט ולסחר במפרץ. "
-            "מתיחות בין איראן לארה״ב ולמדינות האזור סביב פתיחה/סגירה של המעבר משפיעה על מחירים, ביטוח אוניות ויציבות אזורית."
+            "דיווחים על פתיחה/סגירה או הסכמות סביבו נוגעים לשיט ולשווקים."
         )
         outlook = (
-            "מה שחשוב לעקוב אחריו: האם יש הסכמה מעשית על פתיחת המעבר, ומה אומרות איראן, ארה״ב ומדינות המפרץ בפועל. "
-            "שינוי חד בהצהרות או בתנועת אוניות עשוי לעדכן את התמונה במהירות."
+            "עדיין פתוח: האם יש הסכמה מעשית על פתיחת המעבר, ומה נאמר בפועל ע״י הצדדים. "
+            "חסרים פרטי לוח זמנים והיקף."
         )
     elif re.search(
         r"חיזבאללה|לבנון|רחפן|יירוט|פיקוד העורף|חטופ|עזה|חמאס|רצועת|נסיגה|צה[\"׳']?ל|מערכת הביטחון|כוחות|לחימ",
         blob,
     ):
-        if re.search(r"עזה|חמאס|רצועת|נסיגה", blob):
-            points = _extract_fact_points(title, headlines)
-            why_matters = (
-                "כי נסיגה ממוקדים בעזה — במיוחד תחת לחץ אמריקני ובדיון על כוח רב־לאומי — משנה שליטה בשטח, לחימה ומיקוח מדיני."
-                if re.search(r"רב-?לאומי|אמריקנ", blob)
-                else "כי דיון על נסיגה או שינוי פריסה בעזה משפיע ישירות על הלחימה, על החטופים ועל הלחץ המדיני סביב הרצועה."
-            )
-            background = (
-                "ממקורות שונים עולה אותו דיון בכמה זוויות: "
-                + "; ".join(points[:4])
-                + ". "
-                "עדיין מדובר בבחינה/דיווח ולא בהכרח בהחלטה סופית מאושרת."
-            )
-            outlook = (
-                "השלב הבא: האם יש החלטה מאושרת, מאילו מוקדים, האם נכנס כוח חלופי, ובאיזה לוח זמנים — או שהבדיקה נגנזת. "
-                "תגובות פוליטיות ודיווחי שטח יבהירו אם מדובר במהלך ממשי."
-            )
-        else:
-            why_matters = "כי זה נוגע ישירות לביטחון תושבים ולמצב בגבול — לא לאירוע רחוק בלבד."
-            background = (
-                "זירת הצפון מול לבנון נשארת רגישה: דיווחים על רחפנים, יירוטים או חילופי אש משפיעים על תושבים וכוחות. "
-                "גם כשהאירוע נקודתי, הוא מגיע על רקע מתיחות מתמשכת."
-            )
-            outlook = (
-                "לעקוב אחרי אישור רשמי של צה״ל/פיקוד העורף, היקף הנזק או היירוט, והאם מגיע אירוע המשך. "
-                "שינוי בקצב התקריות הוא הסימן הכי שימושי."
-            )
+        points = _extract_fact_points(title, headlines)
+        why_matters = "הדיווח נוגע לביטחון תושבים, לגבול או ללחימה."
+        background = (
+            "ממקורות חדשותיים: "
+            + ("; ".join(points[:4]) if points else title)
+            + ". עדיין מדובר בדיווח שדורש אישור/פירוט."
+        )
+        outlook = "חסרים אישור רשמי, היקף ולוח זמנים."
     elif re.search(
-        r"תובע הכללי|בא.?כוח הכללי|עוה\"?ד|עורך דין|סנאט|הבית הלבן|טראמפ|ביידן|בלנש|בלאנש|Blanche|ארה[\"׳']?ב|וושינגטון|פנטגון|נאט.?ו",
+        r"תובע הכללי|סנאט|הבית הלבן|טראמפ|ביידן|ארה[\"׳']?ב|וושינגטון|פנטגון|נאט.?ו",
         blob,
     ):
-        why_matters = "מינוי בכיר בוושינגטון קובע מדיניות אכיפה ותיקים רגישים — ולכן משפיע גם על זירה בינלאומית שישראל עוקבת אחריה."
-        background = (
-            "במערכת האמריקאית, מינוי לתפקיד בכיר כמו תובע כללי עובר בדרך כלל דרך נשיא וסנאט, "
-            "ומשפיע על מדיניות אכיפה, תיקים רגישים ויחסי חוץ. "
-            "כשמונה מישהו שהיה בעבר עורך דין של הנשיא, עולות גם שאלות על עצמאות מוסדית וניגודי עניינים — גם אם המינוי עצמו חוקי."
-        )
-        outlook = (
-            "השלב הבא: האם הסנאט מאשר סופית, מתי נכנסים לתפקיד, ואילו תיקים/קווי מדיניות מסומנים ראשונים. "
-            "תגובות במפלגות ובמערכת המשפט האמריקאית יבהירו כמה שנוי במחלוקת המינוי בפועל."
-        )
-    elif re.search(r"כנסת|ממשלת ישראל|קואליצ|פריימר|רע.?ם|מפלג|נתניהו|לפיד|גנץ", blob):
-        why_matters = "זה על סדר היום כי מהלכים פוליטיים כאן משנים יציבות שלטון והחלטות שנוגעות לכולם."
-        background = (
-            "בפוליטיקה הישראלית, מהלכי מפלגות, פריימריז והחלטות בכנסת משפיעים על יציבות הקואליציה ועל סדר היום. "
-            "כותרת כזו בדרך כלל מסמנת מאבק כוח, מועמדות או הסדר פוליטי."
-        )
-        outlook = (
-            "השלב הבא הוא בדרך כלל הודעות רשמיות, הצבעות או סיכום מועמדים. "
-            "כדאי לבדוק אם יש הסכמה בין מקורות על העובדות לפני מסקנה על התוצאה הפוליטית."
-        )
+        why_matters = "מינוי או מהלך בכיר בוושינגטון משפיע על מדיניות אכיפה ותיקים רגישים."
+        background = "במערכת האמריקאית חשוב להפריד בין הודעה על מינוי לבין אישור סופי."
+        outlook = "עדיין פתוח: אישור סופי, מועד כניסה לתפקיד, וקווי מדיניות שפורסמו."
     elif re.search(r"תייר|נופש|מלונ|חופשה|משרד התיירות", blob):
-        why_matters = "זה רלוונטי לכיס ולתוכניות חופשה — מחירים, זמינות ומדיניות שמשפיעים על מטיילים עכשיו."
-        background = (
-            "ענף התיירות והנופש בישראל רגיש לביטחון, מחירים ועונות חגים. "
-            "דיווחים על מלונות, מבצעים או מדיניות משפיעים ישירות על מטיילים ועל עסקים מקומיים."
-        )
-        outlook = (
-            "לעקוב אחרי שינויי מחיר, זמינות לחגים, והודעות של משרד התיירות או הרשתות. "
-            "שינוי במדיניות ביטולים או הטבות הוא עדכון פרקטי."
-        )
+        why_matters = "הדיווח נוגע למחירים, זמינות או מדיניות שמשפיעים על מטיילים."
+        background = "ענף התיירות רגיש לביטחון, מחירים ועונות חגים."
+        outlook = "חסרים פרטי מחיר/זמינות והודעות רשמיות."
     elif re.search(r"ספורט|כדורגל|מכבי|הפועל|נבחרת|פרמייר|העברה|שחקנ", blob):
-        why_matters = "זו כותרת לספורט כי יש כאן שינוי בסגל או בתוצאה שעשוי להשפיע על המשך העונה."
-        background = (
-            "בספורט יש פער תכוף בין שמועה לאישור רשמי של מועדון או ליגה. "
-            "הערך לקורא הוא להפריד בין מה שסוכם לבין מה שעדיין בדיווח בלבד."
-        )
-        outlook = (
-            "לחכות לאישור המועדון/הליגה או לתוצאה הרשמית, ואז לראות השפעה על הסגל ועל לוח המשחקים."
-        )
-    elif re.search(r"בורסה|ריבית|מני|דולר|ברקשייר|השקע|בנק ישראל", blob):
-        why_matters = "זה על הלוח כי מהלך כלכלי כזה יכול להזיז מחירים, חיסכון או תחושת שוק בטווח קצר."
-        background = (
-            "דיווחים על מניות, ריבית או מהלכי השקעה משפיעים על משקיעים ועל תחושת השוק. "
-            "חשוב להבחין בין עובדה שפורסמה לבין פרשנות או המלצה."
-        )
-        outlook = (
-            "לעקוב אחרי תגובת השוק והודעות רשמיות ביום־יומיים הקרובים. "
-            "נתון מאושר או דוח מעודכן משנה את התמונה יותר מכותרת פרשנית."
-        )
+        why_matters = "הדיווח נוגע לשינוי בסגל או לתוצאה רשמית."
+        background = "בספורט יש פער תכוף בין שמועה לאישור רשמי."
+        outlook = "חסר אישור המועדון/הליגה או תוצאה רשמית."
+    elif re.search(r"בורסה|ריבית|מני|דולר|השקע|בנק ישראל", blob):
+        why_matters = "הדיווח נוגע לנתון או מהלך כלכלי שפורסם."
+        background = "חשוב להבחין בין עובדה שפורסמה לבין פרשנות שוק."
+        outlook = "חסרים נתון מאושר או הודעה רשמית מעודכנת."
     else:
         background, outlook, why_matters = _substantive_fallback(title, headlines, names)
-
-    insight = ""
 
     return {
         "title": title,
         "summary": summary,
         "why_matters": why_matters,
-        "bullet_facts": bullets[:5],
+        "bullet_facts": bullets[:6],
         "background": background,
         "outlook": outlook,
-        "insight": insight,
+        "insight": "",
         "historical_context": background,
         "status": status,
         "mode": "heuristic",
     }
+
 
 
 def _extract_json(text: str) -> dict | None:
@@ -504,9 +574,14 @@ def distill_item(item: dict, cache: dict | None = None) -> dict:
 def enrich_items(items: list[dict]) -> list[dict]:
     cache = load_cache()
     out = []
+    dropped = 0
     for item in items:
-        d = distill_item(item, cache=cache)
-        enriched = dict(item)
+        scrubbed = scrub_item_sources(item)
+        if not scrubbed:
+            dropped += 1
+            continue
+        d = distill_item(scrubbed, cache=cache)
+        enriched = dict(scrubbed)
         enriched["distill"] = d
         enriched["dryTitle"] = d.get("title")
         enriched["summary"] = d.get("summary")
@@ -519,5 +594,7 @@ def enrich_items(items: list[dict]) -> list[dict]:
         enriched["status"] = d.get("status")
         enriched["distillMode"] = d.get("mode")
         out.append(enriched)
+    if dropped:
+        print(f"[distill] dropped {dropped} opinion/noise clusters")
     save_cache(cache)
     return out

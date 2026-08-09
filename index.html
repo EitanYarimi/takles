@@ -1191,6 +1191,87 @@
       /משרד התיירות|תיירות ישראל|ענף התיירות|בתי.?המלון|מלונ|נופש|חופשה|חבילת נופש|חדרי מלון|אתר נופש|למטייל|ריזורט|דיל טיס|טיסת צ'?ארטר/i;
     const LEISURE_DROP =
       /דה\s*וויס|The Voice|סדרת|עונה \d|נטפליקס|קונצרט|זמר |בידור|מכבי|הפועל|ספורט|ליגת|פרמייר|איראן|הורמוז|מלחמ|כטב|רקטה|חיזבאללה|חמאס|עזה|ביידן|טראמפ|בורסה|מני[וה]|אקזיט/i;
+    const OPINION_LABEL_RE =
+      /(?:\|\s*)(?:דעה|פרשנות|טור)\b|^(?:דעה|פרשנות|טור)\s*[:\-–—]|(?:\|\s*)?(?:דעה|פרשנות|טור(?:\s+דעה)?)\s*$/i;
+    const OPINION_COLOR_RE = /הצצה לתוך|השיגעון|רק מחזק את הזעזוע|לא מחדשות דבר/i;
+    const FACT_SIGNAL_RE =
+      /מגיב|הודיע|מסר|נמסר|אישר|הכחיש|דחה|נעצר|נפצע|נהרג|הורשע|הצביע|אושר|מינה|פיטר|חתם|שיגר|ירה|יי.?רט|התרע|אזעק|העלה|הוריד|קבע|פרסם|דיווח|חק[רה]|הגיש|התפטר|הכריז/i;
+    const QUOTE_REACTION_RE = /(מגיב|בתגובה|תוקף|מתוקף).{0,40}[:\"״]|[\"״].{15,}[\"״]/i;
+
+    function stripQuotesAndTail(text) {
+      let t = String(text || "").replace(/[\"״„“”].*?[\"״„“”]/g, " ");
+      t = t.split(/[:\-–—]\s*/)[0] || t;
+      return t.replace(/\s+/g, " ").trim();
+    }
+
+    function isOpinionText(text) {
+      const t = String(text || "");
+      if (OPINION_LABEL_RE.test(t)) return true;
+      const core = stripQuotesAndTail(t);
+      if (FACT_SIGNAL_RE.test(core)) return false;
+      if (OPINION_COLOR_RE.test(t) || OPINION_COLOR_RE.test(core)) return true;
+      if (core.length < 48 && !FACT_SIGNAL_RE.test(core) && !/\d/.test(core)) {
+        if (/[?!]|שיגעון|זעזוע|הלם|דרמה/.test(t)) return true;
+      }
+      return false;
+    }
+
+    function looksLikeFactLine(text) {
+      const t = dryTitle(text || "");
+      if (!t || t.length < 12) return false;
+      if (isOpinionText(t)) return false;
+      if (FACT_SIGNAL_RE.test(t) || /\d/.test(t)) return true;
+      if (/של |מול |בין /.test(t) && /על |לגבי |בנוגע/.test(t)) return true;
+      return false;
+    }
+
+    function factualCoreTitle(title) {
+      let t = dryTitle(title || "");
+      const m = t.match(
+        /^(.{8,80}?(?:מגיב|הודיע|מסר|אישר|הכחיש)\s+ל[^:\"״]{2,40})\s*[:\-–—]\s*[\"״]/
+      );
+      if (m) return m[1].replace(/[\s\-–—:·]+$/g, "");
+      if (/[:\-–—]\s*[\"״]/.test(t)) t = t.split(/[:\-–—]\s*[\"״]/)[0].replace(/[\s\-–—:·]+$/g, "");
+      return t || dryTitle(title || "");
+    }
+
+    function scrubItemSources(item) {
+      const sources = [...(item.sources || [])];
+      const factual = [];
+      const opinion = [];
+      for (const s of sources) {
+        if (isOpinionText(s.headline || "")) opinion.push(s);
+        else factual.push(s);
+      }
+      const title = item.title || "";
+      let keep = factual;
+      if (!keep.length) {
+        if (looksLikeFactLine(title) && !isOpinionText(title)) {
+          keep = [
+            {
+              url: item.link || "",
+              headline: factualCoreTitle(title),
+              name: (sources[0] && sources[0].name) || "Google News",
+            },
+          ];
+        } else {
+          return null;
+        }
+      }
+      if (
+        QUOTE_REACTION_RE.test(title) &&
+        opinion.length >= Math.max(1, keep.length) &&
+        !/יי.?רט|אזעק|רקטות?|חטופ|מלחמ|פיגוע/.test(title)
+      ) {
+        return null;
+      }
+      return {
+        ...item,
+        title: factualCoreTitle(title),
+        sources: keep.slice(0, 6),
+        opinion_sources: opinion.slice(0, 6),
+      };
+    }
 
     const DRAMATIC = [
       "שומט את הקרקע",
@@ -2834,65 +2915,78 @@
 
     function localDistill(item) {
       const pre = item.distill || null;
-      const headlines = (item.sources || []).map((s) => s.headline);
-      const names = [...new Set((item.sources || []).map((s) => s.name))];
+      const factSources = (item.sources || []).filter((s) => !isOpinionText(s.headline || ""));
+      const headlines = factSources.map((s) => s.headline).filter(Boolean);
+      const names = [...new Set(factSources.map((s) => s.name).filter(Boolean))];
+      const coreTitle = factualCoreTitle(item.title || item.dryTitle || "");
 
       if (pre && Array.isArray(pre.bullet_facts) && pre.bullet_facts.length) {
+        const cleanFacts = (pre.bullet_facts || []).filter(
+          (f) => looksLikeFactLine(f) || String(f).startsWith("נתון") || String(f).includes("לא הובהר")
+        );
         return {
-          title: pre.title || dryTitle(item.title),
-          bullet_facts: pre.bullet_facts,
+          title: factualCoreTitle(pre.title || coreTitle),
+          bullet_facts: cleanFacts.length ? cleanFacts : [coreTitle || "חסר פירוט עובדתי"],
           status: pre.status || item.status || "reported",
-          insight: pre.insight || "",
+          insight: "",
           historical_context: pre.historical_context || pre.background || "",
           background: pre.background || pre.historical_context || "",
           outlook: pre.outlook || "",
           summary: pre.summary || item.summary || pre.background || "",
           why_matters: pre.why_matters || item.why_matters || "",
-          sources: item.sources,
+          sources: factSources.length ? factSources : item.sources,
           original_headlines: headlines,
           pubDate: item.pubDate,
           link: item.link,
-          topic: item.topicHint || classifyTopic(item.title, item.sources),
+          topic: item.topicHint || classifyTopic(coreTitle, factSources),
           mode: pre.mode || item.distillMode || "prebuilt",
         };
       }
 
       // fallback if payload has flattened fields from server
       if (item.bullet_facts?.length && item.background && item.outlook) {
+        const cleanFacts = (item.bullet_facts || []).filter(
+          (f) => looksLikeFactLine(f) || String(f).startsWith("נתון") || String(f).includes("לא הובהר")
+        );
         return {
-          title: item.dryTitle || dryTitle(item.title),
-          bullet_facts: item.bullet_facts,
+          title: factualCoreTitle(item.dryTitle || coreTitle),
+          bullet_facts: cleanFacts.length ? cleanFacts : [coreTitle || "חסר פירוט עובדתי"],
           status: item.status || "reported",
-          insight: item.insight || "",
+          insight: "",
           historical_context: item.historical_context || item.background,
           background: item.background,
           outlook: item.outlook,
           summary: item.summary || item.background,
           why_matters: item.why_matters || "",
-          sources: item.sources,
+          sources: factSources.length ? factSources : item.sources,
           original_headlines: headlines,
           pubDate: item.pubDate,
           link: item.link,
-          topic: item.topicHint || classifyTopic(item.title, item.sources),
+          topic: item.topicHint || classifyTopic(coreTitle, factSources),
           mode: item.distillMode || "prebuilt",
         };
       }
 
-      const quoted = /"|״|„|“|”/.test(item.title) || /:/.test(item.title);
+      const rawTitle = item.title || "";
       const softClaim =
         /עשוי|אולי|חשד|דיווח|נמסר|לפי גורמ|לטענת|גורמים|לא אושר|טרם אושר|על פי דיווח/.test(
-          item.title
+          coreTitle
         );
       const multi = names.length >= 2;
       let status = "reported";
-      if (multi && !quoted && !softClaim) status = "confirmed";
-      if (/הכחיש|הכחשה|דחה את/.test(item.title)) status = "denied";
-      if (/חשד|אולי|עשוי|נבדק|בבדיקה|לא אושר|טרם אושר/.test(item.title)) status = "review";
-      if (softClaim && status === "confirmed") status = "reported";
+      if (multi && !/"|״/.test(rawTitle) && !softClaim && !QUOTE_REACTION_RE.test(rawTitle)) {
+        status = "confirmed";
+      }
+      if (/הכחיש|הכחשה|דחה את/.test(coreTitle)) status = "denied";
+      if (/חשד|אולי|עשוי|נבדק|בבדיקה|לא אושר|טרם אושר/.test(coreTitle) || QUOTE_REACTION_RE.test(rawTitle)) {
+        status = "review";
+      }
 
       const bullets = [];
       const seen = new Set();
       const pushBullet = (raw) => {
+        if (isOpinionText(raw)) return;
+        if (!looksLikeFactLine(raw) && !String(raw).startsWith("נתון")) return;
         const dry = dryTitle(raw);
         if (!dry) return;
         const key = dry.slice(0, 48);
@@ -2900,25 +2994,26 @@
         seen.add(key);
         bullets.push(dry);
       };
-      // נתונים מספריים מהכותרות אם קיימים
-      const blobAll = [item.title, ...headlines].join(" ");
+      if (coreTitle) pushBullet(coreTitle);
+      const blobAll = [coreTitle, ...headlines].join(" ");
       const numRe =
         /(\d+(?:[.,]\d+)?)\s*(%|אחוז|הרוג|הרוגים|פצוע|פצועים|רקטות?|יירוטים?|שעות?|ימים?)/g;
       let nm;
       while ((nm = numRe.exec(blobAll)) && bullets.length < 2) {
         pushBullet(`נתון מהדיווחים: ${nm[0]}`);
       }
-      for (const h of [item.title, ...headlines]) {
+      for (const h of headlines) {
         pushBullet(h);
         if (bullets.length >= 5) break;
       }
       while (bullets.length < 3) {
-        bullets.push("חלק מהפרטים עדיין לא הובהרו במקורות שנבדקו");
+        bullets.push("חלק מהפרטים העובדתיים עדיין לא הובהרו במקורות החדשותיים שנבדקו");
       }
 
       const uniqueHeads = [];
       const seenH = new Set();
-      for (const h of headlines.length ? headlines : [item.title]) {
+      for (const h of headlines.length ? headlines : [coreTitle]) {
+        if (isOpinionText(h) || !looksLikeFactLine(h)) continue;
         const dry = dryTitle(h);
         const key = dry.slice(0, 40);
         if (!dry || seenH.has(key)) continue;
@@ -2929,41 +3024,37 @@
       let summary;
       if (multi) {
         summary =
-          `הצלבה בין ${names.length} מקורות (${names.slice(0, 4).join(", ")}${
+          `הצלבה בין ${names.length} מקורות חדשותיים (${names.slice(0, 4).join(", ")}${
             names.length > 4 ? "…" : ""
           }). ` +
           (uniqueHeads.length
-            ? `הקו המשותף בכותרות: ${uniqueHeads.slice(0, 2).join("; ")}. `
-            : "") +
-          (uniqueHeads.length >= 3
-            ? `זווית נוספת בחלק מהמקורות: ${uniqueHeads[2]}. `
-            : "") +
-          (softClaim || status !== "confirmed"
-            ? "חלק מהפרטים עדיין ברמת דיווח ולא אושרו סופית."
+            ? `מה שניתן לגזור: ${uniqueHeads.slice(0, 3).join("; ")}. `
+            : `ליבת הדיווח: ${coreTitle}. `) +
+          (softClaim || status !== "confirmed" || QUOTE_REACTION_RE.test(rawTitle)
+            ? "חלק מהפרטים ברמת דיווח/תגובה ולא אושרו סופית."
             : "חסרים עדיין פרטי לוח זמנים / היקף / גורם מאשר.");
       } else {
         summary =
-          `מבוסס על מקור יחיד${names[0] ? ` (${names[0]})` : ""}. ` +
-          `לפי הדיווח: ${dryTitle(item.title)}. ` +
+          `מבוסס על מקור חדשותי יחיד${names[0] ? ` (${names[0]})` : ""}. ` +
+          `לפי הדיווח: ${coreTitle}. ` +
           "עדיין בלי הצלבה מספקת מול מקורות נוספים.";
       }
 
-      let context = "הקשר: דיווח שוטף מפיד חדשות ישראל.";
-      if (/הורמוז|איראן/.test(item.title)) context = "הקשר: סוגיית מצר הורמוז ומתיחות אזורית מול איראן.";
-      if (/חיזבאללה|לבנון|רחפן/.test(item.title)) context = "הקשר: אירוע בגבול הצפון / זירת לבנון.";
-      if (/שריפה|פתח תקווה|מזג|חום/.test(item.title)) context = "הקשר: אירוע אזרחי / מזג אוויר בישראל.";
-
-      const outlook =
-        "עדיין פתוח: אישור רשמי, היקף, לוח זמנים והשלכות מעשיות. " +
-        "עדכונים נוספים מהמקורות יבהירו מה אומת ומה נשאר דיווח.";
-
-      const why =
-        bullets[0] && bullets[0] !== "חלק מהפרטים עדיין לא הובהרו במקורות שנבדקו"
+      const thinReaction = QUOTE_REACTION_RE.test(rawTitle) && headlines.length <= 2;
+      const context = thinReaction
+        ? "חסר הקשר מצולב מעבר לדיווח על התגובה עצמה."
+        : "הקשר: דיווח שוטף מפיד חדשות ישראל.";
+      const outlook = thinReaction
+        ? "חסר פירוט עובדתי: על מה בדיוק הגיבו, ומה אומת מעבר לציטוט."
+        : "עדיין פתוח: אישור רשמי, היקף, לוח זמנים והשלכות מעשיות.";
+      const why = thinReaction
+        ? ""
+        : bullets[0] && !String(bullets[0]).includes("לא הובהר")
           ? `הדיווח נוגע ל־${bullets[0]} — שינוי במצב הזה ישפיע על המציאות בשטח או במדיניות.`
-          : "הדיווח מתאר מהלך שעדיין לא סגור — אישור או דחייה ישנו את המצב בפועל.";
+          : "";
 
       return {
-        title: dryTitle(item.title),
+        title: coreTitle,
         bullet_facts: bullets.slice(0, 6),
         status,
         insight: "",
@@ -2972,11 +3063,11 @@
         outlook,
         summary,
         why_matters: why,
-        sources: item.sources,
+        sources: factSources.length ? factSources : item.sources,
         original_headlines: headlines,
         pubDate: item.pubDate,
         link: item.link,
-        topic: item.topicHint || classifyTopic(item.title, item.sources),
+        topic: item.topicHint || classifyTopic(coreTitle, factSources),
         mode: "local",
       };
     }
@@ -3211,10 +3302,12 @@
       const merged = [];
       for (const group of groups) {
         for (const item of group) {
-          const key = (item.title || "").trim().toLowerCase().replace(/\s+/g, " ");
+          const scrubbed = scrubItemSources(item);
+          if (!scrubbed) continue;
+          const key = (scrubbed.title || "").trim().toLowerCase().replace(/\s+/g, " ");
           if (!key || seen.has(key)) continue;
           seen.add(key);
-          merged.push(item);
+          merged.push(scrubbed);
         }
       }
       return {
@@ -3226,7 +3319,8 @@
     }
 
     function applyNewsPayload(data, sourceLabel) {
-      const items = data.items || [];
+      const raw = data.items || [];
+      const items = raw.map(scrubItemSources).filter(Boolean);
       if (!items.length) return;
       lastSourceLabel = sourceLabel;
       allCards = items.map((item) => enrichCard(localDistill(item), item));
