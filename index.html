@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>תכל׳ס — POC</title>
+  <title>תכל׳ס</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&family=Secular+One&display=swap" rel="stylesheet" />
@@ -178,6 +178,191 @@
       letter-spacing: 0.02em;
     }
 
+    .insights {
+      margin: 1.75rem 0.35rem 0.5rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--rule-soft);
+    }
+    .insights-head {
+      margin: 0 0 0.85rem;
+      padding: 0 0.15rem;
+    }
+    .insights-head h2 {
+      margin: 0 0 0.25rem;
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 400;
+      color: var(--headline);
+      letter-spacing: -0.02em;
+    }
+    .insights-head p {
+      margin: 0;
+      font-size: 0.88rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .insights-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.85rem;
+    }
+    .insight-panel {
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(16, 32, 51, 0.1);
+      border-radius: 14px;
+      padding: 1rem 1.05rem 1.05rem;
+      box-shadow: 0 8px 22px rgba(16, 32, 51, 0.04);
+      text-align: right;
+    }
+    .insight-top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 0.35rem 0.75rem;
+      margin-bottom: 0.55rem;
+    }
+    .insight-panel .insight-label {
+      margin: 0;
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: 0.02em;
+    }
+    .insight-panel .insight-status {
+      margin: 0;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--muted);
+    }
+    .insight-panel .insight-headline {
+      margin: 0 0 0.75rem;
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 400;
+      color: var(--ink);
+      letter-spacing: -0.02em;
+    }
+    .insight-facts {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0.55rem;
+      margin: 0 0 0.85rem;
+      padding: 0;
+      list-style: none;
+    }
+    .insight-facts li {
+      background: rgba(11, 110, 92, 0.06);
+      border-radius: 10px;
+      padding: 0.65rem 0.7rem;
+    }
+    .insight-facts .k {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 0.2rem;
+    }
+    .insight-facts .v {
+      display: block;
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--ink);
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+    .insight-facts .n {
+      display: block;
+      margin-top: 0.2rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--muted);
+      line-height: 1.3;
+    }
+    .insight-analysis {
+      margin: 0 0 0.75rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--ink-soft);
+      line-height: 1.5;
+    }
+    .insight-blocs {
+      margin: 0 0 0.75rem;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 0.4rem;
+    }
+    .insight-blocs li {
+      padding: 0.55rem 0.65rem;
+      border-radius: 8px;
+      background: rgba(16, 32, 51, 0.04);
+    }
+    .insight-blocs li.verdict-yes {
+      background: rgba(15, 92, 59, 0.1);
+      border-inline-start: 3px solid var(--ok);
+    }
+    .insight-blocs li.verdict-maybe {
+      background: rgba(138, 90, 0, 0.1);
+      border-inline-start: 3px solid var(--warn);
+    }
+    .insight-blocs li.verdict-no {
+      background: rgba(155, 28, 28, 0.08);
+      border-inline-start: 3px solid var(--spot);
+    }
+    .insight-blocs .verdict {
+      display: inline-block;
+      margin-inline-start: 0.35rem;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+    }
+    .verdict-yes .verdict { color: var(--ok); }
+    .verdict-maybe .verdict { color: var(--warn); }
+    .verdict-no .verdict { color: var(--spot); }
+    .insight-blocs strong {
+      display: block;
+      font-size: 0.86rem;
+      color: var(--ink);
+      margin-bottom: 0.1rem;
+    }
+    .insight-blocs span {
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-weight: 600;
+      line-height: 1.35;
+    }
+    .insight-sources {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem 0.75rem;
+      margin: 0;
+      padding-top: 0.55rem;
+      border-top: 1px solid var(--rule-soft);
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--muted);
+    }
+    .insight-sources a {
+      color: var(--accent);
+      text-decoration: underline;
+      text-underline-offset: 0.15em;
+    }
+    .insight-map {
+      margin: 0.75rem 0 0.55rem;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--rule-soft);
+      background: #dce6ee;
+      aspect-ratio: 16 / 10;
+    }
+    .insight-map iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+    }
+
     .cubes {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -342,12 +527,28 @@
       padding: 1.15rem 1.35rem 1.35rem;
     }
 
-    .viz {
+    .viz,
+    .title-cover {
       position: relative;
       height: clamp(168px, 28vw, 240px);
       overflow: hidden;
       isolation: isolate;
       background: #1a2a36;
+    }
+    .title-cover {
+      width: 100%;
+      border-radius: 0;
+    }
+    .topic-list-view .title-cover {
+      height: clamp(180px, 34vw, 260px);
+      border-radius: 18px;
+      margin: 0 0 1rem;
+      box-shadow: 0 14px 34px rgba(16, 32, 51, 0.08);
+    }
+    .title-cover canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
     }
     .viz img {
       width: 100%;
@@ -374,17 +575,6 @@
     .viz-contain::after {
       background: linear-gradient(180deg, transparent 55%, rgba(16, 32, 51, 0.25) 100%);
     }
-    .viz-contain .viz-context {
-      color: #102033;
-      text-shadow: none;
-      background: rgba(255, 255, 255, 0.9);
-      padding: 0.22rem 0.55rem;
-      border-radius: 999px;
-    }
-    .viz-contain .viz-credit {
-      color: #102033;
-      background: rgba(255, 255, 255, 0.92);
-    }
     .viz::after {
       content: "";
       position: absolute;
@@ -394,30 +584,7 @@
         linear-gradient(180deg, rgba(16, 32, 51, 0.05) 0%, rgba(16, 32, 51, 0.18) 45%, rgba(16, 32, 51, 0.55) 100%);
       pointer-events: none;
     }
-    .viz-credit {
-      position: absolute;
-      inset-inline-start: 0.85rem;
-      bottom: 0.7rem;
-      z-index: 2;
-      font-size: 0.68rem;
-      font-weight: 700;
-      color: rgba(255, 255, 255, 0.95);
-      background: rgba(16, 32, 51, 0.45);
-      padding: 0.28rem 0.6rem;
-      border-radius: 999px;
-      backdrop-filter: blur(6px);
-      max-width: calc(100% - 1.7rem);
-    }
-    .viz-context {
-      position: absolute;
-      inset-inline-end: 0.85rem;
-      top: 0.75rem;
-      z-index: 2;
-      font-size: 0.72rem;
-      font-weight: 800;
-      color: #fff;
-      text-shadow: 0 1px 8px rgba(0, 0, 0, 0.35);
-    }
+    .title-cover::after { display: none; }
     .viz-security,
     .viz-north { background: linear-gradient(135deg, #0b6e5c 0%, #134e63 55%, #1a3a4a 100%); }
     .viz-politics,
@@ -861,6 +1028,13 @@
       <p class="status-line" id="status">טוען…</p>
       <p class="board-label">לפי נושא</p>
       <div class="cubes" id="cubes"></div>
+      <section class="insights" id="insightsSection" aria-label="תובנות">
+        <div class="insights-head">
+          <h2>תובנות</h2>
+          <p>נתונים מאומתים וניתוח קצר — לא כותרות</p>
+        </div>
+        <div class="insights-grid" id="insights">טוען נתונים…</div>
+      </section>
     </div>
     <div class="about-view" id="aboutView">
       <button type="button" class="back-btn" id="aboutBackBtn">← חזרה ללוח</button>
@@ -874,17 +1048,17 @@
         <li><strong>כותרת בעולם</strong> — אירוע בינלאומי בולט, מופרד מהלוח הישראלי.</li>
         <li><strong>ריבועי נושאים</strong> — ביטחון, פוליטיקה, אזור, בעולם, כלכלה, פנים, תיירות ונופש, ספורט.</li>
         <li><strong>סיכום מראש</strong> — לכל כתבה: עובדות, רקע ומבט קדימה — בלי שהמשתמש יריץ דבר.</li>
+        <li><strong>תובנות</strong> — נתונים מאומתים (תפקוד הממשלה, מזג אוויר…) עם ניתוח קצר ומקורות, בלי כותרות.</li>
         <li><strong>צפיתי</strong> — מוריד כתבה מהלוח הפעיל בלי למחוק אותה לגמרי.</li>
         <li><strong>בלי לינקים החוצה</strong> — נשארים בתוך תכל׳ס; העובדות מרוכזות כאן.</li>
       </ul>
-      <p>POC · מקורות מ־Google News ישראל, מסוננים ומסווגים אוטומטית.</p>
+      <p>מקורות מ־Google News ישראל, מסוננים ומסווגים אוטומטית.</p>
     </div>
     <div class="detail-view" id="detailView"></div>
     <div class="topic-list-view" id="topicListView"></div>
     <div class="grid" id="feed" hidden></div>
 
     <footer>
-      מקור נתונים: Google News Israel · POC ·
       <a class="about-link" href="#about" id="aboutLink" style="margin:0;font-size:inherit">מה האתר עושה?</a>
     </footer>
   </div>
@@ -932,6 +1106,9 @@
     ];
 
     const TOPIC_HE = Object.fromEntries(TOPICS.map((t) => [t.id, t.label]));
+
+    const INSIGHTS_JSON = IS_PAGES ? "./insights.json" : "/insights.json";
+    let insightsData = null;
 
     let activeTopic = "all";
     let allCards = [];
@@ -997,6 +1174,25 @@
       return sentence.slice(0, max - 1).replace(/\s+\S*$/, "") + "…";
     }
 
+    const VISUAL_PACK = {
+      hormuz: { label: "מצר הורמוז", src: "media/hormuz.jpg" },
+      north: { label: "גבול הצפון", src: "media/north.jpg" },
+      gaza: { label: "רצועת עזה", src: "media/gaza-context.jpg" },
+      knesset: { label: "פוליטיקה", src: "media/knesset.jpg" },
+      politics: { label: "פוליטיקה", src: "media/knesset.jpg" },
+      usa: { label: "ארה״ב", src: "media/usa.jpg" },
+      weather: { label: "מזג אוויר", src: "media/weather.jpg" },
+      markets: { label: "שווקים", src: "media/markets.jpg" },
+      economy: { label: "כלכלה", src: "media/markets.jpg" },
+      sport: { label: "ספורט", src: "media/sport.jpg" },
+      travel: { label: "תיירות", src: "media/travel.jpg" },
+      leisure: { label: "תיירות ונופש", src: "media/leisure.jpg" },
+      security: { label: "ביטחון", src: "media/security.jpg" },
+      region: { label: "המזרח התיכון", src: "media/region.jpg" },
+      world: { label: "בעולם", src: "media/world.jpg" },
+      domestic: { label: "פנים הארץ", src: "media/domestic.jpg" },
+    };
+
     function pickVisualContext(title, topic) {
       const t = String(title || "");
       if (/הורמוז|איראן|מפרץ|חות|עומאן|נפט/.test(t)) return "hormuz";
@@ -1011,131 +1207,164 @@
       return topic || "domestic";
     }
 
+    function wrapCanvasLines(ctx, text, maxWidth, maxLines) {
+      const words = String(text || "").trim().split(/\s+/).filter(Boolean);
+      if (!words.length) return [];
+      const lines = [];
+      let line = "";
+      for (const word of words) {
+        const test = line ? `${line} ${word}` : word;
+        if (ctx.measureText(test).width > maxWidth && line) {
+          lines.push(line);
+          line = word;
+          if (lines.length >= maxLines) break;
+        } else {
+          line = test;
+        }
+      }
+      if (lines.length < maxLines && line) lines.push(line);
+      if (lines.length >= maxLines) {
+        const last = lines[maxLines - 1];
+        if (ctx.measureText(last).width > maxWidth || words.join(" ").length > lines.join(" ").length) {
+          let trimmed = last;
+          while (trimmed.length > 1 && ctx.measureText(trimmed + "…").width > maxWidth) {
+            trimmed = trimmed.slice(0, -1).trim();
+          }
+          lines[maxLines - 1] = trimmed + "…";
+        }
+        return lines.slice(0, maxLines);
+      }
+      return lines;
+    }
+
+    function paintTitleCover(el) {
+      if (!el || el.dataset.painted === "1") return;
+      const src = el.dataset.coverSrc || "media/domestic.jpg";
+      const title = el.dataset.coverTitle || "";
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+
+      const paint = (img) => {
+        const cssW = Math.max(1, el.clientWidth || el.offsetWidth || 640);
+        const cssH = Math.max(1, el.clientHeight || el.offsetHeight || 220);
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        canvas.width = Math.round(cssW * dpr);
+        canvas.height = Math.round(cssH * dpr);
+        canvas.style.width = "100%";
+        canvas.style.height = "100%";
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        ctx.fillStyle = "#1a2a36";
+        ctx.fillRect(0, 0, cssW, cssH);
+
+        if (img) {
+          const scale = Math.max(cssW / img.width, cssH / img.height);
+          const w = img.width * scale;
+          const h = img.height * scale;
+          ctx.drawImage(img, (cssW - w) / 2, (cssH - h) / 2, w, h);
+        }
+
+        const fade = ctx.createLinearGradient(0, 0, 0, cssH);
+        fade.addColorStop(0, "rgba(16, 32, 51, 0.12)");
+        fade.addColorStop(0.5, "rgba(16, 32, 51, 0.28)");
+        fade.addColorStop(1, "rgba(16, 32, 51, 0.72)");
+        ctx.fillStyle = fade;
+        ctx.fillRect(0, 0, cssW, cssH);
+
+        if (!title) {
+          el.replaceChildren(canvas);
+          el.dataset.painted = "1";
+          return;
+        }
+
+        const padX = Math.max(20, cssW * 0.05);
+        const maxTextW = cssW - padX * 2;
+        ctx.direction = "rtl";
+        ctx.textAlign = "right";
+        ctx.textBaseline = "alphabetic";
+
+        const titleSize = Math.max(24, Math.min(40, Math.round(cssW * 0.052)));
+        ctx.font = `800 ${titleSize}px "Secular One", Heebo, Arial Hebrew, Arial, sans-serif`;
+        ctx.fillStyle = "#fff";
+        const lines = wrapCanvasLines(ctx, title, maxTextW, 3);
+        const lineH = titleSize * 1.18;
+        const blockH = lines.length * lineH;
+        let y = cssH - padX - blockH + titleSize * 0.15;
+        for (const line of lines) {
+          ctx.shadowColor = "rgba(0,0,0,0.28)";
+          ctx.shadowBlur = 8;
+          ctx.fillText(line, cssW - padX, y + titleSize * 0.85);
+          ctx.shadowBlur = 0;
+          y += lineH;
+        }
+
+        el.replaceChildren(canvas);
+        el.dataset.painted = "1";
+      };
+
+      const whenFonts = () => {
+        if (!document.fonts || !document.fonts.ready) return Promise.resolve();
+        return Promise.race([
+          document.fonts.ready.catch(() => {}),
+          new Promise((r) => setTimeout(r, 400)),
+        ]);
+      };
+      const img = new Image();
+      img.decoding = "async";
+      img.onload = () => {
+        whenFonts().then(() => paint(img));
+      };
+      img.onerror = () => paint(null);
+      img.src = src;
+    }
+
+    function hydrateTitleCovers(root) {
+      const scope = root || document;
+      const nodes = [...scope.querySelectorAll(".title-cover[data-cover-src]")];
+      requestAnimationFrame(() => {
+        nodes.forEach((el) => {
+          el.dataset.painted = "";
+          paintTitleCover(el);
+        });
+      });
+    }
+
+    function titleCoverHtml({ src, title, key }) {
+      return `<div class="viz title-cover viz-${escapeHtml(key || "domestic")}"
+        role="img"
+        aria-label="${escapeHtml(title || "תמונה")}"
+        data-cover-src="${escapeHtml(src)}"
+        data-cover-title="${escapeHtml(title || "")}"></div>`;
+    }
+
     function storyVisual(card) {
       const key = pickVisualContext(card?.title || "", card?.topic || "domestic");
-      // תמונות הקשר מקומיות — AI / מדיה שסופקה; לא תיעוד מהאירוע
-      const pack = {
-        hormuz: {
-          label: "מצר הורמוז",
-          alt: "אוניות בנתיב ימי",
-          src: "media/hormuz.jpg",
-          credit: "ויזואל תכל׳ס",
-          note: "AI · לא תיעוד מהאירוע",
-        },
-        north: {
-          label: "גבול הצפון",
-          alt: "נוף הררי בגבול",
-          src: "media/north.jpg",
-          credit: "ויזואל תכל׳ס",
-          note: "AI · לא תיעוד מהאירוע",
-        },
-        gaza: {
-          label: "רצועת עזה",
-          alt: "מבט על רצועת עזה",
-          src: "media/gaza-context.jpg",
-          credit: "הקשר ויזואלי",
-          note: "לא תיעוד מהאירוע",
-        },
-        knesset: {
-          label: "פוליטיקה",
-          alt: "בניין ממשל",
-          src: "media/knesset.jpg",
-          credit: "ויזואל תכל׳ס",
-          note: "AI · לא תיעוד מהאירוע",
-        },
-        politics: {
-          label: "פוליטיקה",
-          alt: "בניין ממשל",
-          src: "media/knesset.jpg",
-          credit: "ויזואל תכל׳ס",
-          note: "AI · לא תיעוד מהאירוע",
-        },
-        usa: {
-          label: "ארה״ב",
-          alt: "וושינגטון",
-          src: "media/usa.jpg",
-          credit: "ויזואל תכל׳ס",
-          note: "AI · לא תיעוד מהאירוע",
-        },
-        weather: {
-          label: "מזג אוויר",
-          alt: "שמיים דרמטיים",
-          src: "media/weather.jpg",
-          credit: "ויזואל תכל׳ס",
-          note: "AI · לא תיעוד מהאירוע",
-        },
-        markets: {
-          label: "שווקים",
-          alt: "מסכי מסחר",
-          src: "media/markets.jpg",
-          credit: "ויזואל תכל׳ס",
-          note: "AI · לא תיעוד מהאירוע",
-        },
-        economy: {
-          label: "כלכלה",
-          alt: "מסכי מסחר",
-          src: "media/markets.jpg",
-          credit: "ויזואל תכל׳ס",
-          note: "AI · לא תיעוד מהאירוע",
-        },
-        sport: {
-          label: "ספורט",
-          alt: "אצטדיון",
-          src: "media/sport.jpg",
-          credit: "ויזואל תכל׳ס",
-          note: "AI · לא תיעוד מהאירוע",
-        },
-        travel: {
-          label: "תיירות",
-          alt: "טיסה",
-          src: "media/travel.jpg",
-          credit: "ויזואל תכל׳ס",
-          note: "AI · לא תיעוד מהאירוע",
-        },
-        leisure: {
-          label: "תיירות ונופש",
-          alt: "חוף",
-          src: "media/leisure.jpg",
-          credit: "ויזואל תכל׳ס",
-          note: "AI · לא תיעוד מהאירוע",
-        },
-        security: {
-          label: "ביטחון",
-          alt: "עיר בלילה",
-          src: "media/security.jpg",
-          credit: "ויזואל תכל׳ס",
-          note: "AI · לא תיעוד מהאירוע",
-        },
-        region: {
-          label: "המזרח התיכון",
-          alt: "עיר במזרח התיכון",
-          src: "media/region.jpg",
-          credit: "ויזואל תכל׳ס",
-          note: "AI · לא תיעוד מהאירוע",
-        },
-        world: {
-          label: "בעולם",
-          alt: "כדור הארץ",
-          src: "media/world.jpg",
-          credit: "ויזואל תכל׳ס",
-          note: "AI · לא תיעוד מהאירוע",
-        },
-        domestic: {
-          label: "פנים הארץ",
-          alt: "נוף עירוני בישראל",
-          src: "media/domestic.jpg",
-          credit: "ויזואל תכל׳ס",
-          note: "AI · לא תיעוד מהאירוע",
-        },
-      };
-      const chosen = pack[key] || pack.domestic;
-      const fitClass = chosen.fit === "contain" ? " viz-contain" : "";
-      const creditNote = chosen.note || "הקשר לנושא · לא תיעוד מהאירוע";
-      return `<div class="viz viz-${escapeHtml(key)}${fitClass}">
-        <img src="${escapeHtml(chosen.src)}" alt="${escapeHtml(chosen.alt)}" loading="lazy" decoding="async" />
-        <span class="viz-context">${escapeHtml(chosen.label)}</span>
-        <span class="viz-credit">${escapeHtml(chosen.credit)} · ${escapeHtml(creditNote)}</span>
+      const chosen = VISUAL_PACK[key] || VISUAL_PACK.domestic;
+      return `<div class="viz viz-${escapeHtml(key)}">
+        <img src="${escapeHtml(chosen.src)}" alt="" loading="lazy" decoding="async" />
       </div>`;
+    }
+
+    function storyTitleCover(card) {
+      const key = pickVisualContext(card?.title || "", card?.topic || "domestic");
+      const chosen = VISUAL_PACK[key] || VISUAL_PACK.domestic;
+      return titleCoverHtml({
+        src: chosen.src,
+        title: card?.title || chosen.label,
+        key,
+      });
+    }
+
+    function topicCoverHtml(topicId) {
+      const key = topicId && VISUAL_PACK[topicId] ? topicId : "domestic";
+      const chosen = VISUAL_PACK[key] || VISUAL_PACK.domestic;
+      const label = TOPIC_HE[topicId] || chosen.label;
+      return titleCoverHtml({
+        src: chosen.src,
+        title: label,
+        key,
+      });
     }
 
     function renderLead(cards) {
@@ -1201,6 +1430,334 @@
         <p class="lead-kicker">בעולם · ${escapeHtml(relativeTime(story.pubDate))}</p>
         <h2 class="lead-title t-world">${escapeHtml(story.title)}</h2>
       `;
+    }
+
+    function wmoHe(code) {
+      const c = Number(code);
+      if (c === 0) return "בהיר";
+      if (c <= 3) return "מעונן חלקית";
+      if (c <= 48) return "ערפל / אובך";
+      if (c <= 57) return "טפטוף";
+      if (c <= 67) return "גשם";
+      if (c <= 77) return "שלג";
+      if (c <= 82) return "ממטרים";
+      if (c <= 99) return "סופות רעמים";
+      return "לא ידוע";
+    }
+
+    function insightPanelHtml(item) {
+      const facts = (item.facts || [])
+        .map(
+          (f) => `<li>
+            <span class="k">${escapeHtml(f.label)}</span>
+            <span class="v">${escapeHtml(f.value)}</span>
+            ${f.note ? `<span class="n">${escapeHtml(f.note)}</span>` : ""}
+          </li>`
+        )
+        .join("");
+      const blocs = (item.blocs || []).length
+        ? `<ul class="insight-blocs">${item.blocs
+            .map((b) => {
+              const v = b.verdict || "";
+              const vLabel =
+                v === "yes" ? "כן" : v === "maybe" ? "חלקי" : v === "no" ? "לא" : "";
+              return `<li class="${v ? `verdict-${escapeHtml(v)}` : ""}">
+                <strong>${escapeHtml(b.name)}${vLabel ? `<span class="verdict">${vLabel}</span>` : ""}</strong>
+                <span>${escapeHtml(b.detail || "")}</span>
+              </li>`;
+            })
+            .join("")}</ul>`
+        : "";
+      const sources = (item.sources || [])
+        .map((s) =>
+          s.url
+            ? `<a href="${escapeHtml(s.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(s.name)}</a>`
+            : `<span>${escapeHtml(s.name)}</span>`
+        )
+        .join("");
+      const map = item.mapEmbed
+        ? `<div class="insight-map"><iframe title="${escapeHtml(item.label)}" src="${escapeHtml(item.mapEmbed)}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe></div>`
+        : "";
+      return `<article class="insight-panel" data-insight="${escapeHtml(item.id)}">
+        <div class="insight-top">
+          <p class="insight-label">${escapeHtml(item.label)}</p>
+          <p class="insight-status">${escapeHtml(item.status || "")}</p>
+        </div>
+        <h3 class="insight-headline">${escapeHtml(item.headline || item.label)}</h3>
+        <ul class="insight-facts">${facts}</ul>
+        ${item.analysis ? `<p class="insight-analysis">${escapeHtml(item.analysis)}</p>` : ""}
+        ${blocs}
+        ${map}
+        ${sources ? `<div class="insight-sources">${sources}</div>` : ""}
+      </article>`;
+    }
+
+    function renderInsights() {
+      if (!els.insights) return;
+      const items = insightsData?.items || [];
+      const asOf = insightsData?.updatedAt
+        ? `עודכן ${escapeHtml(insightsData.updatedAt)}`
+        : "";
+      const head = asOf
+        ? `<p class="hint" style="margin:0 0 0.65rem;padding:0 0.15rem">${asOf} · ${escapeHtml(insightsData.disclaimer || "")}</p>`
+        : "";
+      const body = items.length
+        ? items.map(insightPanelHtml).join("")
+        : `<p class="hint" style="margin:0;padding:0.25rem">אין נתוני תובנות עדיין.</p>`;
+      els.insights.innerHTML = head + body;
+    }
+
+    async function loadWeatherInsight() {
+      const landUrl =
+        "https://api.open-meteo.com/v1/forecast?" +
+        new URLSearchParams({
+          latitude: "32.08",
+          longitude: "34.78",
+          current:
+            "temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m,precipitation",
+          daily:
+            "temperature_2m_max,temperature_2m_min,precipitation_sum,weather_code,wind_speed_10m_max,uv_index_max",
+          timezone: "Asia/Jerusalem",
+          forecast_days: "2",
+        });
+      const seaUrl =
+        "https://marine-api.open-meteo.com/v1/marine?" +
+        new URLSearchParams({
+          latitude: "32.08",
+          longitude: "34.78",
+          current: "wave_height,wave_period,wave_direction",
+          timezone: "Asia/Jerusalem",
+        });
+      const [landRes, seaRes] = await Promise.all([
+        fetch(landUrl, { cache: "no-store" }),
+        fetch(seaUrl, { cache: "no-store" }),
+      ]);
+      if (!landRes.ok) throw new Error(`weather ${landRes.status}`);
+      const data = await landRes.json();
+      const marine = seaRes.ok ? await seaRes.json() : null;
+      const cur = data.current || {};
+      const daily = data.daily || {};
+      const wave = marine?.current || {};
+      const todayMax = Number(daily.temperature_2m_max?.[0]);
+      const todayMin = Number(daily.temperature_2m_min?.[0]);
+      const rain = Number(daily.precipitation_sum?.[0] || 0);
+      const windNow = Number(cur.wind_speed_10m || 0);
+      const windMax = Number(daily.wind_speed_10m_max?.[0] || windNow);
+      const code = Number(cur.weather_code || daily.weather_code?.[0] || 0);
+      const uv = Number(daily.uv_index_max?.[0] || 0);
+      const waveH = Number(wave.wave_height || 0);
+      const waveP = Number(wave.wave_period || 0);
+      const stormy = code >= 80;
+      const rainy = rain >= 1 || Number(cur.precipitation || 0) > 0.2;
+
+      function beachDay() {
+        if (stormy || rainy || windMax >= 45) {
+          return {
+            verdict: "no",
+            detail: "גשם/רוח חזקה — פחות מתאים ליום חוף רגוע.",
+          };
+        }
+        if (todayMax >= 36) {
+          return {
+            verdict: "maybe",
+            detail: `חם מאוד (עד ${Math.round(todayMax)}°) — רק עם צל, מים ושעות בוקר/אחר־צהריים מאוחר.`,
+          };
+        }
+        if (todayMax >= 24 && todayMax <= 34 && windMax < 35) {
+          return {
+            verdict: "yes",
+            detail: `חום נוח לים (${Math.round(todayMin)}°–${Math.round(todayMax)}°), בלי גשם משמעותי. UV גבוה? קחו כובע ומסנן.`,
+          };
+        }
+        if (todayMax < 22) {
+          return {
+            verdict: "maybe",
+            detail: "קריר יחסית לרחצה — מתאים יותר לטיול על החוף מאשר לשחייה ארוכה.",
+          };
+        }
+        return {
+          verdict: "maybe",
+          detail: "אפשרי, אבל בדקו רוח וגלים לפני שיוצאים.",
+        };
+      }
+
+      function surfDay() {
+        if (stormy) {
+          return {
+            verdict: "no",
+            detail: "תנאי סערה — לא מומלץ לגלישה חובבנית.",
+          };
+        }
+        if (waveH < 0.45) {
+          return {
+            verdict: "no",
+            detail: `ים שקט יחסית (גובה גל ~${waveH.toFixed(1)} מ׳) — פחות לגלישה.`,
+          };
+        }
+        if (waveH >= 0.8 && waveH <= 2.2 && windMax < 40) {
+          return {
+            verdict: "yes",
+            detail: `יש גל לעבודה (~${waveH.toFixed(1)} מ׳, מחזור ${waveP.toFixed(0)} שנ׳). בדקו ספוט מקומי ובטיחות.`,
+          };
+        }
+        if (waveH > 2.2) {
+          return {
+            verdict: "maybe",
+            detail: `גל גבוה (~${waveH.toFixed(1)} מ׳) — לגולשים מנוסים בלבד.`,
+          };
+        }
+        return {
+          verdict: "maybe",
+          detail: `גל קל (~${waveH.toFixed(1)} מ׳) — אפשרי למתחילים/לונגבורד, לא סשן גדול.`,
+        };
+      }
+
+      function hikeDay() {
+        if (stormy || rain >= 5) {
+          return {
+            verdict: "no",
+            detail: "גשם משמעותי או סופות — דחו טיול שטח.",
+          };
+        }
+        if (todayMax >= 35) {
+          return {
+            verdict: "no",
+            detail: `עומס חום גבוה (עד ${Math.round(todayMax)}°) — לא מומלץ לטיול ארוך בטבע בשיא היום.`,
+          };
+        }
+        if (todayMax >= 32) {
+          return {
+            verdict: "maybe",
+            detail: `חם (${Math.round(todayMax)}°) — רק מסלול קצר, בוקר מוקדם, הרבה מים וצל.`,
+          };
+        }
+        if (windMax >= 45) {
+          return {
+            verdict: "maybe",
+            detail: "רוח חזקה צפויה — הימנעו מרכסים חשופים.",
+          };
+        }
+        return {
+          verdict: "yes",
+          detail: `תנאים נוחים יחסית לטיול (${Math.round(todayMin)}°–${Math.round(todayMax)}°, גשם ${rain.toFixed(1)} מ״מ).`,
+        };
+      }
+
+      function bikeDay() {
+        if (stormy || rainy || rain >= 2) {
+          return {
+            verdict: "no",
+            detail: "רטוב / סופות — כבישים חלקלקים וסיכון גבוה לרכיבה.",
+          };
+        }
+        if (windMax >= 40) {
+          return {
+            verdict: "no",
+            detail: `רוח חזקה (~${Math.round(windMax)} קמ״ש) — לא נוח ולא בטוח לרכיבה פתוחה.`,
+          };
+        }
+        if (todayMax >= 35) {
+          return {
+            verdict: "maybe",
+            detail: `חם מאוד (עד ${Math.round(todayMax)}°) — רק בוקר מוקדם, מסלול קצר והרבה מים.`,
+          };
+        }
+        if (windMax >= 28) {
+          return {
+            verdict: "maybe",
+            detail: `רוח בינונית–חזקה (~${Math.round(windMax)} קמ״ש) — אפשרי במסלולים מוגנים, פחות לאורך חוף פתוח.`,
+          };
+        }
+        if (todayMax >= 18 && todayMax <= 33) {
+          return {
+            verdict: "yes",
+            detail: `תנאים טובים לרכיבה (${Math.round(todayMin)}°–${Math.round(todayMax)}°, רוח ~${Math.round(windMax)} קמ״ש).`,
+          };
+        }
+        if (todayMax < 18) {
+          return {
+            verdict: "maybe",
+            detail: "קריר — מתאים עם שכבות; היזהרו מכביש לח בבוקר.",
+          };
+        }
+        return {
+          verdict: "maybe",
+          detail: "אפשרי, אבל בדקו חום ורוח לפני יציאה ארוכה.",
+        };
+      }
+
+      const beach = beachDay();
+      const surf = surfDay();
+      const hike = hikeDay();
+      const bike = bikeDay();
+
+      return {
+        id: "weather",
+        label: "מזג אוויר",
+        headline: "מה כדאי לעשות היום?",
+        status: "חי · Open-Meteo + Windy",
+        facts: [
+          {
+            label: "עכשיו · ת״א",
+            value: `${Math.round(cur.temperature_2m)}°C`,
+            note: wmoHe(code),
+          },
+          {
+            label: "היום",
+            value: `${Math.round(todayMin)}°–${Math.round(todayMax)}°`,
+            note: rain > 0 ? `גשם ${rain} מ״מ` : "בלי גשם משמעותי",
+          },
+          {
+            label: "רוח",
+            value: `${Math.round(windNow)} קמ״ש`,
+            note: `שיא צפוי ~${Math.round(windMax)} קמ״ש`,
+          },
+          {
+            label: "גלים",
+            value: waveH ? `${waveH.toFixed(1)} מ׳` : "—",
+            note: waveP ? `מחזור ${waveP.toFixed(0)} שנ׳` : "חוף תל אביב",
+          },
+        ],
+        analysis:
+          "ההמלצות הן כלל אצבע לפי חום, גשם, רוח וגובה גל — לא תחליף לדיווח מציל / שירות מטאורולוגי / תנאי ספוט / כביש.",
+        blocs: [
+          { name: "יום לים", verdict: beach.verdict, detail: beach.detail },
+          { name: "יום לגלוש", verdict: surf.verdict, detail: surf.detail },
+          { name: "יום לטיול בטבע", verdict: hike.verdict, detail: hike.detail },
+          { name: "יום לרכב באופניים", verdict: bike.verdict, detail: bike.detail },
+        ],
+        mapEmbed:
+          "https://embed.windy.com/embed2.html?lat=31.75&lon=34.95&detailLat=32.08&detailLon=34.78&width=650&height=400&zoom=7&level=surface&overlay=wind&product=ecmwf&menu=&message=true&marker=true&calendar=now&pressure=&type=map&location=coordinates&detail=true&metricWind=default&metricTemp=default&radarRange=-1",
+        sources: [
+          { name: "Open-Meteo", url: "https://open-meteo.com/" },
+          { name: "Open-Meteo Marine", url: "https://open-meteo.com/en/docs/marine-weather-api" },
+          { name: "Windy", url: "https://www.windy.com/?31.750,34.950,7" },
+          { name: "Contains data from the Windy database", url: "https://www.windy.com/" },
+        ],
+      };
+    }
+
+    async function loadInsights() {
+      try {
+        const res = await fetch(INSIGHTS_JSON, { cache: "no-store" });
+        if (!res.ok) throw new Error(String(res.status));
+        insightsData = await res.json();
+      } catch (e) {
+        console.warn("insights load failed", e);
+        insightsData = { updatedAt: "", disclaimer: "", items: [] };
+      }
+      try {
+        const weather = await loadWeatherInsight();
+        const items = [...(insightsData.items || [])].filter((x) => x.id !== "weather");
+        items.unshift(weather);
+        insightsData = { ...insightsData, items };
+      } catch (e) {
+        console.warn("weather insight failed", e);
+      }
+      renderInsights();
+      if (!insightsData?.items?.length && els.insights) {
+        els.insights.innerHTML = `<p class="hint" style="margin:0">לא ניתן לטעון נתוני תובנות כרגע.</p>`;
+      }
     }
 
     function renderTopicCubes(cards) {
@@ -1396,6 +1953,7 @@
       detailView: document.getElementById("detailView"),
       topicListView: document.getElementById("topicListView"),
       status: document.getElementById("status"),
+      insights: document.getElementById("insights"),
     };
 
     const SEEN_KEY = "takles_seen_map";
@@ -1617,7 +2175,8 @@
       els.topicListView.classList.add("active");
       els.topicListView.innerHTML = `
         <button type="button" class="back-btn" id="topicBackBtn">← חזרה ללוח</button>
-        <h2 class="title t-${escapeHtml(topicId)}" style="margin:0 0 0.35rem">${escapeHtml(topic.label)}</h2>
+        ${topicCoverHtml(topicId)}
+        <h2 class="title t-${escapeHtml(topicId)}" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">${escapeHtml(topic.label)}</h2>
         <p class="status-line" style="margin-top:0">${cards.length} עדכונים · נצפים באפור</p>
         <div class="sort-bar" id="sortBar">
           <button type="button" data-sort="time" class="${listSort === "time" ? "active" : ""}">לפי זמן</button>
@@ -1649,6 +2208,7 @@
           }
         </ul>
       `;
+      hydrateTitleCovers(els.topicListView);
       document.getElementById("topicBackBtn").addEventListener("click", showHome);
       document.getElementById("sortBar").addEventListener("click", (e) => {
         const btn = e.target.closest("[data-sort]");
@@ -1731,7 +2291,7 @@
           }
         </div>
         <article class="detail-hero">
-          ${storyVisual(c)}
+          ${storyTitleCover(c)}
           <div class="meta">
             <span class="badge ${escapeHtml(c.status)}">${STATUS_HE[c.status] || c.status}</span>
             <span class="badge sources">${escapeHtml(TOPIC_HE[c.topic] || "פנים")}</span>
@@ -1762,6 +2322,7 @@
           <div class="sources-row">${sourceChips}</div>
         </div>
       `;
+      hydrateTitleCovers(els.detailView);
       document.getElementById("backBtn").addEventListener("click", showHome);
       const seenBtn = document.getElementById("seenBtn");
       if (seenBtn) {
@@ -2082,6 +2643,7 @@
     window.addEventListener("popstate", openFromHash);
     window.addEventListener("hashchange", openFromHash);
 
+    loadInsights();
     loadFallbackHttp().then(() => {
       openFromHash();
       connectLiveSocket();
