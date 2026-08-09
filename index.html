@@ -1165,7 +1165,32 @@
   <script>
     const IS_PAGES = /github\.io$/i.test(location.hostname);
     const NEWS_JSON = IS_PAGES ? "./news.json" : "/api/news";
-    const POLL_MS = 60_000;
+    const POLL_MS = IS_PAGES ? 5 * 60_000 : 60_000;
+    const GOOGLE_FEEDS = [
+      {
+        url: "https://news.google.com/rss?hl=he&gl=IL&ceid=IL:he",
+        limit: 20,
+      },
+      {
+        url: "https://news.google.com/rss/headlines/section/topic/SPORTS?hl=he&gl=IL&ceid=IL:he",
+        limit: 8,
+        topicHint: "sport",
+      },
+      {
+        url:
+          "https://news.google.com/rss/search?hl=he&gl=IL&ceid=IL:he&q=" +
+          encodeURIComponent('"תיירות" OR "נופש" OR "מלונות" OR "חופשה" OR "משרד התיירות"'),
+        limit: 25,
+        topicHint: "leisure",
+        leisure: true,
+        keep: 6,
+      },
+    ];
+    const SOURCE_RE = /<a href="([^"]+)"[^>]*>(.*?)<\/a>\s*&nbsp;&nbsp;<font[^>]*>(.*?)<\/font>/gi;
+    const LEISURE_KEEP =
+      /משרד התיירות|תיירות ישראל|ענף התיירות|בתי.?המלון|מלונ|נופש|חופשה|חבילת נופש|חדרי מלון|אתר נופש|למטייל|ריזורט|דיל טיס|טיסת צ'?ארטר/i;
+    const LEISURE_DROP =
+      /דה\s*וויס|The Voice|סדרת|עונה \d|נטפליקס|קונצרט|זמר |בידור|מכבי|הפועל|ספורט|ליגת|פרמייר|איראן|הורמוז|מלחמ|כטב|רקטה|חיזבאללה|חמאס|עזה|ביידן|טראמפ|בורסה|מני[וה]|אקזיט/i;
 
     const DRAMATIC = [
       "שומט את הקרקע",
@@ -2880,12 +2905,122 @@
     }
 
     async function fetchLiveItems() {
+      if (IS_PAGES) {
+        try {
+          const live = await fetchGoogleNewsLive();
+          if (live.items?.length) {
+            return { items: live.items, meta: live, sourceKind: "live" };
+          }
+        } catch (e) {
+          console.warn("live google feed failed, falling back to news.json", e);
+        }
+      }
       const res = await fetch(NEWS_JSON, { cache: "no-store" });
       if (!res.ok) throw new Error(`API ${res.status}`);
       const data = await res.json();
       if (data.error) throw new Error(data.error);
       if (!data.items?.length) throw new Error("RSS ריק");
-      return { items: data.items, meta: data };
+      return { items: data.items, meta: data, sourceKind: "static" };
+    }
+
+    function stripTags(text) {
+      const el = document.createElement("div");
+      el.innerHTML = text || "";
+      return (el.textContent || "").replace(/\s+/g, " ").trim();
+    }
+
+    function isRelevantLeisure(item) {
+      const heads = (item.sources || []).map((s) => s.headline || "").join(" ");
+      const blob = `${item.title || ""} ${heads}`;
+      if (LEISURE_DROP.test(blob)) return false;
+      return LEISURE_KEEP.test(blob);
+    }
+
+    function parseGoogleRss(xmlText, limit = 24, topicHint = null) {
+      const doc = new DOMParser().parseFromString(xmlText, "text/xml");
+      if (doc.querySelector("parsererror")) throw new Error("RSS parse error");
+      const nodes = [...doc.querySelectorAll("item")].slice(0, limit);
+      return nodes.map((node) => {
+        let title = (node.querySelector("title")?.textContent || "").trim();
+        const link = (node.querySelector("link")?.textContent || "").trim();
+        const pubDate = (node.querySelector("pubDate")?.textContent || "").trim();
+        const desc = node.querySelector("description")?.textContent || "";
+        let mainSource = "";
+        if (title.includes(" - ")) {
+          const parts = title.split(" - ");
+          mainSource = parts.pop().trim();
+          title = parts.join(" - ").trim();
+        }
+        const sources = [];
+        SOURCE_RE.lastIndex = 0;
+        let m;
+        while ((m = SOURCE_RE.exec(desc)) && sources.length < 6) {
+          sources.push({
+            url: m[1],
+            headline: stripTags(m[2]),
+            name: stripTags(m[3]),
+          });
+        }
+        if (!sources.length) {
+          sources.push({
+            url: link,
+            headline: title,
+            name: mainSource || "Google News",
+          });
+        }
+        const item = { title, link, pubDate, sources, image: null };
+        if (topicHint) item.topicHint = topicHint;
+        return item;
+      });
+    }
+
+    async function fetchRssViaProxy(feedUrl) {
+      const proxies = [
+        (u) => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
+        (u) => `https://corsproxy.io/?${encodeURIComponent(u)}`,
+      ];
+      let lastErr = null;
+      for (const make of proxies) {
+        try {
+          const res = await fetch(make(feedUrl), { cache: "no-store" });
+          if (!res.ok) throw new Error(`proxy ${res.status}`);
+          const text = await res.text();
+          if (!text.includes("<item")) throw new Error("empty rss");
+          return text;
+        } catch (e) {
+          lastErr = e;
+        }
+      }
+      throw lastErr || new Error("all proxies failed");
+    }
+
+    async function fetchGoogleNewsLive() {
+      const groups = await Promise.all(
+        GOOGLE_FEEDS.map(async (feed) => {
+          const xml = await fetchRssViaProxy(feed.url);
+          let items = parseGoogleRss(xml, feed.limit, feed.topicHint || null);
+          if (feed.leisure) {
+            items = items.filter(isRelevantLeisure).slice(0, feed.keep || 6);
+          }
+          return items;
+        })
+      );
+      const seen = new Set();
+      const merged = [];
+      for (const group of groups) {
+        for (const item of group) {
+          const key = (item.title || "").trim().toLowerCase().replace(/\s+/g, " ");
+          if (!key || seen.has(key)) continue;
+          seen.add(key);
+          merged.push(item);
+        }
+      }
+      return {
+        fetchedAt: new Date().toISOString(),
+        count: merged.length,
+        withImages: 0,
+        items: merged,
+      };
     }
 
     function applyNewsPayload(data, sourceLabel) {
@@ -2909,10 +3044,13 @@
       els.status.textContent = "מושך חדשות…";
       try {
         const liveData = await fetchLiveItems();
-        applyNewsPayload(
-          liveData.meta || liveData,
-          IS_PAGES ? "GitHub Pages · news.json" : "HTTP"
-        );
+        const label =
+          liveData.sourceKind === "live"
+            ? "חי · Google News"
+            : IS_PAGES
+              ? "GitHub Pages · news.json"
+              : "HTTP";
+        applyNewsPayload(liveData.meta || liveData, label);
       } catch (e) {
         const items = FALLBACK.items;
         lastSourceLabel = `גיבוי (${FALLBACK.fetchedAt})`;
@@ -2926,7 +3064,9 @@
       const tick = async () => {
         try {
           const liveData = await fetchLiveItems();
-          applyNewsPayload(liveData.meta || liveData, "GitHub Pages · רענון");
+          const label =
+            liveData.sourceKind === "live" ? "חי · Google News · רענון" : "GitHub Pages · רענון";
+          applyNewsPayload(liveData.meta || liveData, label);
         } catch (e) {
           console.warn("pages poll failed", e);
         }
