@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-09T00:08:34Z",
+  "fetchedAt": "2026-08-09T00:18:53Z",
   "count": 34,
   "withImages": 0,
   "items": [
@@ -19,14 +19,14 @@
           "name": "ynet.co.il"
         },
         {
-          "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE50ZWI0N1BYMFpMWE05ZTl1cm80dm91bkJwenVDTmFIOWZrenIwT1B1SVdSNXlSQTN6dU42YmxNbkhLaHV3X0R2OF85bEJhNHV6NDl2LTFYYWFsbFRVZFVraQ?oc=5",
-          "headline": "הקלף האיראני יורד מהשולחן? ואנס חושף התפתחות דרמטית בהורמוז",
-          "name": "מעריב"
-        },
-        {
           "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxOZEtTcF92ZHBMS2p4OHlHVVA1bWMyNXh5TmhQbGFGYU9RNzBFLUsyMmJYeHhxbE52aWwwb2ZObjlmNFZvUW4yOXBxS3N0dDNrbEM1VVkyZnhOM2xtay1VdmtwT1pSQkJkaXVMM1lqbXNBQ1NSeWJoWjlFTUdJcG5IckhFRkQza3R1QVl6YU85UkhfRklfbDlHZmZlc0x4NTI2MjdQazYtLUtHTkpzTlZlbkM4b3RsaFk?oc=5",
           "headline": "איראן: קרובים מאוד להסכם עם עומאן על מצר הורמוז, אך הוא לא ייפתח מייד",
           "name": "הארץ"
+        },
+        {
+          "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE50ZWI0N1BYMFpMWE05ZTl1cm80dm91bkJwenVDTmFIOWZrenIwT1B1SVdSNXlSQTN6dU42YmxNbkhLaHV3X0R2OF85bEJhNHV6NDl2LTFYYWFsbFRVZFVraQ?oc=5",
+          "headline": "הקלף האיראני יורד מהשולחן? ואנס חושף התפתחות דרמטית בהורמוז",
+          "name": "מעריב"
         },
         {
           "url": "https://news.google.com/rss/articles/CBMib0FVX3lxTE90TVZzNGZZajJENllDVGFKOGpYcDNIUUgydW1LLTNXNlhZbWV4dERZdGVmdHpmaUdCc2tCTFoyUGdoaHBETTZWelRCc2hjZy1xYU9tMWkzbHBSclRZd2xLMzVhV09sbzIwbG04cV9uVQ?oc=5",
@@ -37,13 +37,13 @@
       "image": null,
       "distill": {
         "title": "מזכיר המועצה העליונה לביטחון לאומי של איראן: \"מצר הורמוז לא ייפתח עד שארה\"ב תתקן את התנהגותה",
-        "summary": "מזכיר המועצה העליונה לביטחון לאומי של איראן: \"מצר הורמוז לא ייפתח עד שארה\"ב תתקן את התנהגותה. בנוסף עולה מהמקורות: טראמפ מחליט - וישראל בצד: \"הכול כפוף לרצונו\" | הבעיות המרכזיות, והיתרון שנותר; הקלף האיראני יורד מהשולחן? ואנס חושף התפתחות דרמטית בהורמוז. מדווח במקביל ב־5 מקורות.",
+        "summary": "מזכיר המועצה העליונה לביטחון לאומי של איראן: \"מצר הורמוז לא ייפתח עד שארה\"ב תתקן את התנהגותה. בנוסף עולה מהמקורות: טראמפ מחליט - וישראל בצד: \"הכול כפוף לרצונו\" | הבעיות המרכזיות, והיתרון שנותר; איראן: קרובים מאוד להסכם עם עומאן על מצר הורמוז, אך הוא לא ייפתח מייד. מדווח במקביל ב־5 מקורות.",
         "why_matters": "זה משפיע על שיט ואנרגיה גלובליים — ולכן גם על מחירים ויציבות שנוגעים לישראל ולשווקים.",
         "bullet_facts": [
           "מזכיר המועצה העליונה לביטחון לאומי של איראן: \"מצר הורמוז לא ייפתח עד שארה\"ב תתקן את התנהגותה",
           "טראמפ מחליט - וישראל בצד: \"הכול כפוף לרצונו\" | הבעיות המרכזיות, והיתרון שנותר",
-          "הקלף האיראני יורד מהשולחן? ואנס חושף התפתחות דרמטית בהורמוז",
-          "איראן: קרובים מאוד להסכם עם עומאן על מצר הורמוז, אך הוא לא ייפתח מייד"
+          "איראן: קרובים מאוד להסכם עם עומאן על מצר הורמוז, אך הוא לא ייפתח מייד",
+          "הקלף האיראני יורד מהשולחן? ואנס חושף התפתחות דרמטית בהורמוז"
         ],
         "background": "מצר הורמוז הוא נתיב שיט מרכזי לנפט ולסחר במפרץ. מתיחות בין איראן לארה״ב ולמדינות האזור סביב פתיחה/סגירה של המעבר משפיעה על מחירים, ביטוח אוניות ויציבות אזורית.",
         "outlook": "מה שחשוב לעקוב אחריו: האם יש הסכמה מעשית על פתיחת המעבר, ומה אומרות איראן, ארה״ב ומדינות המפרץ בפועל. שינוי חד בהצהרות או בתנועת אוניות עשוי לעדכן את התמונה במהירות.",
@@ -53,13 +53,13 @@
         "mode": "heuristic"
       },
       "dryTitle": "מזכיר המועצה העליונה לביטחון לאומי של איראן: \"מצר הורמוז לא ייפתח עד שארה\"ב תתקן את התנהגותה",
-      "summary": "מזכיר המועצה העליונה לביטחון לאומי של איראן: \"מצר הורמוז לא ייפתח עד שארה\"ב תתקן את התנהגותה. בנוסף עולה מהמקורות: טראמפ מחליט - וישראל בצד: \"הכול כפוף לרצונו\" | הבעיות המרכזיות, והיתרון שנותר; הקלף האיראני יורד מהשולחן? ואנס חושף התפתחות דרמטית בהורמוז. מדווח במקביל ב־5 מקורות.",
+      "summary": "מזכיר המועצה העליונה לביטחון לאומי של איראן: \"מצר הורמוז לא ייפתח עד שארה\"ב תתקן את התנהגותה. בנוסף עולה מהמקורות: טראמפ מחליט - וישראל בצד: \"הכול כפוף לרצונו\" | הבעיות המרכזיות, והיתרון שנותר; איראן: קרובים מאוד להסכם עם עומאן על מצר הורמוז, אך הוא לא ייפתח מייד. מדווח במקביל ב־5 מקורות.",
       "why_matters": "זה משפיע על שיט ואנרגיה גלובליים — ולכן גם על מחירים ויציבות שנוגעים לישראל ולשווקים.",
       "bullet_facts": [
         "מזכיר המועצה העליונה לביטחון לאומי של איראן: \"מצר הורמוז לא ייפתח עד שארה\"ב תתקן את התנהגותה",
         "טראמפ מחליט - וישראל בצד: \"הכול כפוף לרצונו\" | הבעיות המרכזיות, והיתרון שנותר",
-        "הקלף האיראני יורד מהשולחן? ואנס חושף התפתחות דרמטית בהורמוז",
-        "איראן: קרובים מאוד להסכם עם עומאן על מצר הורמוז, אך הוא לא ייפתח מייד"
+        "איראן: קרובים מאוד להסכם עם עומאן על מצר הורמוז, אך הוא לא ייפתח מייד",
+        "הקלף האיראני יורד מהשולחן? ואנס חושף התפתחות דרמטית בהורמוז"
       ],
       "background": "מצר הורמוז הוא נתיב שיט מרכזי לנפט ולסחר במפרץ. מתיחות בין איראן לארה״ב ולמדינות האזור סביב פתיחה/סגירה של המעבר משפיעה על מחירים, ביטוח אוניות ויציבות אזורית.",
       "outlook": "מה שחשוב לעקוב אחריו: האם יש הסכמה מעשית על פתיחת המעבר, ומה אומרות איראן, ארה״ב ומדינות המפרץ בפועל. שינוי חד בהצהרות או בתנועת אוניות עשוי לעדכן את התמונה במהירות.",
@@ -144,9 +144,14 @@
           "name": "ynet.co.il"
         },
         {
-          "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxOYWlFS1hsX2E2a0gxMmt5dUQ2TkF2RDI0TE5xblpjdENzSk80M3VJQWljMHBSd0lnQTBLUm9nTzRXT1FxUVNkdG93amdMOWh4M0FxSFFZX2x2TW1tVV9ueG1Fb3hxdXJGbWhuUmdjalBSazlaNW4wZFI5UThNdXVoemY1YmdsQ09VWWoza3JjcWp4bzZMNjh4d1JLWFlvdlB1U0k3ZVdRNXBvc2R3V29LUEJB?oc=5",
-          "headline": "דיווח: משרד ההגנה האמריקאי דורש מתעשיית הנשק במדינה להאיץ את הייצור",
+          "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxNVkd4TWY1VHlYbkJUbDJqN01xcmwwNXI3UzNJVk82WHlKVXNOQTEyLUZwNG9SRmtMQk5JMHdxZElnMjJadlFCVU5jbGQzVXFnd2hpN01YbDZSMkMtbWp2MFlPbmlDaXd4ZDNEU0phSlVNRGZDMGlmM3V6cl93dG9wV0MyUVVEY2NNOWtaRDF1aFViWm1QT29PNk12czNCZXFTY25TWmFqbGg3SUFkWm1LWXI2Yi00OHM?oc=5",
+          "headline": "ארה\"ב שוחקת את מאגרי הנשק שלה באיראן. רוסיה וסין עוקבות בדריכות",
           "name": "הארץ"
+        },
+        {
+          "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE9ZRUQzQ1Z6OFg4NFNTNERPUEYtQmJNWmFWTE9EQWxjOFN2YzZITHVKTW5tdjNUQUxOdk5RaVQzMnhyTk5IdHhITW54d0pteUN4QkZmX2JXenAxS3c?oc=5",
+          "headline": "מחסני הטילים מתרוקנים, הפנטגון לוחץ: \"21 יום להציג תוכנית להאצת ייצור הנשק\"",
+          "name": "ynet.co.il"
         },
         {
           "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE02dlJkckp0OThiZjlTM1lPM1FNM2xuUUNrUlV4YkMwRVFhd2Zjc1NxV0cxU3F1b1RIYWJYQWYybGVoRk1XY2hhMDFHOUhHZWZtLXZzd0JYVHpid0hsQlp1ZA?oc=5",
@@ -154,25 +159,20 @@
           "name": "מעריב"
         },
         {
-          "url": "https://news.google.com/rss/articles/CBMifEFVX3lxTE1tbmVYYXFKREJLNkdFTHRVSi1BMjA1QTd6ampUeUFoeW4xTGc2MFFrODEwNjVqMS1aWlloUHJteU1UN2JBdGRxN05EOG1UTnpYZmZ0c2NVRzFIUU1Ha1VDSlU4dHZPVUkxSThUb1U2eEJvaTRmdWhWcTBCN0c?oc=5",
-          "headline": "בעקבות המלחמה עם איראן: הפנטגון לוחץ על התעשיות הביטחוניות להאיץ דרמטית את קצב ייצור הנשק | דיווח",
-          "name": "Mako"
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE82NnE0TXJaQmNUR3gybFFHVmo2dGYzcXM2MDBPRllPUmZxaV9CWWhhRjNmY0NtajZRU2xtVWhONDNybTF3SkVxSjh3WDRBVFAtRndyMzJsNW0xR3E1bzJhaFBad0labUtTRkZ2SnZqaEhRQl9m0gF8QVVfeXFMTUhkSzNUNmhtLUVuT1I1cDhKTjJoRXFUTDc4dkp1ZWE5czRqcmw0M25PSUUtclZIXzhHTmhjeEJfeUM4QjU2R1ZxTDNUVnRCaldjd3JzbWl2MUdleXhHdTJ6T3NuZnc3YkRxOGlLSWR2aFBiTmNKd0xfbTQ3Rg?oc=5",
-          "headline": "הפנטגון דורש: להאיץ את ייצור הנשק בעקבות המלחמה באיראן",
-          "name": "היום"
+          "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE53SENPdURTQmhMeDExR2RpVm9nY296bm1FN0lIcE9zRnBoUmhfUW9LM2hMVXU4Q21idVUwSlpmSDFYQ0ljTUpHR0JGVEVwN2IyZU81QVZEZTNiaGFYa3ZmaHpNSHFGNUtw?oc=5",
+          "headline": "טראמפ מכחיש מחסור בתחמושת בצבא ארה\"ב ומאיים על המדליפים",
+          "name": "makorrishon.co.il"
         }
       ],
       "image": null,
       "distill": {
         "title": "המהלכים שהחלישו את צבא ארה\"ב, והחשש: רוסיה וסין ינצלו זאת",
-        "summary": "לפי הדיווחים, המהלכים שהחלישו את צבא ארה\"ב, והחשש: רוסיה וסין ינצלו זאת. מדווח במקביל ב־5 מקורות.",
+        "summary": "לפי הדיווחים, המהלכים שהחלישו את צבא ארה\"ב, והחשש: רוסיה וסין ינצלו זאת. מדווח במקביל ב־4 מקורות.",
         "why_matters": "זה משפיע על שיט ואנרגיה גלובליים — ולכן גם על מחירים ויציבות שנוגעים לישראל ולשווקים.",
         "bullet_facts": [
           "הדיון מתואר כמתנהל גם תחת לחץ אמריקני",
           "המהלכים שהחלישו את צבא ארה\"ב, והחשש: רוסיה וסין ינצלו זאת",
-          "משרד ההגנה האמריקאי דורש מתעשיית הנשק במדינה להאיץ את הייצור"
+          "ארה\"ב שוחקת את מאגרי הנשק שלה באיראן. רוסיה וסין עוקבות בדריכות"
         ],
         "background": "מצר הורמוז הוא נתיב שיט מרכזי לנפט ולסחר במפרץ. מתיחות בין איראן לארה״ב ולמדינות האזור סביב פתיחה/סגירה של המעבר משפיעה על מחירים, ביטוח אוניות ויציבות אזורית.",
         "outlook": "מה שחשוב לעקוב אחריו: האם יש הסכמה מעשית על פתיחת המעבר, ומה אומרות איראן, ארה״ב ומדינות המפרץ בפועל. שינוי חד בהצהרות או בתנועת אוניות עשוי לעדכן את התמונה במהירות.",
@@ -182,12 +182,12 @@
         "mode": "heuristic"
       },
       "dryTitle": "המהלכים שהחלישו את צבא ארה\"ב, והחשש: רוסיה וסין ינצלו זאת",
-      "summary": "לפי הדיווחים, המהלכים שהחלישו את צבא ארה\"ב, והחשש: רוסיה וסין ינצלו זאת. מדווח במקביל ב־5 מקורות.",
+      "summary": "לפי הדיווחים, המהלכים שהחלישו את צבא ארה\"ב, והחשש: רוסיה וסין ינצלו זאת. מדווח במקביל ב־4 מקורות.",
       "why_matters": "זה משפיע על שיט ואנרגיה גלובליים — ולכן גם על מחירים ויציבות שנוגעים לישראל ולשווקים.",
       "bullet_facts": [
         "הדיון מתואר כמתנהל גם תחת לחץ אמריקני",
         "המהלכים שהחלישו את צבא ארה\"ב, והחשש: רוסיה וסין ינצלו זאת",
-        "משרד ההגנה האמריקאי דורש מתעשיית הנשק במדינה להאיץ את הייצור"
+        "ארה\"ב שוחקת את מאגרי הנשק שלה באיראן. רוסיה וסין עוקבות בדריכות"
       ],
       "background": "מצר הורמוז הוא נתיב שיט מרכזי לנפט ולסחר במפרץ. מתיחות בין איראן לארה״ב ולמדינות האזור סביב פתיחה/סגירה של המעבר משפיעה על מחירים, ביטוח אוניות ויציבות אזורית.",
       "outlook": "מה שחשוב לעקוב אחריו: האם יש הסכמה מעשית על פתיחת המעבר, ומה אומרות איראן, ארה״ב ומדינות המפרץ בפועל. שינוי חד בהצהרות או בתנועת אוניות עשוי לעדכן את התמונה במהירות.",
@@ -327,67 +327,67 @@
       "distillMode": "heuristic"
     },
     {
-      "title": "רובי וחגית חן: \"משפחות שיקירן נחטף והושב כחלל לא מקבלות הכרה מהמדינה\"",
-      "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5nNkEwQjRhUTBfaTB4eGlRWHJORy1hUEJPLXc5ODZkQXFvc3RlMmVUcnFPQ0NaMDJUNDc5UUFGU0F2ZUZNbFRtcnZ1cEhGMFdYRm9PaUoteDFEZw?oc=5",
-      "pubDate": "Sat, 08 Aug 2026 17:38:57 GMT",
+      "title": "נשיא איראן: \"כעת הזמן הטוב ביותר להגיע להסכם\"",
+      "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTFBIdDF6a2gyREZIR2wyVTY2MklYUzdfWVVtT29OZTFHNThib1hjaWRVd19nRGNVOHg4NFZ4b3hVWlRiSEphRWVSdVZFQ0JoQzg0cjlYN1Q0b1RYN2hMTjhiLWM0aWFTQXhyb0NhMnJGNXJESThB?oc=5",
+      "pubDate": "Sat, 08 Aug 2026 04:31:25 GMT",
       "sources": [
         {
-          "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5nNkEwQjRhUTBfaTB4eGlRWHJORy1hUEJPLXc5ODZkQXFvc3RlMmVUcnFPQ0NaMDJUNDc5UUFGU0F2ZUZNbFRtcnZ1cEhGMFdYRm9PaUoteDFEZw?oc=5",
-          "headline": "רובי וחגית חן: \"משפחות שיקירן נחטף והושב כחלל לא מקבלות הכרה מהמדינה\"",
+          "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTFBIdDF6a2gyREZIR2wyVTY2MklYUzdfWVVtT29OZTFHNThib1hjaWRVd19nRGNVOHg4NFZ4b3hVWlRiSEphRWVSdVZFQ0JoQzg0cjlYN1Q0b1RYN2hMTjhiLWM0aWFTQXhyb0NhMnJGNXJESThB?oc=5",
+          "headline": "נשיא איראן: \"כעת הזמן הטוב ביותר להגיע להסכם\"",
+          "name": "רשת 13"
+        },
+        {
+          "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE54cjV1MmNZeW5SVXVIWWtEOTlRYjlwZDNIRTNwZDVBNTZHM0FKNHdnRzBCMWJBM1dWT21xYURPVk1ZQTlscW9UakF1RV93RTRSZ1VpT2tBZHI0QmM?oc=5",
+          "headline": "האיום האיראני על סעודיה אחרי ברית ההגנה, ודברי הנשיא: \"עכשיו הזמן להסכם\"",
           "name": "ynet.co.il"
         },
         {
-          "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE1OMElENnZpNEhRY19zVXZZUHUwVmFDNHR3MnZWNmxkY2R2cElEaUJwa1IySmU2MldJNG1WNTNKTFplVGJmbXU4U2RLekFyNE1wTXBOakoyX1d4enpaTVZaVDJfaGp4Mm5j0gFwQVVfeXFMTzF5ejNtOVM1WGhXVE42U0FQNC1weGMwSmRhVENDOXZSMlZLSGVzdi1qeWxxcmRGRFRrem9jS3JxT2pWRXVZX3JPR01vd0NkbXFENDZCTllmNWFVSFB2Q0VMemd1dk9kUjZRTml5M2hFbg?oc=5",
-          "headline": "שוב מחאה בכיכר הבימה: הפגנה בדרישה לוועדת חקירה ממלכתית",
-          "name": "היום"
+          "url": "https://news.google.com/rss/articles/CBMifEFVX3lxTE01OG42dVdXQUkyZngzaTJGSmhuWEQ5dTZVUW9lYzBDNTVoamFaQzdFRVk1dmdxeU01cEY0dnhINVF3eFdDakJnNlY3VWNma3ZwM1BQVVJ2N0E5bWVQTHNQV01PZWQzcWoxZU9FdHVKcXBrZHhwcjcwOWtMWVg?oc=5",
+          "headline": "האיום של איראן על סעודיה, והציטוט של בכיר בברית ההגנה החדשה באזור: \"ישראל מדינה בלתי לגיטימית\"",
+          "name": "Mako"
         },
         {
-          "url": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE1tY1RSZVVqUnV1VHNiRXF6YTJZMVd2bmEzSmwyVmt6WDhrRnVrQ2pLbFFieDNGaE5kSmNHaERUNzJuOFBlejBaZElaWQ?oc=5",
-          "headline": "חגית ורובי חן: הצביעו רק למפלגות שיקימו ועדת חקירה ממלכתית",
-          "name": "זמן ישראל"
+          "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTFBiYWtkRDlBTW1VMkpnNDVSYlUyTXRfRUdsaFBJX3dJajlVS3N1VUpNUVVEU2ZSZXEteHZYZUdnUDUxRVNPTnpkdGp2b25HazFIQmFrOVVQTFpRWmNXaTg2Ng?oc=5",
+          "headline": "\"אירופה לא יכולה לקבל החלטות עצמאיות\": נשיא איראן חושף מה קרה עם צרפת",
+          "name": "מעריב"
         },
         {
-          "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxNTHMxQ0x5d1BDX1RhclZlSkE0RjBPV1JvSXIwWjR0S3BwVjE0c01USUdVaEVoZ3JSVm9XUmJvTnFueFJmQU9hWFk0alRCcF8zMEVBV0JVcXlrUktiNkVGYWgtNFY1WTdXUkh4VGxqVE9iX2lWTzBTU3FHcl9HcXQtQXRzN2V3TldOaTNyUDVjOVdTVWxvQmR1aWxrQ25CNW50WmZxaFBObXk?oc=5",
-          "headline": "מאות הפגינו נגד הממשלה: \"מדינה לא יכולה להתנהל תחת סנטימנט של נקמה\"",
-          "name": "הארץ"
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTFBvMTZjc04wZ0loNXJ2ZVRxX3cxcDZCR0hQbzFlMnFRTDdkT1pqOWFEeUFvMFprZ0VhczFWZkhVM3drbkppTm8zcHVpUlZhM1RkOHQ2WWRrLVVkams?oc=5",
-          "headline": "האלוף בדימוס נגד נתניהו: לעולם לא אסלח לו. הממשלה בגדה בערכי המסורת היהודית",
-          "name": "ynet.co.il"
+          "url": "https://news.google.com/rss/articles/CBMiywJBVV95cUxOSlpjcFh5QUJmWUhmd2pPcHR1Wl9IMnpMRW9FZUttblVCeGdsaGNHTnVUdmdtNkRjOUZ6dzk0NVd4eVI2OGtvelAwTzEyNjVCNXFzcGhWbFZUWGhYaXljY0RqZ2NkQUZSUm9mckJ3QmhaZVN3MlhNQ0NpdEVTUVpUZGcwRjVYUzk0QmJaZkF1VXdUVmVoWV9xN2h5LWt4MzVhVUJRR3JBdmd2eFVVdkJCX0t0dlFHMnNZc2NOS3JZS3U3aDZJeXRNd3N0eDJURkVTTmVxQjd6dUwwUUVXLURwcUlta3Exc0hHYmZpRV9Eek04Z3pEa3RaSmUxWUpHSTB1bnR6SXI4dUlsLVhnU2xJb0ZwWXNMNkVKeW1GOE9ZNWcxR0hFLUJGaWd2WTk1UFFqdmhYXy1LaGJsYTJyLVFIRE5HMm5yMWNvX1lv?oc=5",
+          "headline": "איראן מאיימת על סעודיה: \"הברית החדשה לא תעזור לכם\"",
+          "name": "סרוגים"
         }
       ],
       "image": null,
       "distill": {
-        "title": "רובי וחגית חן: \"משפחות שיקירן נחטף והושב כחלל לא מקבלות הכרה מהמדינה",
-        "summary": "רובי וחגית חן: \"משפחות שיקירן נחטף והושב כחלל לא מקבלות הכרה מהמדינה. בנוסף עולה מהמקורות: שוב מחאה בכיכר הבימה: הפגנה בדרישה לוועדת חקירה ממלכתית; חגית ורובי חן: הצביעו רק למפלגות שיקימו ועדת חקירה ממלכתית. מדווח במקביל ב־4 מקורות.",
-        "why_matters": "זה על סדר היום כי מהלכים פוליטיים כאן משנים יציבות שלטון והחלטות שנוגעות לכולם.",
+        "title": "נשיא איראן: \"כעת הזמן הטוב ביותר להגיע להסכם",
+        "summary": "נשיא איראן: \"כעת הזמן הטוב ביותר להגיע להסכם. בנוסף עולה מהמקורות: האיום האיראני על סעודיה אחרי ברית ההגנה, ודברי הנשיא: \"עכשיו הזמן להסכם; האיום של איראן על סעודיה, והציטוט של בכיר בברית ההגנה החדשה באזור: \"ישראל מדינה בלתי לגיטימית. מדווח במקביל ב־5 מקורות.",
+        "why_matters": "זה משפיע על שיט ואנרגיה גלובליים — ולכן גם על מחירים ויציבות שנוגעים לישראל ולשווקים.",
         "bullet_facts": [
-          "רובי וחגית חן: \"משפחות שיקירן נחטף והושב כחלל לא מקבלות הכרה מהמדינה",
-          "שוב מחאה בכיכר הבימה: הפגנה בדרישה לוועדת חקירה ממלכתית",
-          "חגית ורובי חן: הצביעו רק למפלגות שיקימו ועדת חקירה ממלכתית",
-          "מאות הפגינו נגד הממשלה: \"מדינה לא יכולה להתנהל תחת סנטימנט של נקמה"
+          "נשיא איראן: \"כעת הזמן הטוב ביותר להגיע להסכם",
+          "האיום האיראני על סעודיה אחרי ברית ההגנה, ודברי הנשיא: \"עכשיו הזמן להסכם",
+          "האיום של איראן על סעודיה, והציטוט של בכיר בברית ההגנה החדשה באזור: \"ישראל מדינה בלתי לגיטימית",
+          "אירופה לא יכולה לקבל החלטות עצמאיות\": נשיא איראן חושף מה קרה עם צרפת"
         ],
-        "background": "בפוליטיקה הישראלית, מהלכי מפלגות, פריימריז והחלטות בכנסת משפיעים על יציבות הקואליציה ועל סדר היום. כותרת כזו בדרך כלל מסמנת מאבק כוח, מועמדות או הסדר פוליטי.",
-        "outlook": "השלב הבא הוא בדרך כלל הודעות רשמיות, הצבעות או סיכום מועמדים. כדאי לבדוק אם יש הסכמה בין מקורות על העובדות לפני מסקנה על התוצאה הפוליטית.",
+        "background": "מצר הורמוז הוא נתיב שיט מרכזי לנפט ולסחר במפרץ. מתיחות בין איראן לארה״ב ולמדינות האזור סביב פתיחה/סגירה של המעבר משפיעה על מחירים, ביטוח אוניות ויציבות אזורית.",
+        "outlook": "מה שחשוב לעקוב אחריו: האם יש הסכמה מעשית על פתיחת המעבר, ומה אומרות איראן, ארה״ב ומדינות המפרץ בפועל. שינוי חד בהצהרות או בתנועת אוניות עשוי לעדכן את התמונה במהירות.",
         "insight": "",
-        "historical_context": "בפוליטיקה הישראלית, מהלכי מפלגות, פריימריז והחלטות בכנסת משפיעים על יציבות הקואליציה ועל סדר היום. כותרת כזו בדרך כלל מסמנת מאבק כוח, מועמדות או הסדר פוליטי.",
+        "historical_context": "מצר הורמוז הוא נתיב שיט מרכזי לנפט ולסחר במפרץ. מתיחות בין איראן לארה״ב ולמדינות האזור סביב פתיחה/סגירה של המעבר משפיעה על מחירים, ביטוח אוניות ויציבות אזורית.",
         "status": "reported",
         "mode": "heuristic"
       },
-      "dryTitle": "רובי וחגית חן: \"משפחות שיקירן נחטף והושב כחלל לא מקבלות הכרה מהמדינה",
-      "summary": "רובי וחגית חן: \"משפחות שיקירן נחטף והושב כחלל לא מקבלות הכרה מהמדינה. בנוסף עולה מהמקורות: שוב מחאה בכיכר הבימה: הפגנה בדרישה לוועדת חקירה ממלכתית; חגית ורובי חן: הצביעו רק למפלגות שיקימו ועדת חקירה ממלכתית. מדווח במקביל ב־4 מקורות.",
-      "why_matters": "זה על סדר היום כי מהלכים פוליטיים כאן משנים יציבות שלטון והחלטות שנוגעות לכולם.",
+      "dryTitle": "נשיא איראן: \"כעת הזמן הטוב ביותר להגיע להסכם",
+      "summary": "נשיא איראן: \"כעת הזמן הטוב ביותר להגיע להסכם. בנוסף עולה מהמקורות: האיום האיראני על סעודיה אחרי ברית ההגנה, ודברי הנשיא: \"עכשיו הזמן להסכם; האיום של איראן על סעודיה, והציטוט של בכיר בברית ההגנה החדשה באזור: \"ישראל מדינה בלתי לגיטימית. מדווח במקביל ב־5 מקורות.",
+      "why_matters": "זה משפיע על שיט ואנרגיה גלובליים — ולכן גם על מחירים ויציבות שנוגעים לישראל ולשווקים.",
       "bullet_facts": [
-        "רובי וחגית חן: \"משפחות שיקירן נחטף והושב כחלל לא מקבלות הכרה מהמדינה",
-        "שוב מחאה בכיכר הבימה: הפגנה בדרישה לוועדת חקירה ממלכתית",
-        "חגית ורובי חן: הצביעו רק למפלגות שיקימו ועדת חקירה ממלכתית",
-        "מאות הפגינו נגד הממשלה: \"מדינה לא יכולה להתנהל תחת סנטימנט של נקמה"
+        "נשיא איראן: \"כעת הזמן הטוב ביותר להגיע להסכם",
+        "האיום האיראני על סעודיה אחרי ברית ההגנה, ודברי הנשיא: \"עכשיו הזמן להסכם",
+        "האיום של איראן על סעודיה, והציטוט של בכיר בברית ההגנה החדשה באזור: \"ישראל מדינה בלתי לגיטימית",
+        "אירופה לא יכולה לקבל החלטות עצמאיות\": נשיא איראן חושף מה קרה עם צרפת"
       ],
-      "background": "בפוליטיקה הישראלית, מהלכי מפלגות, פריימריז והחלטות בכנסת משפיעים על יציבות הקואליציה ועל סדר היום. כותרת כזו בדרך כלל מסמנת מאבק כוח, מועמדות או הסדר פוליטי.",
-      "outlook": "השלב הבא הוא בדרך כלל הודעות רשמיות, הצבעות או סיכום מועמדים. כדאי לבדוק אם יש הסכמה בין מקורות על העובדות לפני מסקנה על התוצאה הפוליטית.",
+      "background": "מצר הורמוז הוא נתיב שיט מרכזי לנפט ולסחר במפרץ. מתיחות בין איראן לארה״ב ולמדינות האזור סביב פתיחה/סגירה של המעבר משפיעה על מחירים, ביטוח אוניות ויציבות אזורית.",
+      "outlook": "מה שחשוב לעקוב אחריו: האם יש הסכמה מעשית על פתיחת המעבר, ומה אומרות איראן, ארה״ב ומדינות המפרץ בפועל. שינוי חד בהצהרות או בתנועת אוניות עשוי לעדכן את התמונה במהירות.",
       "insight": "",
-      "historical_context": "בפוליטיקה הישראלית, מהלכי מפלגות, פריימריז והחלטות בכנסת משפיעים על יציבות הקואליציה ועל סדר היום. כותרת כזו בדרך כלל מסמנת מאבק כוח, מועמדות או הסדר פוליטי.",
+      "historical_context": "מצר הורמוז הוא נתיב שיט מרכזי לנפט ולסחר במפרץ. מתיחות בין איראן לארה״ב ולמדינות האזור סביב פתיחה/סגירה של המעבר משפיעה על מחירים, ביטוח אוניות ויציבות אזורית.",
       "status": "reported",
       "distillMode": "heuristic"
     },
@@ -467,11 +467,6 @@
           "name": "סרוגים"
         },
         {
-          "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE05dTlzTi1TN1hPU3pnT2xmWnVkNmRkcl9HbHk4azZOa2pTbThVd3lRWDFDblU5cTZ5YnlsRTZFMEg0Y0NGN1VyY25SbVZBS2wyellYR3pBWkx3RXN0RExja3pSU3BTQXM?oc=5",
-          "headline": "בצה\"ל מעריכים: שיגור הרחפן לעבר הכוחות בדרום לבנון - ניסיון לסייע למחבלים להימלט",
-          "name": "כאן 11"
-        },
-        {
           "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBGWGl3V3gzMjVhZ1k1MnJRM0lzcmpVb3JDS1VqaFJFLVpyNGtGVmpjRDdmRTZvVGxYeVpEZjdjbjI1R3ZqbUJ2eXhTWU5HZkRwM3ZqcG1DaUdxZw?oc=5",
           "headline": "צה\"ל הסתיר: חיזבאללה שיגר ביממה האחרונה רחפן נפץ לעבר כוח בדרום לבנון",
           "name": "ynet.co.il"
@@ -482,6 +477,11 @@
           "name": "emess.co.il"
         },
         {
+          "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTFA2bXZhbXRFZ2E5TU52ZDZYeVVkRkw2MWR0QjFkNWFkSGpDZTk2anNiVDRsdU5EWlBoREszUFJXVmg0Skc4LUoteFRoTU5mMjE4eVdWVUl0U1RyLXdrQ1E5eFZtWkdOUEk?oc=5",
+          "headline": "רחפן נפץ שוגר לעבר כוח צה\"ל בלבנון; הצבא בחר שלא לעדכן את הציבור",
+          "name": "כאן 11"
+        },
+        {
           "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE5UUWROY1Etcy1xOWlRZ2p2QVNlTXcyTDU5ckt6b05OWHFXTjQ0ZndmN2pkMnhlTTZubk1jWlZXUkN5TVF2SUkyRENMZktLaVlGbHVmbmNYM2ozOEkyNXRIZGJlREd2S1HSAW9BVV95cUxPUFpFLUlGOVpMVzUycm9ZOFhRNGUwSG9ITXVpQzFkVDNDcjhvWE51TXpJM09VN0hHd1JmeU5HbkdYZGtqdVZDTWJBYlpPR040SlZBTnZ4OGdhbWNnd0dCcHlqUVFiTmxjMlh3LTlaSTA?oc=5",
           "headline": "צה\"ל מאשר: חיזבאללה שיגר הלילה רחפן לעבר כוח בדרום לבנון",
           "name": "היום"
@@ -490,13 +490,13 @@
       "image": null,
       "distill": {
         "title": "חיזבאללה שיגר רחפן לעבר כוחות צה\"ל, אבל המטרה הייתה אחרת",
-        "summary": "חיזבאללה שיגר רחפן לעבר כוחות צה\"ל, אבל המטרה הייתה אחרת. בנוסף עולה מהמקורות: בצה\"ל מעריכים: שיגור הרחפן לעבר הכוחות בדרום לבנון - ניסיון לסייע למחבלים להימלט; צה\"ל הסתיר: חיזבאללה שיגר ביממה האחרונה רחפן נפץ לעבר כוח בדרום לבנון. מדווח במקביל ב־5 מקורות.",
+        "summary": "חיזבאללה שיגר רחפן לעבר כוחות צה\"ל, אבל המטרה הייתה אחרת. בנוסף עולה מהמקורות: צה\"ל הסתיר: חיזבאללה שיגר ביממה האחרונה רחפן נפץ לעבר כוח בדרום לבנון; הרחפן לא התפוצץ: חשד לניסיון חילוץ של מחבלי חיזבאללה. מדווח במקביל ב־5 מקורות.",
         "why_matters": "כי זה נוגע ישירות לביטחון תושבים ולמצב בגבול — לא לאירוע רחוק בלבד.",
         "bullet_facts": [
           "חיזבאללה שיגר רחפן לעבר כוחות צה\"ל, אבל המטרה הייתה אחרת",
-          "בצה\"ל מעריכים: שיגור הרחפן לעבר הכוחות בדרום לבנון - ניסיון לסייע למחבלים להימלט",
           "צה\"ל הסתיר: חיזבאללה שיגר ביממה האחרונה רחפן נפץ לעבר כוח בדרום לבנון",
-          "הרחפן לא התפוצץ: חשד לניסיון חילוץ של מחבלי חיזבאללה"
+          "הרחפן לא התפוצץ: חשד לניסיון חילוץ של מחבלי חיזבאללה",
+          "רחפן נפץ שוגר לעבר כוח צה\"ל בלבנון; הצבא בחר שלא לעדכן את הציבור"
         ],
         "background": "זירת הצפון מול לבנון נשארת רגישה: דיווחים על רחפנים, יירוטים או חילופי אש משפיעים על תושבים וכוחות. גם כשהאירוע נקודתי, הוא מגיע על רקע מתיחות מתמשכת.",
         "outlook": "לעקוב אחרי אישור רשמי של צה״ל/פיקוד העורף, היקף הנזק או היירוט, והאם מגיע אירוע המשך. שינוי בקצב התקריות הוא הסימן הכי שימושי.",
@@ -506,13 +506,13 @@
         "mode": "heuristic"
       },
       "dryTitle": "חיזבאללה שיגר רחפן לעבר כוחות צה\"ל, אבל המטרה הייתה אחרת",
-      "summary": "חיזבאללה שיגר רחפן לעבר כוחות צה\"ל, אבל המטרה הייתה אחרת. בנוסף עולה מהמקורות: בצה\"ל מעריכים: שיגור הרחפן לעבר הכוחות בדרום לבנון - ניסיון לסייע למחבלים להימלט; צה\"ל הסתיר: חיזבאללה שיגר ביממה האחרונה רחפן נפץ לעבר כוח בדרום לבנון. מדווח במקביל ב־5 מקורות.",
+      "summary": "חיזבאללה שיגר רחפן לעבר כוחות צה\"ל, אבל המטרה הייתה אחרת. בנוסף עולה מהמקורות: צה\"ל הסתיר: חיזבאללה שיגר ביממה האחרונה רחפן נפץ לעבר כוח בדרום לבנון; הרחפן לא התפוצץ: חשד לניסיון חילוץ של מחבלי חיזבאללה. מדווח במקביל ב־5 מקורות.",
       "why_matters": "כי זה נוגע ישירות לביטחון תושבים ולמצב בגבול — לא לאירוע רחוק בלבד.",
       "bullet_facts": [
         "חיזבאללה שיגר רחפן לעבר כוחות צה\"ל, אבל המטרה הייתה אחרת",
-        "בצה\"ל מעריכים: שיגור הרחפן לעבר הכוחות בדרום לבנון - ניסיון לסייע למחבלים להימלט",
         "צה\"ל הסתיר: חיזבאללה שיגר ביממה האחרונה רחפן נפץ לעבר כוח בדרום לבנון",
-        "הרחפן לא התפוצץ: חשד לניסיון חילוץ של מחבלי חיזבאללה"
+        "הרחפן לא התפוצץ: חשד לניסיון חילוץ של מחבלי חיזבאללה",
+        "רחפן נפץ שוגר לעבר כוח צה\"ל בלבנון; הצבא בחר שלא לעדכן את הציבור"
       ],
       "background": "זירת הצפון מול לבנון נשארת רגישה: דיווחים על רחפנים, יירוטים או חילופי אש משפיעים על תושבים וכוחות. גם כשהאירוע נקודתי, הוא מגיע על רקע מתיחות מתמשכת.",
       "outlook": "לעקוב אחרי אישור רשמי של צה״ל/פיקוד העורף, היקף הנזק או היירוט, והאם מגיע אירוע המשך. שינוי בקצב התקריות הוא הסימן הכי שימושי.",
@@ -654,71 +654,6 @@
       "distillMode": "heuristic"
     },
     {
-      "title": "נשיא איראן מסעוד פזשכיאן: \"אני מאמין שכעת זה הזמן הטוב ביותר להגיע להסכם\"",
-      "link": "https://news.google.com/rss/articles/CBMiggFBVV95cUxQVzRXd19vUFBDSzBFMnJybDB5MDhrX2JGM01NcDFfRDZsVG1iblpnczR3SGFabGNSVFBHR0doYnRvSmZfYlMzUXk3akFBdDdLTGVocm9HdGY4TTV0ZGc1dXFWQ0d6V3pNeEkxa0g4X1Y4V2hnS1VyeXZFX04wYmFqdlJR?oc=5",
-      "pubDate": "Sat, 08 Aug 2026 14:51:59 GMT",
-      "sources": [
-        {
-          "url": "https://news.google.com/rss/articles/CBMiggFBVV95cUxQVzRXd19vUFBDSzBFMnJybDB5MDhrX2JGM01NcDFfRDZsVG1iblpnczR3SGFabGNSVFBHR0doYnRvSmZfYlMzUXk3akFBdDdLTGVocm9HdGY4TTV0ZGc1dXFWQ0d6V3pNeEkxa0g4X1Y4V2hnS1VyeXZFX04wYmFqdlJR?oc=5",
-          "headline": "נשיא איראן מסעוד פזשכיאן: \"אני מאמין שכעת זה הזמן הטוב ביותר להגיע להסכם\"",
-          "name": "כאן 11"
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE54cjV1MmNZeW5SVXVIWWtEOTlRYjlwZDNIRTNwZDVBNTZHM0FKNHdnRzBCMWJBM1dWT21xYURPVk1ZQTlscW9UakF1RV93RTRSZ1VpT2tBZHI0QmM?oc=5",
-          "headline": "האיום האיראני על סעודיה אחרי ברית ההגנה, ודברי הנשיא: \"עכשיו הזמן להסכם\"",
-          "name": "ynet.co.il"
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMifEFVX3lxTE01OG42dVdXQUkyZngzaTJGSmhuWEQ5dTZVUW9lYzBDNTVoamFaQzdFRVk1dmdxeU01cEY0dnhINVF3eFdDakJnNlY3VWNma3ZwM1BQVVJ2N0E5bWVQTHNQV01PZWQzcWoxZU9FdHVKcXBrZHhwcjcwOWtMWVg?oc=5",
-          "headline": "האיום של איראן על סעודיה, והציטוט של בכיר בברית ההגנה החדשה באזור: \"ישראל מדינה בלתי לגיטימית\"",
-          "name": "Mako"
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTFBiYWtkRDlBTW1VMkpnNDVSYlUyTXRfRUdsaFBJX3dJajlVS3N1VUpNUVVEU2ZSZXEteHZYZUdnUDUxRVNPTnpkdGp2b25HazFIQmFrOVVQTFpRWmNXaTg2Ng?oc=5",
-          "headline": "\"אירופה לא יכולה לקבל החלטות עצמאיות\": נשיא איראן חושף מה קרה עם צרפת",
-          "name": "מעריב"
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMiywJBVV95cUxOSlpjcFh5QUJmWUhmd2pPcHR1Wl9IMnpMRW9FZUttblVCeGdsaGNHTnVUdmdtNkRjOUZ6dzk0NVd4eVI2OGtvelAwTzEyNjVCNXFzcGhWbFZUWGhYaXljY0RqZ2NkQUZSUm9mckJ3QmhaZVN3MlhNQ0NpdEVTUVpUZGcwRjVYUzk0QmJaZkF1VXdUVmVoWV9xN2h5LWt4MzVhVUJRR3JBdmd2eFVVdkJCX0t0dlFHMnNZc2NOS3JZS3U3aDZJeXRNd3N0eDJURkVTTmVxQjd6dUwwUUVXLURwcUlta3Exc0hHYmZpRV9Eek04Z3pEa3RaSmUxWUpHSTB1bnR6SXI4dUlsLVhnU2xJb0ZwWXNMNkVKeW1GOE9ZNWcxR0hFLUJGaWd2WTk1UFFqdmhYXy1LaGJsYTJyLVFIRE5HMm5yMWNvX1lv?oc=5",
-          "headline": "איראן מאיימת על סעודיה: \"הברית החדשה לא תעזור לכם\"",
-          "name": "סרוגים"
-        }
-      ],
-      "image": null,
-      "distill": {
-        "title": "נשיא איראן מסעוד פזשכיאן: \"אני מאמין שכעת זה הזמן הטוב ביותר להגיע להסכם",
-        "summary": "נשיא איראן מסעוד פזשכיאן: \"אני מאמין שכעת זה הזמן הטוב ביותר להגיע להסכם. בנוסף עולה מהמקורות: האיום האיראני על סעודיה אחרי ברית ההגנה, ודברי הנשיא: \"עכשיו הזמן להסכם; האיום של איראן על סעודיה, והציטוט של בכיר בברית ההגנה החדשה באזור: \"ישראל מדינה בלתי לגיטימית. מדווח במקביל ב־5 מקורות.",
-        "why_matters": "זה משפיע על שיט ואנרגיה גלובליים — ולכן גם על מחירים ויציבות שנוגעים לישראל ולשווקים.",
-        "bullet_facts": [
-          "נשיא איראן מסעוד פזשכיאן: \"אני מאמין שכעת זה הזמן הטוב ביותר להגיע להסכם",
-          "האיום האיראני על סעודיה אחרי ברית ההגנה, ודברי הנשיא: \"עכשיו הזמן להסכם",
-          "האיום של איראן על סעודיה, והציטוט של בכיר בברית ההגנה החדשה באזור: \"ישראל מדינה בלתי לגיטימית",
-          "אירופה לא יכולה לקבל החלטות עצמאיות\": נשיא איראן חושף מה קרה עם צרפת"
-        ],
-        "background": "מצר הורמוז הוא נתיב שיט מרכזי לנפט ולסחר במפרץ. מתיחות בין איראן לארה״ב ולמדינות האזור סביב פתיחה/סגירה של המעבר משפיעה על מחירים, ביטוח אוניות ויציבות אזורית.",
-        "outlook": "מה שחשוב לעקוב אחריו: האם יש הסכמה מעשית על פתיחת המעבר, ומה אומרות איראן, ארה״ב ומדינות המפרץ בפועל. שינוי חד בהצהרות או בתנועת אוניות עשוי לעדכן את התמונה במהירות.",
-        "insight": "",
-        "historical_context": "מצר הורמוז הוא נתיב שיט מרכזי לנפט ולסחר במפרץ. מתיחות בין איראן לארה״ב ולמדינות האזור סביב פתיחה/סגירה של המעבר משפיעה על מחירים, ביטוח אוניות ויציבות אזורית.",
-        "status": "reported",
-        "mode": "heuristic"
-      },
-      "dryTitle": "נשיא איראן מסעוד פזשכיאן: \"אני מאמין שכעת זה הזמן הטוב ביותר להגיע להסכם",
-      "summary": "נשיא איראן מסעוד פזשכיאן: \"אני מאמין שכעת זה הזמן הטוב ביותר להגיע להסכם. בנוסף עולה מהמקורות: האיום האיראני על סעודיה אחרי ברית ההגנה, ודברי הנשיא: \"עכשיו הזמן להסכם; האיום של איראן על סעודיה, והציטוט של בכיר בברית ההגנה החדשה באזור: \"ישראל מדינה בלתי לגיטימית. מדווח במקביל ב־5 מקורות.",
-      "why_matters": "זה משפיע על שיט ואנרגיה גלובליים — ולכן גם על מחירים ויציבות שנוגעים לישראל ולשווקים.",
-      "bullet_facts": [
-        "נשיא איראן מסעוד פזשכיאן: \"אני מאמין שכעת זה הזמן הטוב ביותר להגיע להסכם",
-        "האיום האיראני על סעודיה אחרי ברית ההגנה, ודברי הנשיא: \"עכשיו הזמן להסכם",
-        "האיום של איראן על סעודיה, והציטוט של בכיר בברית ההגנה החדשה באזור: \"ישראל מדינה בלתי לגיטימית",
-        "אירופה לא יכולה לקבל החלטות עצמאיות\": נשיא איראן חושף מה קרה עם צרפת"
-      ],
-      "background": "מצר הורמוז הוא נתיב שיט מרכזי לנפט ולסחר במפרץ. מתיחות בין איראן לארה״ב ולמדינות האזור סביב פתיחה/סגירה של המעבר משפיעה על מחירים, ביטוח אוניות ויציבות אזורית.",
-      "outlook": "מה שחשוב לעקוב אחריו: האם יש הסכמה מעשית על פתיחת המעבר, ומה אומרות איראן, ארה״ב ומדינות המפרץ בפועל. שינוי חד בהצהרות או בתנועת אוניות עשוי לעדכן את התמונה במהירות.",
-      "insight": "",
-      "historical_context": "מצר הורמוז הוא נתיב שיט מרכזי לנפט ולסחר במפרץ. מתיחות בין איראן לארה״ב ולמדינות האזור סביב פתיחה/סגירה של המעבר משפיעה על מחירים, ביטוח אוניות ויציבות אזורית.",
-      "status": "reported",
-      "distillMode": "heuristic"
-    },
-    {
       "title": "אירן מקשיחה עמדות - דורשת פיצויים והסרת סנקציות כתנאי לפתיחת מצר הורמוז",
       "link": "https://news.google.com/rss/articles/CBMiYkFVX3lxTE9iTlQ0cmhtOGYzamx6N2EydjBJQzA3R3NhSHZrNkJVWHVYWjZFQjc0T0NaSFh2ajdpSUNSRFZMM09HcTNfLXBrWUJtMXdpNUhFenBxbjZ1clo0bU5paGdSUzNn?oc=5",
       "pubDate": "Sat, 08 Aug 2026 17:40:23 GMT",
@@ -762,24 +697,19 @@
       "distillMode": "heuristic"
     },
     {
-      "title": "עומאן גינתה את תקיפות הספינות במצר הורמוז",
-      "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE14bThOZkxCVlNzcTR1OThkUHdiejlDSVdlLWIxY2w2WGdlSlVSMVpzQzlqUTdWd1JTQnM3YnhSMVdpVXhzSWdrcTZTMjJYNF9zNDI0NUI3a2ZMQQ?oc=5",
-      "pubDate": "Sat, 08 Aug 2026 14:04:20 GMT",
+      "title": "הסלמה במפרץ: המו\"מ קרוב לסיום, אך איראן תקפה מכלית בהורמוז",
+      "link": "https://news.google.com/rss/articles/CBMigAFBVV95cUxOV1c0clhnaC10RVVQbzJobDV1STFBMy1YSElSZy1FTUdDMVpxMHlGXzJraDFvOXJLM0dSYWpKcFhXb0ZETnpyR0FiaTdLdlRXWjJMNVMwU1ZudnBhTXBXY2RnX2VZOURBUHpMRk9EZnByZFB5bFFtZEdFc2lvWVB3dw?oc=5",
+      "pubDate": "Sat, 08 Aug 2026 14:52:00 GMT",
       "sources": [
         {
-          "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE14bThOZkxCVlNzcTR1OThkUHdiejlDSVdlLWIxY2w2WGdlSlVSMVpzQzlqUTdWd1JTQnM3YnhSMVdpVXhzSWdrcTZTMjJYNF9zNDI0NUI3a2ZMQQ?oc=5",
-          "headline": "עומאן גינתה את תקיפות הספינות במצר הורמוז",
-          "name": "ynet.co.il"
+          "url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxOV1c0clhnaC10RVVQbzJobDV1STFBMy1YSElSZy1FTUdDMVpxMHlGXzJraDFvOXJLM0dSYWpKcFhXb0ZETnpyR0FiaTdLdlRXWjJMNVMwU1ZudnBhTXBXY2RnX2VZOURBUHpMRk9EZnByZFB5bFFtZEdFc2lvWVB3dw?oc=5",
+          "headline": "הסלמה במפרץ: המו\"מ קרוב לסיום, אך איראן תקפה מכלית בהורמוז",
+          "name": "Mako"
         },
         {
           "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE95all4WHExRUpJd1BqNVFYUDlzUllnOVI3akxaVkxONVlPQ2l1RG83a2FQZjBXci1zblRvdXNhVzltNENQdUlZck1UXzNOel9TVHB4Ulp0SGp3Zw?oc=5",
           "headline": "דיווח איראני: מכלית עלתה באש במצר הורמוז",
           "name": "ynet.co.il"
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxOV1c0clhnaC10RVVQbzJobDV1STFBMy1YSElSZy1FTUdDMVpxMHlGXzJraDFvOXJLM0dSYWpKcFhXb0ZETnpyR0FiaTdLdlRXWjJMNVMwU1ZudnBhTXBXY2RnX2VZOURBUHpMRk9EZnByZFB5bFFtZEdFc2lvWVB3dw?oc=5",
-          "headline": "הסלמה במפרץ: המו\"מ קרוב לסיום, אך איראן תקפה מכלית בהורמוז",
-          "name": "Mako"
         },
         {
           "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE5RUDJQc1BuUEZxbEJzWWFuX3Bjc3pFZWRvVWNLclFsdTQwMHZGaUJfRGVtVFdEYWNFMFhiWjZYN0ZobmNfMHZzNVgxTUhhSGU4QlpwMkNnSGV0SV92WGpaeFRhRHY?oc=5",
@@ -790,47 +720,57 @@
           "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE5IUWF5eXFIYXpvaU5UQkhvc3ItNGc5a1gxeEF4dkowVWl4eEdvRG4yby1iWmJKU1dRRXFJTXlYb1FWZGRlcEVmS2RvOFBFdmllMEd3VTFsdlprSEJDaDdncjFFdWJFRE3SAW9BVV95cUxQM25uZTBlMzZ6ZVp5bUY5bmdxNHBGU3NpRDRyWUNfcmJSZXdaSnJMdTBhYkhHU3FYb2xXM3hZRVpqd28wQk5nSDdsZG13ZjJyVDR3UFFKTWw5cjJHZFNHLW83LXEyeXltZVhURXo4d1E?oc=5",
           "headline": "דיווח: כלי שיט הותקף במצר הורמוז ועלה באש",
           "name": "היום"
+        },
+        {
+          "url": "https://news.google.com/rss/articles/CBMiS0FVX3lxTFBYUkV2RFdiWTM3VFhmYlJGV1V3c1ZqZXAxWXJEYzlxUTJOeWFIRmlORUhUbXJBamllQWdQejdaaXlGYVNTZ1I1TWxUdw?oc=5",
+          "headline": "חברת הנפט של אבו דאבי: אנו נתונים למתקפות נגד אנשינו וגלי השיט שלנו ללא התגרות מצידנו",
+          "name": "זמן ישראל"
         }
       ],
       "image": null,
       "distill": {
-        "title": "עומאן גינתה את תקיפות הספינות במצר הורמוז",
-        "summary": "עומאן גינתה את תקיפות הספינות במצר הורמוז. בנוסף עולה מהמקורות: דיווח איראני: מכלית עלתה באש במצר הורמוז; הסלמה במפרץ: המו\"מ קרוב לסיום, אך איראן תקפה מכלית בהורמוז. מדווח במקביל ב־4 מקורות.",
+        "title": "הסלמה במפרץ: המו\"מ קרוב לסיום, אך איראן תקפה מכלית בהורמוז",
+        "summary": "הסלמה במפרץ: המו\"מ קרוב לסיום, אך איראן תקפה מכלית בהורמוז. בנוסף עולה מהמקורות: דיווח איראני: מכלית עלתה באש במצר הורמוז; איחוד האמירויות טוענת: איראן תקפה כלי שיט של חברת הנפט הלאומית. מדווח במקביל ב־5 מקורות.",
         "why_matters": "זה משפיע על שיט ואנרגיה גלובליים — ולכן גם על מחירים ויציבות שנוגעים לישראל ולשווקים.",
         "bullet_facts": [
-          "עומאן גינתה את תקיפות הספינות במצר הורמוז",
-          "דיווח איראני: מכלית עלתה באש במצר הורמוז",
           "הסלמה במפרץ: המו\"מ קרוב לסיום, אך איראן תקפה מכלית בהורמוז",
-          "איחוד האמירויות טוענת: איראן תקפה כלי שיט של חברת הנפט הלאומית"
+          "דיווח איראני: מכלית עלתה באש במצר הורמוז",
+          "איחוד האמירויות טוענת: איראן תקפה כלי שיט של חברת הנפט הלאומית",
+          "כלי שיט הותקף במצר הורמוז ועלה באש"
         ],
         "background": "מצר הורמוז הוא נתיב שיט מרכזי לנפט ולסחר במפרץ. מתיחות בין איראן לארה״ב ולמדינות האזור סביב פתיחה/סגירה של המעבר משפיעה על מחירים, ביטוח אוניות ויציבות אזורית.",
         "outlook": "מה שחשוב לעקוב אחריו: האם יש הסכמה מעשית על פתיחת המעבר, ומה אומרות איראן, ארה״ב ומדינות המפרץ בפועל. שינוי חד בהצהרות או בתנועת אוניות עשוי לעדכן את התמונה במהירות.",
         "insight": "",
         "historical_context": "מצר הורמוז הוא נתיב שיט מרכזי לנפט ולסחר במפרץ. מתיחות בין איראן לארה״ב ולמדינות האזור סביב פתיחה/סגירה של המעבר משפיעה על מחירים, ביטוח אוניות ויציבות אזורית.",
-        "status": "confirmed",
+        "status": "reported",
         "mode": "heuristic"
       },
-      "dryTitle": "עומאן גינתה את תקיפות הספינות במצר הורמוז",
-      "summary": "עומאן גינתה את תקיפות הספינות במצר הורמוז. בנוסף עולה מהמקורות: דיווח איראני: מכלית עלתה באש במצר הורמוז; הסלמה במפרץ: המו\"מ קרוב לסיום, אך איראן תקפה מכלית בהורמוז. מדווח במקביל ב־4 מקורות.",
+      "dryTitle": "הסלמה במפרץ: המו\"מ קרוב לסיום, אך איראן תקפה מכלית בהורמוז",
+      "summary": "הסלמה במפרץ: המו\"מ קרוב לסיום, אך איראן תקפה מכלית בהורמוז. בנוסף עולה מהמקורות: דיווח איראני: מכלית עלתה באש במצר הורמוז; איחוד האמירויות טוענת: איראן תקפה כלי שיט של חברת הנפט הלאומית. מדווח במקביל ב־5 מקורות.",
       "why_matters": "זה משפיע על שיט ואנרגיה גלובליים — ולכן גם על מחירים ויציבות שנוגעים לישראל ולשווקים.",
       "bullet_facts": [
-        "עומאן גינתה את תקיפות הספינות במצר הורמוז",
-        "דיווח איראני: מכלית עלתה באש במצר הורמוז",
         "הסלמה במפרץ: המו\"מ קרוב לסיום, אך איראן תקפה מכלית בהורמוז",
-        "איחוד האמירויות טוענת: איראן תקפה כלי שיט של חברת הנפט הלאומית"
+        "דיווח איראני: מכלית עלתה באש במצר הורמוז",
+        "איחוד האמירויות טוענת: איראן תקפה כלי שיט של חברת הנפט הלאומית",
+        "כלי שיט הותקף במצר הורמוז ועלה באש"
       ],
       "background": "מצר הורמוז הוא נתיב שיט מרכזי לנפט ולסחר במפרץ. מתיחות בין איראן לארה״ב ולמדינות האזור סביב פתיחה/סגירה של המעבר משפיעה על מחירים, ביטוח אוניות ויציבות אזורית.",
       "outlook": "מה שחשוב לעקוב אחריו: האם יש הסכמה מעשית על פתיחת המעבר, ומה אומרות איראן, ארה״ב ומדינות המפרץ בפועל. שינוי חד בהצהרות או בתנועת אוניות עשוי לעדכן את התמונה במהירות.",
       "insight": "",
       "historical_context": "מצר הורמוז הוא נתיב שיט מרכזי לנפט ולסחר במפרץ. מתיחות בין איראן לארה״ב ולמדינות האזור סביב פתיחה/סגירה של המעבר משפיעה על מחירים, ביטוח אוניות ויציבות אזורית.",
-      "status": "confirmed",
+      "status": "reported",
       "distillMode": "heuristic"
     },
     {
-      "title": "סיכום חדשות השבת 08.08.2026",
-      "link": "https://news.google.com/rss/articles/CBMifkFVX3lxTE5CZFp5ZU1ISUFnekZsa1J2NnBBVmVCbVpuMENESUQ2LWRlT28zbUNobVJHY0lpTzYtVlVUWE5LRVo2cUtGendYYW1NLVlBQW5vTV9fdjlvWHllcXlCdzdNZk5EUEhoM20tVDNHVENac1AxOE1LVloxY3dHa2N6Zw?oc=5",
-      "pubDate": "Sat, 08 Aug 2026 17:04:00 GMT",
+      "title": "איראן מתעקשת לנהל את מעבר הורמוז; רמטכ\"ל ארה\"ב ממליץ לסיים את המלחמה",
+      "link": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE5TaXhuaGhISl9Fa0YxYnVhWm5oeFB3NmlaMF9CWUx2Z20yQ2E4cVRGdXFFZnNzVTFleURoUzZuWWhURDJVVm1NSV9tRmNQUXpuX1hR?oc=5",
+      "pubDate": "Sat, 08 Aug 2026 17:42:00 GMT",
       "sources": [
+        {
+          "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE5TaXhuaGhISl9Fa0YxYnVhWm5oeFB3NmlaMF9CWUx2Z20yQ2E4cVRGdXFFZnNzVTFleURoUzZuWWhURDJVVm1NSV9tRmNQUXpuX1hR?oc=5",
+          "headline": "איראן מתעקשת לנהל את מעבר הורמוז; רמטכ\"ל ארה\"ב ממליץ לסיים את המלחמה",
+          "name": "הידברות"
+        },
         {
           "url": "https://news.google.com/rss/articles/CBMifkFVX3lxTE5CZFp5ZU1ISUFnekZsa1J2NnBBVmVCbVpuMENESUQ2LWRlT28zbUNobVJHY0lpTzYtVlVUWE5LRVo2cUtGendYYW1NLVlBQW5vTV9fdjlvWHllcXlCdzdNZk5EUEhoM20tVDNHVENac1AxOE1LVloxY3dHa2N6Zw?oc=5",
           "headline": "סיכום חדשות השבת 08.08.2026",
@@ -850,45 +790,105 @@
           "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE5pMTBQWHU0LV9vVzQzb0t2WDRDTXpMcU9aUVlrMWF5SEQxSlEtQlJGbzNSVjZUa0lUSS1sSEctRmtyWVNpWHRZcTRGM1RMZG1tVHQxcm5ldWdlOFJQRURHSy1ibGo?oc=5",
           "headline": "ישראל דחפה להסלמה מול איראן - ואז האסימון נפל בארה\"ב",
           "name": "מעריב"
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMi4gJBVV95cUxNTVE2Yzlfa2lvMW5KaW5RUTZvOVNaT0JmSUlWYnJPcmFTbXh1Nkp5U3pzdzhST2pSR2R4cEY0MkI0UnZGMXFYNE9EVU9SbjlwLXBIVHJGM1IzWTBsY1lrNVowN28yd1JtNmxiWUQ0ZkxDd2lGbWYxeHNhS1lDaEZ2TDZaa0Q4MUdVaDNlWXFFaHJTZXFfSWd4SEw5dTZJRldRMHU3OUI3WUdPZ0NnVUlYYVd6NldmZ0dDM0plZVVMTTAxTVhXOUQ4R1RKblU2Q0k2bEtXZXd1TjhyOEhmQTVxdzZNb3lYRUZaekxRZ0hpdk1XNnBueVRreTJEYkltdjJIZlFkaHV0dkRoZVB2V3RzNGtTS0hBRk1rOTVWLThjc2h3QWwyVG14ajBaNF82ejdIZGZ1SW5mcG9sc3JvbjEyZEdOOVhDNkpBd2ZFbHd5Tl9ya1Y5NGtidm5GZ1JJS0xTRmc?oc=5",
-          "headline": "שינוי כיוון בוושינגטון? הגנרל הבכיר מחפש דרך לסיים את המלחמה",
-          "name": "סרוגים"
         }
       ],
       "image": null,
       "distill": {
-        "title": "סיכום חדשות השבת 08.08.2026",
-        "summary": "סיכום חדשות השבת 08.08.2026. בנוסף עולה מהמקורות: צבא ארה\"ב מחפש נתיב יציאה מהמלחמה, החמרה במצבו של ביידן | כותרות השבת; מקורות ל־CNN: מפקד צבא ארה\"ב אמר כי יש לחפש נתיב יציאה מהמלחמה באיראן. מדווח במקביל ב־5 מקורות.",
+        "title": "איראן מתעקשת לנהל את מעבר הורמוז; רמטכ\"ל ארה\"ב ממליץ לסיים את המלחמה",
+        "summary": "איראן מתעקשת לנהל את מעבר הורמוז; רמטכ\"ל ארה\"ב ממליץ לסיים את המלחמה. בנוסף עולה מהמקורות: סיכום חדשות השבת 08.08.2026; צבא ארה\"ב מחפש נתיב יציאה מהמלחמה, החמרה במצבו של ביידן | כותרות השבת. מדווח במקביל ב־5 מקורות.",
         "why_matters": "זה משפיע על שיט ואנרגיה גלובליים — ולכן גם על מחירים ויציבות שנוגעים לישראל ולשווקים.",
         "bullet_facts": [
+          "איראן מתעקשת לנהל את מעבר הורמוז; רמטכ\"ל ארה\"ב ממליץ לסיים את המלחמה",
           "סיכום חדשות השבת 08.08.2026",
           "צבא ארה\"ב מחפש נתיב יציאה מהמלחמה, החמרה במצבו של ביידן | כותרות השבת",
-          "מקורות ל־CNN: מפקד צבא ארה\"ב אמר כי יש לחפש נתיב יציאה מהמלחמה באיראן",
-          "ישראל דחפה להסלמה מול איראן - ואז האסימון נפל בארה\"ב"
+          "מקורות ל־CNN: מפקד צבא ארה\"ב אמר כי יש לחפש נתיב יציאה מהמלחמה באיראן"
         ],
         "background": "מצר הורמוז הוא נתיב שיט מרכזי לנפט ולסחר במפרץ. מתיחות בין איראן לארה״ב ולמדינות האזור סביב פתיחה/סגירה של המעבר משפיעה על מחירים, ביטוח אוניות ויציבות אזורית.",
         "outlook": "מה שחשוב לעקוב אחריו: האם יש הסכמה מעשית על פתיחת המעבר, ומה אומרות איראן, ארה״ב ומדינות המפרץ בפועל. שינוי חד בהצהרות או בתנועת אוניות עשוי לעדכן את התמונה במהירות.",
         "insight": "",
         "historical_context": "מצר הורמוז הוא נתיב שיט מרכזי לנפט ולסחר במפרץ. מתיחות בין איראן לארה״ב ולמדינות האזור סביב פתיחה/סגירה של המעבר משפיעה על מחירים, ביטוח אוניות ויציבות אזורית.",
-        "status": "confirmed",
+        "status": "reported",
         "mode": "heuristic"
       },
-      "dryTitle": "סיכום חדשות השבת 08.08.2026",
-      "summary": "סיכום חדשות השבת 08.08.2026. בנוסף עולה מהמקורות: צבא ארה\"ב מחפש נתיב יציאה מהמלחמה, החמרה במצבו של ביידן | כותרות השבת; מקורות ל־CNN: מפקד צבא ארה\"ב אמר כי יש לחפש נתיב יציאה מהמלחמה באיראן. מדווח במקביל ב־5 מקורות.",
+      "dryTitle": "איראן מתעקשת לנהל את מעבר הורמוז; רמטכ\"ל ארה\"ב ממליץ לסיים את המלחמה",
+      "summary": "איראן מתעקשת לנהל את מעבר הורמוז; רמטכ\"ל ארה\"ב ממליץ לסיים את המלחמה. בנוסף עולה מהמקורות: סיכום חדשות השבת 08.08.2026; צבא ארה\"ב מחפש נתיב יציאה מהמלחמה, החמרה במצבו של ביידן | כותרות השבת. מדווח במקביל ב־5 מקורות.",
       "why_matters": "זה משפיע על שיט ואנרגיה גלובליים — ולכן גם על מחירים ויציבות שנוגעים לישראל ולשווקים.",
       "bullet_facts": [
+        "איראן מתעקשת לנהל את מעבר הורמוז; רמטכ\"ל ארה\"ב ממליץ לסיים את המלחמה",
         "סיכום חדשות השבת 08.08.2026",
         "צבא ארה\"ב מחפש נתיב יציאה מהמלחמה, החמרה במצבו של ביידן | כותרות השבת",
-        "מקורות ל־CNN: מפקד צבא ארה\"ב אמר כי יש לחפש נתיב יציאה מהמלחמה באיראן",
-        "ישראל דחפה להסלמה מול איראן - ואז האסימון נפל בארה\"ב"
+        "מקורות ל־CNN: מפקד צבא ארה\"ב אמר כי יש לחפש נתיב יציאה מהמלחמה באיראן"
       ],
       "background": "מצר הורמוז הוא נתיב שיט מרכזי לנפט ולסחר במפרץ. מתיחות בין איראן לארה״ב ולמדינות האזור סביב פתיחה/סגירה של המעבר משפיעה על מחירים, ביטוח אוניות ויציבות אזורית.",
       "outlook": "מה שחשוב לעקוב אחריו: האם יש הסכמה מעשית על פתיחת המעבר, ומה אומרות איראן, ארה״ב ומדינות המפרץ בפועל. שינוי חד בהצהרות או בתנועת אוניות עשוי לעדכן את התמונה במהירות.",
       "insight": "",
       "historical_context": "מצר הורמוז הוא נתיב שיט מרכזי לנפט ולסחר במפרץ. מתיחות בין איראן לארה״ב ולמדינות האזור סביב פתיחה/סגירה של המעבר משפיעה על מחירים, ביטוח אוניות ויציבות אזורית.",
-      "status": "confirmed",
+      "status": "reported",
+      "distillMode": "heuristic"
+    },
+    {
+      "title": "ההצעה הטורקית: נשק חיזבאללה יועבר לאיראן בתמורה לנסיגת צה\"ל",
+      "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE42bHdvcWc0cXFnUjg0R3MxOUZMYlRKSVFDc3pTelVaVTFZbHd2VnNDT3FoMnVCZF9GRUtCWGhIVUZDVHhudXVSeVhHdw?oc=5",
+      "pubDate": "Sat, 08 Aug 2026 19:02:33 GMT",
+      "sources": [
+        {
+          "url": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE42bHdvcWc0cXFnUjg0R3MxOUZMYlRKSVFDc3pTelVaVTFZbHd2VnNDT3FoMnVCZF9GRUtCWGhIVUZDVHhudXVSeVhHdw?oc=5",
+          "headline": "ההצעה הטורקית: נשק חיזבאללה יועבר לאיראן בתמורה לנסיגת צה\"ל",
+          "name": "JDN"
+        },
+        {
+          "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE5ZNHpXWkNsX1podjJpOXhwTWtieUI5QmIyVXAwTEVxWWFJTTM5LUtQNWtPc0pHaWJhWDJ3XzBGb2RtS1lYVUJEbTQ2ZFdYUlNDMjFRM2ZFcG91T3dDQmhSZw?oc=5",
+          "headline": "לא רוצה שחיזבאללה יתרסק\": המהלך החריג של ארדואן בגבול לבנון",
+          "name": "מעריב"
+        },
+        {
+          "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE42ZDBLUGdQTlZaQ242U2wtNFBvS0kwczROWnE4QVliQXBSVzBhOWx6VXJSWDJSTXI3aEJTaVFCRWFTdWJuSXZ0MS1SS1B6d0FNN01nSENBbU1IM0NTSXR5N011QmNpdldY?oc=5",
+          "headline": "מדינה אחרי מדינה: התוכנית של ארדואן להשתלט על המזרח התיכון",
+          "name": "גלובס"
+        },
+        {
+          "url": "https://news.google.com/rss/articles/CBMiTkFVX3lxTE9ZN2I3VVVMZW9rTUNmeVkwUnh3X2tYQVBUWnpLcXpCMWdGaGVSWWtCdHM2ZnAzNjl3U2FKZmFoVVJmUldTTDZMc2pJR2ZiUQ?oc=5",
+          "headline": "טורקיה בתמונה: עשויה לתווך בהוצאת נשק חיזבאללה",
+          "name": "emess.co.il"
+        },
+        {
+          "url": "https://news.google.com/rss/articles/CBMiTkFVX3lxTE4wY3FaZWhDUENiYzVsUzFmNHlJM1poQ1paSmtkeUV3Zm1VeF9fOFBIVWJPYzRZazNSNVIzR0V3eHBITkNpLVJoZTMtQkhndw?oc=5",
+          "headline": "חיילים טורקים בגבול ישראל? התוכנית המטרידה של ארדואן",
+          "name": "C14"
+        }
+      ],
+      "image": null,
+      "distill": {
+        "title": "ההצעה הטורקית: נשק חיזבאללה יועבר לאיראן בתמורה לנסיגת צה\"ל",
+        "summary": "ההצעה הטורקית: נשק חיזבאללה יועבר לאיראן בתמורה לנסיגת צה\"ל. בנוסף עולה מהמקורות: לא רוצה שחיזבאללה יתרסק\": המהלך החריג של ארדואן בגבול לבנון; מדינה אחרי מדינה: התוכנית של ארדואן להשתלט על המזרח התיכון. מדווח במקביל ב־5 מקורות.",
+        "why_matters": "זה משפיע על שיט ואנרגיה גלובליים — ולכן גם על מחירים ויציבות שנוגעים לישראל ולשווקים.",
+        "bullet_facts": [
+          "ההצעה הטורקית: נשק חיזבאללה יועבר לאיראן בתמורה לנסיגת צה\"ל",
+          "לא רוצה שחיזבאללה יתרסק\": המהלך החריג של ארדואן בגבול לבנון",
+          "מדינה אחרי מדינה: התוכנית של ארדואן להשתלט על המזרח התיכון",
+          "טורקיה בתמונה: עשויה לתווך בהוצאת נשק חיזבאללה"
+        ],
+        "background": "מצר הורמוז הוא נתיב שיט מרכזי לנפט ולסחר במפרץ. מתיחות בין איראן לארה״ב ולמדינות האזור סביב פתיחה/סגירה של המעבר משפיעה על מחירים, ביטוח אוניות ויציבות אזורית.",
+        "outlook": "מה שחשוב לעקוב אחריו: האם יש הסכמה מעשית על פתיחת המעבר, ומה אומרות איראן, ארה״ב ומדינות המפרץ בפועל. שינוי חד בהצהרות או בתנועת אוניות עשוי לעדכן את התמונה במהירות.",
+        "insight": "",
+        "historical_context": "מצר הורמוז הוא נתיב שיט מרכזי לנפט ולסחר במפרץ. מתיחות בין איראן לארה״ב ולמדינות האזור סביב פתיחה/סגירה של המעבר משפיעה על מחירים, ביטוח אוניות ויציבות אזורית.",
+        "status": "reported",
+        "mode": "heuristic"
+      },
+      "dryTitle": "ההצעה הטורקית: נשק חיזבאללה יועבר לאיראן בתמורה לנסיגת צה\"ל",
+      "summary": "ההצעה הטורקית: נשק חיזבאללה יועבר לאיראן בתמורה לנסיגת צה\"ל. בנוסף עולה מהמקורות: לא רוצה שחיזבאללה יתרסק\": המהלך החריג של ארדואן בגבול לבנון; מדינה אחרי מדינה: התוכנית של ארדואן להשתלט על המזרח התיכון. מדווח במקביל ב־5 מקורות.",
+      "why_matters": "זה משפיע על שיט ואנרגיה גלובליים — ולכן גם על מחירים ויציבות שנוגעים לישראל ולשווקים.",
+      "bullet_facts": [
+        "ההצעה הטורקית: נשק חיזבאללה יועבר לאיראן בתמורה לנסיגת צה\"ל",
+        "לא רוצה שחיזבאללה יתרסק\": המהלך החריג של ארדואן בגבול לבנון",
+        "מדינה אחרי מדינה: התוכנית של ארדואן להשתלט על המזרח התיכון",
+        "טורקיה בתמונה: עשויה לתווך בהוצאת נשק חיזבאללה"
+      ],
+      "background": "מצר הורמוז הוא נתיב שיט מרכזי לנפט ולסחר במפרץ. מתיחות בין איראן לארה״ב ולמדינות האזור סביב פתיחה/סגירה של המעבר משפיעה על מחירים, ביטוח אוניות ויציבות אזורית.",
+      "outlook": "מה שחשוב לעקוב אחריו: האם יש הסכמה מעשית על פתיחת המעבר, ומה אומרות איראן, ארה״ב ומדינות המפרץ בפועל. שינוי חד בהצהרות או בתנועת אוניות עשוי לעדכן את התמונה במהירות.",
+      "insight": "",
+      "historical_context": "מצר הורמוז הוא נתיב שיט מרכזי לנפט ולסחר במפרץ. מתיחות בין איראן לארה״ב ולמדינות האזור סביב פתיחה/סגירה של המעבר משפיעה על מחירים, ביטוח אוניות ויציבות אזורית.",
+      "status": "reported",
       "distillMode": "heuristic"
     },
     {
@@ -1473,14 +1473,14 @@
           "name": "הארץ"
         },
         {
-          "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTFByRkVmVVZ2OEVya1MzVVU0QnJKTk9oSlI1LWI4RVJnRDVjVHl1Z2dqTkxTckJJTFBzWlgxbU9RTGNRalpVT195QWVEeXZrTG9GS2tLaVY4WDdSN2VnN1JtSFcyZWY1WWU1X2J0V1dBZkhLNEJr?oc=5",
-          "headline": "בזמן המונדיאל: המאבק האחרון של חורחה מסי",
-          "name": "Sport5"
-        },
-        {
           "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5qb1F1YndVRTJBcDVkS3Utbk9weTJ4RXh5d1Q3bFFrNU5IS2FQY2hrRUZFR0JRVDJwbTVTY0hEMEpzVnl0cllPUGpnd0t5X1Z0V3pTSEJxWHRLdw?oc=5",
           "headline": "אבל בארגנטינה: אביו של לאו מסי הלך לעולמו בגיל 68",
           "name": "ynet.co.il"
+        },
+        {
+          "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTFByRkVmVVZ2OEVya1MzVVU0QnJKTk9oSlI1LWI4RVJnRDVjVHl1Z2dqTkxTckJJTFBzWlgxbU9RTGNRalpVT195QWVEeXZrTG9GS2tLaVY4WDdSN2VnN1JtSFcyZWY1WWU1X2J0V1dBZkhLNEJr?oc=5",
+          "headline": "בזמן המונדיאל: המאבק האחרון של חורחה מסי",
+          "name": "Sport5"
         },
         {
           "url": "https://news.google.com/rss/articles/CBMijgFBVV95cUxOYzhLYzR2QWh6QXVHUkxDLTZoQm4zUWQtM3R4MTYzc1RuZnZ1SU5PeWdWQTRlTWNIRGtoQWlKNUNZQ3VIdzVtV3J2U0Q1OGE1b1Ywa1pmdmhfYnRheC1YLWFqQTB2RlM4cWduNmV5eTZIakFhQnRSSWthc3dKV0RmX01OMC12NngxcTl1OVV3?oc=5",
@@ -1492,112 +1492,46 @@
       "topicHint": "sport",
       "distill": {
         "title": "חורחה מסי, אביו של ליונל מסי, הלך לעולמו בגיל 68",
-        "summary": "חורחה מסי, אביו של ליונל מסי, הלך לעולמו בגיל 68. בנוסף עולה מהמקורות: חורחה מסי, אביו של ליאו מסי, מת בגיל 68; בזמן המונדיאל: המאבק האחרון של חורחה מסי. מדווח במקביל ב־4 מקורות.",
+        "summary": "חורחה מסי, אביו של ליונל מסי, הלך לעולמו בגיל 68. בנוסף עולה מהמקורות: חורחה מסי, אביו של ליאו מסי, מת בגיל 68; אבל בארגנטינה: אביו של לאו מסי הלך לעולמו בגיל 68. מדווח במקביל ב־4 מקורות.",
         "why_matters": "כי חורחה מסי, אביו של ליונל מסי, הלך לעולמו בגיל 68 — ואם זה יוצא לפועל יש לזה השלכה ישירה בשטח.",
         "bullet_facts": [
           "חורחה מסי, אביו של ליונל מסי, הלך לעולמו בגיל 68",
           "חורחה מסי, אביו של ליאו מסי, מת בגיל 68",
-          "בזמן המונדיאל: המאבק האחרון של חורחה מסי",
-          "אבל בארגנטינה: אביו של לאו מסי הלך לעולמו בגיל 68"
+          "אבל בארגנטינה: אביו של לאו מסי הלך לעולמו בגיל 68",
+          "בזמן המונדיאל: המאבק האחרון של חורחה מסי"
         ],
-        "background": "הדיווח לפי Mako, הארץ, Sport5 מתרכז בכמה קווים: חורחה מסי, אביו של ליונל מסי, הלך לעולמו בגיל 68; חורחה מסי, אביו של ליאו מסי, מת בגיל 68; בזמן המונדיאל: המאבק האחרון של חורחה מסי. ההצלבה בין המקורות חשובה כי כל כותרת מדגישה זווית אחרת של אותו דיון.",
+        "background": "הדיווח לפי Mako, הארץ, ynet.co.il מתרכז בכמה קווים: חורחה מסי, אביו של ליונל מסי, הלך לעולמו בגיל 68; חורחה מסי, אביו של ליאו מסי, מת בגיל 68; אבל בארגנטינה: אביו של לאו מסי הלך לעולמו בגיל 68. ההצלבה בין המקורות חשובה כי כל כותרת מדגישה זווית אחרת של אותו דיון.",
         "outlook": "השלב הבא: האם «חורחה מסי, אביו של ליונל מסי, הלך לעולמו בגיל 68» יתקדם להחלטה מאושרת או יישאר בבחינה בלבד. פרטים על לוח זמנים, היקף והגורם המאשר ישנו את התמונה.",
         "insight": "",
-        "historical_context": "הדיווח לפי Mako, הארץ, Sport5 מתרכז בכמה קווים: חורחה מסי, אביו של ליונל מסי, הלך לעולמו בגיל 68; חורחה מסי, אביו של ליאו מסי, מת בגיל 68; בזמן המונדיאל: המאבק האחרון של חורחה מסי. ההצלבה בין המקורות חשובה כי כל כותרת מדגישה זווית אחרת של אותו דיון.",
+        "historical_context": "הדיווח לפי Mako, הארץ, ynet.co.il מתרכז בכמה קווים: חורחה מסי, אביו של ליונל מסי, הלך לעולמו בגיל 68; חורחה מסי, אביו של ליאו מסי, מת בגיל 68; אבל בארגנטינה: אביו של לאו מסי הלך לעולמו בגיל 68. ההצלבה בין המקורות חשובה כי כל כותרת מדגישה זווית אחרת של אותו דיון.",
         "status": "confirmed",
         "mode": "heuristic"
       },
       "dryTitle": "חורחה מסי, אביו של ליונל מסי, הלך לעולמו בגיל 68",
-      "summary": "חורחה מסי, אביו של ליונל מסי, הלך לעולמו בגיל 68. בנוסף עולה מהמקורות: חורחה מסי, אביו של ליאו מסי, מת בגיל 68; בזמן המונדיאל: המאבק האחרון של חורחה מסי. מדווח במקביל ב־4 מקורות.",
+      "summary": "חורחה מסי, אביו של ליונל מסי, הלך לעולמו בגיל 68. בנוסף עולה מהמקורות: חורחה מסי, אביו של ליאו מסי, מת בגיל 68; אבל בארגנטינה: אביו של לאו מסי הלך לעולמו בגיל 68. מדווח במקביל ב־4 מקורות.",
       "why_matters": "כי חורחה מסי, אביו של ליונל מסי, הלך לעולמו בגיל 68 — ואם זה יוצא לפועל יש לזה השלכה ישירה בשטח.",
       "bullet_facts": [
         "חורחה מסי, אביו של ליונל מסי, הלך לעולמו בגיל 68",
         "חורחה מסי, אביו של ליאו מסי, מת בגיל 68",
-        "בזמן המונדיאל: המאבק האחרון של חורחה מסי",
-        "אבל בארגנטינה: אביו של לאו מסי הלך לעולמו בגיל 68"
+        "אבל בארגנטינה: אביו של לאו מסי הלך לעולמו בגיל 68",
+        "בזמן המונדיאל: המאבק האחרון של חורחה מסי"
       ],
-      "background": "הדיווח לפי Mako, הארץ, Sport5 מתרכז בכמה קווים: חורחה מסי, אביו של ליונל מסי, הלך לעולמו בגיל 68; חורחה מסי, אביו של ליאו מסי, מת בגיל 68; בזמן המונדיאל: המאבק האחרון של חורחה מסי. ההצלבה בין המקורות חשובה כי כל כותרת מדגישה זווית אחרת של אותו דיון.",
+      "background": "הדיווח לפי Mako, הארץ, ynet.co.il מתרכז בכמה קווים: חורחה מסי, אביו של ליונל מסי, הלך לעולמו בגיל 68; חורחה מסי, אביו של ליאו מסי, מת בגיל 68; אבל בארגנטינה: אביו של לאו מסי הלך לעולמו בגיל 68. ההצלבה בין המקורות חשובה כי כל כותרת מדגישה זווית אחרת של אותו דיון.",
       "outlook": "השלב הבא: האם «חורחה מסי, אביו של ליונל מסי, הלך לעולמו בגיל 68» יתקדם להחלטה מאושרת או יישאר בבחינה בלבד. פרטים על לוח זמנים, היקף והגורם המאשר ישנו את התמונה.",
       "insight": "",
-      "historical_context": "הדיווח לפי Mako, הארץ, Sport5 מתרכז בכמה קווים: חורחה מסי, אביו של ליונל מסי, הלך לעולמו בגיל 68; חורחה מסי, אביו של ליאו מסי, מת בגיל 68; בזמן המונדיאל: המאבק האחרון של חורחה מסי. ההצלבה בין המקורות חשובה כי כל כותרת מדגישה זווית אחרת של אותו דיון.",
+      "historical_context": "הדיווח לפי Mako, הארץ, ynet.co.il מתרכז בכמה קווים: חורחה מסי, אביו של ליונל מסי, הלך לעולמו בגיל 68; חורחה מסי, אביו של ליאו מסי, מת בגיל 68; אבל בארגנטינה: אביו של לאו מסי הלך לעולמו בגיל 68. ההצלבה בין המקורות חשובה כי כל כותרת מדגישה זווית אחרת של אותו דיון.",
       "status": "confirmed",
       "distillMode": "heuristic"
     },
     {
-      "title": "אנס קאנטר הודיע כי יתמודד בדראפט ה-WNBA: \"אני עומד בכל דרישה\"",
-      "link": "https://news.google.com/rss/articles/CBMiowFBVV95cUxNOGJrbGxQUm9rNXE2VUVCSjFuUFY1YXlUaFJLcDRqcV9sbllNT1FlUmdmajg3UlVVNE5idl9rb2dqUVd1OEdTYlFWWXVrVGtNWUVhek9zd2hQMnF0S3M3NzZ4SnFNVGphRkFJM29uSk9CQUpQYVJ1elB6UThFWXhfTW1sRVVpQkdYWHJQb3ctUHVxVGZ0RmlQX3AwdFdEdGtNdWJj?oc=5",
-      "pubDate": "Sat, 08 Aug 2026 17:43:00 GMT",
+      "title": "שחקן העבר בטוח: כך מכבי תל אביב תוכל למחוק את הפיגור מול צסק\"א סופיה",
+      "link": "https://news.google.com/rss/articles/CBMiekFVX3lxTFB6MG5KWS03eTdVSWlqdy1TcHY4V0FsUDU5QTZQaGNlVk9EVEE4X0t4QjZwU21zNV9qNjVtYW1IX0UzeTAyRTBqYzVpNFJRVzVOaEFGT01xLUhnX3p5NXMweldDVWpiUDJHSFBuc3BPeFFoWDRrU2ExQWxB?oc=5",
+      "pubDate": "Fri, 07 Aug 2026 19:45:29 GMT",
       "sources": [
         {
-          "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxNOGJrbGxQUm9rNXE2VUVCSjFuUFY1YXlUaFJLcDRqcV9sbllNT1FlUmdmajg3UlVVNE5idl9rb2dqUVd1OEdTYlFWWXVrVGtNWUVhek9zd2hQMnF0S3M3NzZ4SnFNVGphRkFJM29uSk9CQUpQYVJ1elB6UThFWXhfTW1sRVVpQkdYWHJQb3ctUHVxVGZ0RmlQX3AwdFdEdGtNdWJj?oc=5",
-          "headline": "אנס קאנטר הודיע כי יתמודד בדראפט ה-WNBA: \"אני עומד בכל דרישה\"",
-          "name": "הארץ"
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMidkFVX3lxTE5jY1dKYlA0a2lTQWZQYmhUbWRZY0ZucHlqaUc4QzF4TVY5SjRtbFIycEdibzVWTVlCdFZPVGNxbG9Ca05XeV9NNG1qWm44V29TR01LS2dwVzM4cjdVQkFndnVOUEV6QkY5bTV4QzA4dEk1Y1dsd3c?oc=5",
-          "headline": "הליגה שהעצימה נשים עומדת בפני השאלה שאסור לה לשאול",
-          "name": "היום"
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMiqwJBVV95cUxPS3ZFdThhRjNhQWhkY0I3Q2kxQ09MZk1LT1pFOE05MmMyWFA5ZkJvZ2JJdFY0T3FEbE5MZGVDVDd6amduaEhUNzQxcjdZeXVoc05KZUhXdmNyX2ZJQlhQbElxUFJ4bTNDWDlTazhfQloyZGY2SDQxS250Yi1QX2x4bmZSZWlXdmpfOE5WTm9QM1Ywck4xaWliQkNQNUY4cHBtMDZLSzVLWXgwZXdKV2xKUWNPc1A1bWljZk52MjlZNDVpVVJ3SFM0ZWxkcjZiLVJyOVBzWjREMFhpclZ1RWM5VE9sOFh4TTdpWmVNLXN6YWpFQUxscTkwdHpCcmtmUlgtZ2Zxc1ZkWUdCQmpOVjB4NnpqSnN2ZlFkSFZ3ZjAxY3VTY2VXMnIweWkxZw?oc=5",
-          "headline": "הטרלת השנה: 2 גברים נרשמו לדראפט ה-WNBA",
-          "name": "סרוגים"
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE1sX0ZObWpHTGVQeTVkQkRTSVJ3Q1J2X2Vfb3ViWnJ1bFNEYWVIcHNMRlZzTEdRN3lYYXlZb2tYRi0xOTZqN21Yd0dMRWtKVTlwMTFiYnZGdnRTblJ6X01VSXlwTEdGWnNVOFV3aExiWEhqUQ?oc=5",
-          "headline": "גברים בדרך ל-WNBA? עושים סדר בסערת הענק",
-          "name": "Sport5"
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE13YU9BY2hZYVY5b1Q0TTVLZVd5bk5hYXBySUc0S3VPMk15blcyV1Y5RDdHb1JIQXNxZ05VV2tiZFJ6LTE5UkJlM3JEVlZQeVFxMXRGUUpRdlpraVdFUkZz?oc=5",
-          "headline": "\"אתמודד בדראפט ה-WNBA\": ההכרזה המפתיעה של הכדורסלן תומך ישראל",
-          "name": "i24NEWS"
-        }
-      ],
-      "image": null,
-      "topicHint": "sport",
-      "distill": {
-        "title": "אנס קאנטר הודיע כי יתמודד בדראפט ה-WNBA: \"אני עומד בכל דרישה",
-        "summary": "אנס קאנטר הודיע כי יתמודד בדראפט ה-WNBA: \"אני עומד בכל דרישה. בנוסף עולה מהמקורות: הליגה שהעצימה נשים עומדת בפני השאלה שאסור לה לשאול; הטרלת השנה: 2 גברים נרשמו לדראפט ה-WNBA. מדווח במקביל ב־5 מקורות.",
-        "why_matters": "כי אנס קאנטר הודיע כי יתמודד בדראפט ה-WNBA: \"אני עומד בכל דרישה — ואם זה יוצא לפועל יש לזה השלכה ישירה בשטח.",
-        "bullet_facts": [
-          "אנס קאנטר הודיע כי יתמודד בדראפט ה-WNBA: \"אני עומד בכל דרישה",
-          "הליגה שהעצימה נשים עומדת בפני השאלה שאסור לה לשאול",
-          "הטרלת השנה: 2 גברים נרשמו לדראפט ה-WNBA",
-          "גברים בדרך ל-WNBA? עושים סדר בסערת הענק"
-        ],
-        "background": "הדיווח לפי הארץ, היום, סרוגים מתרכז בכמה קווים: אנס קאנטר הודיע כי יתמודד בדראפט ה-WNBA: \"אני עומד בכל דרישה; הליגה שהעצימה נשים עומדת בפני השאלה שאסור לה לשאול; הטרלת השנה: 2 גברים נרשמו לדראפט ה-WNBA. ההצלבה בין המקורות חשובה כי כל כותרת מדגישה זווית אחרת של אותו דיון.",
-        "outlook": "השלב הבא: האם «אנס קאנטר הודיע כי יתמודד בדראפט ה-WNBA: \"אני עומד בכל דרישה» יתקדם להחלטה מאושרת או יישאר בבחינה בלבד. פרטים על לוח זמנים, היקף והגורם המאשר ישנו את התמונה.",
-        "insight": "",
-        "historical_context": "הדיווח לפי הארץ, היום, סרוגים מתרכז בכמה קווים: אנס קאנטר הודיע כי יתמודד בדראפט ה-WNBA: \"אני עומד בכל דרישה; הליגה שהעצימה נשים עומדת בפני השאלה שאסור לה לשאול; הטרלת השנה: 2 גברים נרשמו לדראפט ה-WNBA. ההצלבה בין המקורות חשובה כי כל כותרת מדגישה זווית אחרת של אותו דיון.",
-        "status": "reported",
-        "mode": "heuristic"
-      },
-      "dryTitle": "אנס קאנטר הודיע כי יתמודד בדראפט ה-WNBA: \"אני עומד בכל דרישה",
-      "summary": "אנס קאנטר הודיע כי יתמודד בדראפט ה-WNBA: \"אני עומד בכל דרישה. בנוסף עולה מהמקורות: הליגה שהעצימה נשים עומדת בפני השאלה שאסור לה לשאול; הטרלת השנה: 2 גברים נרשמו לדראפט ה-WNBA. מדווח במקביל ב־5 מקורות.",
-      "why_matters": "כי אנס קאנטר הודיע כי יתמודד בדראפט ה-WNBA: \"אני עומד בכל דרישה — ואם זה יוצא לפועל יש לזה השלכה ישירה בשטח.",
-      "bullet_facts": [
-        "אנס קאנטר הודיע כי יתמודד בדראפט ה-WNBA: \"אני עומד בכל דרישה",
-        "הליגה שהעצימה נשים עומדת בפני השאלה שאסור לה לשאול",
-        "הטרלת השנה: 2 גברים נרשמו לדראפט ה-WNBA",
-        "גברים בדרך ל-WNBA? עושים סדר בסערת הענק"
-      ],
-      "background": "הדיווח לפי הארץ, היום, סרוגים מתרכז בכמה קווים: אנס קאנטר הודיע כי יתמודד בדראפט ה-WNBA: \"אני עומד בכל דרישה; הליגה שהעצימה נשים עומדת בפני השאלה שאסור לה לשאול; הטרלת השנה: 2 גברים נרשמו לדראפט ה-WNBA. ההצלבה בין המקורות חשובה כי כל כותרת מדגישה זווית אחרת של אותו דיון.",
-      "outlook": "השלב הבא: האם «אנס קאנטר הודיע כי יתמודד בדראפט ה-WNBA: \"אני עומד בכל דרישה» יתקדם להחלטה מאושרת או יישאר בבחינה בלבד. פרטים על לוח זמנים, היקף והגורם המאשר ישנו את התמונה.",
-      "insight": "",
-      "historical_context": "הדיווח לפי הארץ, היום, סרוגים מתרכז בכמה קווים: אנס קאנטר הודיע כי יתמודד בדראפט ה-WNBA: \"אני עומד בכל דרישה; הליגה שהעצימה נשים עומדת בפני השאלה שאסור לה לשאול; הטרלת השנה: 2 גברים נרשמו לדראפט ה-WNBA. ההצלבה בין המקורות חשובה כי כל כותרת מדגישה זווית אחרת של אותו דיון.",
-      "status": "reported",
-      "distillMode": "heuristic"
-    },
-    {
-      "title": "תרבות הסמוך: הבעיה של מכבי ת\"א בקיץ",
-      "link": "https://news.google.com/rss/articles/CBMicEFVX3lxTE41c29CX3VwQWNXd3pQWkhDZVN0a1Z2eVlZbUlKLWl2UHdNOGYxRl9jamExUDBQMnpsMHdaNGtNY2NseVB2SDZ5RXlteDJ2cHVidG9VQ00zZmRDQzQwdUh3TUVFWG1uTGE5QUVyUnhsYXQ?oc=5",
-      "pubDate": "Fri, 07 Aug 2026 08:19:55 GMT",
-      "sources": [
-        {
-          "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE41c29CX3VwQWNXd3pQWkhDZVN0a1Z2eVlZbUlKLWl2UHdNOGYxRl9jamExUDBQMnpsMHdaNGtNY2NseVB2SDZ5RXlteDJ2cHVidG9VQ00zZmRDQzQwdUh3TUVFWG1uTGE5QUVyUnhsYXQ?oc=5",
-          "headline": "תרבות הסמוך: הבעיה של מכבי ת\"א בקיץ",
-          "name": "Sport5"
+          "url": "https://news.google.com/rss/articles/CBMiekFVX3lxTFB6MG5KWS03eTdVSWlqdy1TcHY4V0FsUDU5QTZQaGNlVk9EVEE4X0t4QjZwU21zNV9qNjVtYW1IX0UzeTAyRTBqYzVpNFJRVzVOaEFGT01xLUhnX3p5NXMweldDVWpiUDJHSFBuc3BPeFFoWDRrU2ExQWxB?oc=5",
+          "headline": "שחקן העבר בטוח: כך מכבי תל אביב תוכל למחוק את הפיגור מול צסק\"א סופיה",
+          "name": "ספורט 1"
         },
         {
           "url": "https://news.google.com/rss/articles/CBMic0FVX3lxTE56MEk3UzIxN1R2bUtPUkpiX0syaTFNc2dsWDYtMGM3QVpiTGF4SWZxMThlWkUzblFKbm5YZlVCOFBrNTlmSlRZX1N0Z1VVN1lnd0M0clpERVlySTdOZEpSLXNreTNyZmFhSm0zbmFaXzE4OEk?oc=5",
@@ -1617,17 +1551,17 @@
         {
           "url": "https://news.google.com/rss/articles/CBMivAJBVV95cUxPbmZkQ0pGSWxJajV3ZGhSS3JlOFdOVG53aVI4Sm1mbXJydTF4Z2E0NDdjd1lYV1UzcTcwSkNpTldnNE5waWdybGx5QkFtV2tYa3hMeDBheVFkQU9zbWdpRUV3aG5ETkJ2eUt0Q0p1MUdZa3FMc0Y3aGUyV19WMDBaRTJBSW9mV1k3V2Z2TEZVV3hxVUVEMWVOZXk0TXIwSWVpNFhvbDEzeWl1RkFxdUwta1hQVlcweFI4S0wyejc3ZXREbnJrNk5OQ0gxMG9qeUVHUEhNWlpwZFRHaWJSZlpYdmthd1RFaXNzWFZ2OGhTcUpfYkhwSEZuWk5KQ2RrZ0d0aGZrOHJJWlVGZ3Z6QkpfbWdIWVBtZERDYy1nNEExbVZzM2VpYWhfdFdMUHZFal92Slhyd3F2QzBVR3Zn?oc=5",
           "headline": "ציון דרך היסטורי: היריבה ה-100 באירופה",
-          "name": "מועדון הכדורגל מכבי תל אביב"
+          "name": "maccabi-tlv.co.il"
         }
       ],
       "image": null,
       "topicHint": "sport",
       "distill": {
-        "title": "תרבות הסמוך: הבעיה של מכבי ת\"א בקיץ",
-        "summary": "תרבות הסמוך: הבעיה של מכבי ת\"א בקיץ. בנוסף עולה מהמקורות: הסתבכו: התחזית העגומה לישראליות בגומלין; מכבי קרסה, בית\"ר פספסה והפועל חגגה: סיכום משחקי הישראליות באירופה. מדווח במקביל ב־4 מקורות.",
+        "title": "שחקן העבר בטוח: כך מכבי תל אביב תוכל למחוק את הפיגור מול צסק\"א סופיה",
+        "summary": "שחקן העבר בטוח: כך מכבי תל אביב תוכל למחוק את הפיגור מול צסק\"א סופיה. בנוסף עולה מהמקורות: הסתבכו: התחזית העגומה לישראליות בגומלין; מכבי קרסה, בית\"ר פספסה והפועל חגגה: סיכום משחקי הישראליות באירופה. מדווח במקביל ב־4 מקורות.",
         "why_matters": "זו כותרת לספורט כי יש כאן שינוי בסגל או בתוצאה שעשוי להשפיע על המשך העונה.",
         "bullet_facts": [
-          "תרבות הסמוך: הבעיה של מכבי ת\"א בקיץ",
+          "שחקן העבר בטוח: כך מכבי תל אביב תוכל למחוק את הפיגור מול צסק\"א סופיה",
           "הסתבכו: התחזית העגומה לישראליות בגומלין",
           "מכבי קרסה, בית\"ר פספסה והפועל חגגה: סיכום משחקי הישראליות באירופה",
           "אם תודח מול צסק\"א סופיה: הסיכוי של מכבי ת\"א להעפיל לקונפרנס ליג"
@@ -1639,11 +1573,11 @@
         "status": "reported",
         "mode": "heuristic"
       },
-      "dryTitle": "תרבות הסמוך: הבעיה של מכבי ת\"א בקיץ",
-      "summary": "תרבות הסמוך: הבעיה של מכבי ת\"א בקיץ. בנוסף עולה מהמקורות: הסתבכו: התחזית העגומה לישראליות בגומלין; מכבי קרסה, בית\"ר פספסה והפועל חגגה: סיכום משחקי הישראליות באירופה. מדווח במקביל ב־4 מקורות.",
+      "dryTitle": "שחקן העבר בטוח: כך מכבי תל אביב תוכל למחוק את הפיגור מול צסק\"א סופיה",
+      "summary": "שחקן העבר בטוח: כך מכבי תל אביב תוכל למחוק את הפיגור מול צסק\"א סופיה. בנוסף עולה מהמקורות: הסתבכו: התחזית העגומה לישראליות בגומלין; מכבי קרסה, בית\"ר פספסה והפועל חגגה: סיכום משחקי הישראליות באירופה. מדווח במקביל ב־4 מקורות.",
       "why_matters": "זו כותרת לספורט כי יש כאן שינוי בסגל או בתוצאה שעשוי להשפיע על המשך העונה.",
       "bullet_facts": [
-        "תרבות הסמוך: הבעיה של מכבי ת\"א בקיץ",
+        "שחקן העבר בטוח: כך מכבי תל אביב תוכל למחוק את הפיגור מול צסק\"א סופיה",
         "הסתבכו: התחזית העגומה לישראליות בגומלין",
         "מכבי קרסה, בית\"ר פספסה והפועל חגגה: סיכום משחקי הישראליות באירופה",
         "אם תודח מול צסק\"א סופיה: הסיכוי של מכבי ת\"א להעפיל לקונפרנס ליג"
@@ -1652,6 +1586,72 @@
       "outlook": "לחכות לאישור המועדון/הליגה או לתוצאה הרשמית, ואז לראות השפעה על הסגל ועל לוח המשחקים.",
       "insight": "",
       "historical_context": "בספורט יש פער תכוף בין שמועה לאישור רשמי של מועדון או ליגה. הערך לקורא הוא להפריד בין מה שסוכם לבין מה שעדיין בדיווח בלבד.",
+      "status": "reported",
+      "distillMode": "heuristic"
+    },
+    {
+      "title": "אנס קאנטר הודיע כי יתמודד בדראפט ה-WNBA: \"אני עומד בכל דרישה\"",
+      "link": "https://news.google.com/rss/articles/CBMiowFBVV95cUxNOGJrbGxQUm9rNXE2VUVCSjFuUFY1YXlUaFJLcDRqcV9sbllNT1FlUmdmajg3UlVVNE5idl9rb2dqUVd1OEdTYlFWWXVrVGtNWUVhek9zd2hQMnF0S3M3NzZ4SnFNVGphRkFJM29uSk9CQUpQYVJ1elB6UThFWXhfTW1sRVVpQkdYWHJQb3ctUHVxVGZ0RmlQX3AwdFdEdGtNdWJj?oc=5",
+      "pubDate": "Sat, 08 Aug 2026 17:43:00 GMT",
+      "sources": [
+        {
+          "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxNOGJrbGxQUm9rNXE2VUVCSjFuUFY1YXlUaFJLcDRqcV9sbllNT1FlUmdmajg3UlVVNE5idl9rb2dqUVd1OEdTYlFWWXVrVGtNWUVhek9zd2hQMnF0S3M3NzZ4SnFNVGphRkFJM29uSk9CQUpQYVJ1elB6UThFWXhfTW1sRVVpQkdYWHJQb3ctUHVxVGZ0RmlQX3AwdFdEdGtNdWJj?oc=5",
+          "headline": "אנס קאנטר הודיע כי יתמודד בדראפט ה-WNBA: \"אני עומד בכל דרישה\"",
+          "name": "הארץ"
+        },
+        {
+          "url": "https://news.google.com/rss/articles/CBMiYkFVX3lxTE1ma3ZJNmpjejVkS2NUSjhmMDQ1QUpKOEZ2UjFTdjZCamlkUzVXNjNMcG5sX2toenJseU9WV0Ewa1VnZk80REZFV0ZxRWg3X2ZwdWlHdmNvRDBSZXRIajNfc0t3?oc=5",
+          "headline": "זה לא משחק",
+          "name": "ynet.co.il"
+        },
+        {
+          "url": "https://news.google.com/rss/articles/CBMiqwJBVV95cUxPS3ZFdThhRjNhQWhkY0I3Q2kxQ09MZk1LT1pFOE05MmMyWFA5ZkJvZ2JJdFY0T3FEbE5MZGVDVDd6amduaEhUNzQxcjdZeXVoc05KZUhXdmNyX2ZJQlhQbElxUFJ4bTNDWDlTazhfQloyZGY2SDQxS250Yi1QX2x4bmZSZWlXdmpfOE5WTm9QM1Ywck4xaWliQkNQNUY4cHBtMDZLSzVLWXgwZXdKV2xKUWNPc1A1bWljZk52MjlZNDVpVVJ3SFM0ZWxkcjZiLVJyOVBzWjREMFhpclZ1RWM5VE9sOFh4TTdpWmVNLXN6YWpFQUxscTkwdHpCcmtmUlgtZ2Zxc1ZkWUdCQmpOVjB4NnpqSnN2ZlFkSFZ3ZjAxY3VTY2VXMnIweWkxZw?oc=5",
+          "headline": "הטרלת השנה: 2 גברים נרשמו לדראפט ה-WNBA",
+          "name": "סרוגים"
+        },
+        {
+          "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE4xSGlLWDRWLW9pdEMzaGxOUHgtY0hpRExsRFh2SHhWSkk2aExuaUN2OElYSGZ4dTh6M05FOHFfOEM3Wmx6ZW5mYjF3SHVFbVN2NW1lS09vZWdDZ3E5QWxMX3FlbWxMMFlLa3lSZXotZ0YxZw?oc=5",
+          "headline": "\"רוצה לשחק ב-WNBA\": הסערה של אנס קאנטר",
+          "name": "Sport5"
+        },
+        {
+          "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE13YU9BY2hZYVY5b1Q0TTVLZVd5bk5hYXBySUc0S3VPMk15blcyV1Y5RDdHb1JIQXNxZ05VV2tiZFJ6LTE5UkJlM3JEVlZQeVFxMXRGUUpRdlpraVdFUkZz?oc=5",
+          "headline": "\"אתמודד בדראפט ה-WNBA\": ההכרזה המפתיעה של הכדורסלן תומך ישראל",
+          "name": "i24NEWS"
+        }
+      ],
+      "image": null,
+      "topicHint": "sport",
+      "distill": {
+        "title": "אנס קאנטר הודיע כי יתמודד בדראפט ה-WNBA: \"אני עומד בכל דרישה",
+        "summary": "אנס קאנטר הודיע כי יתמודד בדראפט ה-WNBA: \"אני עומד בכל דרישה. בנוסף עולה מהמקורות: זה לא משחק; הטרלת השנה: 2 גברים נרשמו לדראפט ה-WNBA. מדווח במקביל ב־5 מקורות.",
+        "why_matters": "כי אנס קאנטר הודיע כי יתמודד בדראפט ה-WNBA: \"אני עומד בכל דרישה — ואם זה יוצא לפועל יש לזה השלכה ישירה בשטח.",
+        "bullet_facts": [
+          "אנס קאנטר הודיע כי יתמודד בדראפט ה-WNBA: \"אני עומד בכל דרישה",
+          "זה לא משחק",
+          "הטרלת השנה: 2 גברים נרשמו לדראפט ה-WNBA",
+          "רוצה לשחק ב-WNBA\": הסערה של אנס קאנטר"
+        ],
+        "background": "הדיווח לפי הארץ, ynet.co.il, סרוגים מתרכז בכמה קווים: אנס קאנטר הודיע כי יתמודד בדראפט ה-WNBA: \"אני עומד בכל דרישה; זה לא משחק; הטרלת השנה: 2 גברים נרשמו לדראפט ה-WNBA. ההצלבה בין המקורות חשובה כי כל כותרת מדגישה זווית אחרת של אותו דיון.",
+        "outlook": "השלב הבא: האם «אנס קאנטר הודיע כי יתמודד בדראפט ה-WNBA: \"אני עומד בכל דרישה» יתקדם להחלטה מאושרת או יישאר בבחינה בלבד. פרטים על לוח זמנים, היקף והגורם המאשר ישנו את התמונה.",
+        "insight": "",
+        "historical_context": "הדיווח לפי הארץ, ynet.co.il, סרוגים מתרכז בכמה קווים: אנס קאנטר הודיע כי יתמודד בדראפט ה-WNBA: \"אני עומד בכל דרישה; זה לא משחק; הטרלת השנה: 2 גברים נרשמו לדראפט ה-WNBA. ההצלבה בין המקורות חשובה כי כל כותרת מדגישה זווית אחרת של אותו דיון.",
+        "status": "reported",
+        "mode": "heuristic"
+      },
+      "dryTitle": "אנס קאנטר הודיע כי יתמודד בדראפט ה-WNBA: \"אני עומד בכל דרישה",
+      "summary": "אנס קאנטר הודיע כי יתמודד בדראפט ה-WNBA: \"אני עומד בכל דרישה. בנוסף עולה מהמקורות: זה לא משחק; הטרלת השנה: 2 גברים נרשמו לדראפט ה-WNBA. מדווח במקביל ב־5 מקורות.",
+      "why_matters": "כי אנס קאנטר הודיע כי יתמודד בדראפט ה-WNBA: \"אני עומד בכל דרישה — ואם זה יוצא לפועל יש לזה השלכה ישירה בשטח.",
+      "bullet_facts": [
+        "אנס קאנטר הודיע כי יתמודד בדראפט ה-WNBA: \"אני עומד בכל דרישה",
+        "זה לא משחק",
+        "הטרלת השנה: 2 גברים נרשמו לדראפט ה-WNBA",
+        "רוצה לשחק ב-WNBA\": הסערה של אנס קאנטר"
+      ],
+      "background": "הדיווח לפי הארץ, ynet.co.il, סרוגים מתרכז בכמה קווים: אנס קאנטר הודיע כי יתמודד בדראפט ה-WNBA: \"אני עומד בכל דרישה; זה לא משחק; הטרלת השנה: 2 גברים נרשמו לדראפט ה-WNBA. ההצלבה בין המקורות חשובה כי כל כותרת מדגישה זווית אחרת של אותו דיון.",
+      "outlook": "השלב הבא: האם «אנס קאנטר הודיע כי יתמודד בדראפט ה-WNBA: \"אני עומד בכל דרישה» יתקדם להחלטה מאושרת או יישאר בבחינה בלבד. פרטים על לוח זמנים, היקף והגורם המאשר ישנו את התמונה.",
+      "insight": "",
+      "historical_context": "הדיווח לפי הארץ, ynet.co.il, סרוגים מתרכז בכמה קווים: אנס קאנטר הודיע כי יתמודד בדראפט ה-WNBA: \"אני עומד בכל דרישה; זה לא משחק; הטרלת השנה: 2 גברים נרשמו לדראפט ה-WNBA. ההצלבה בין המקורות חשובה כי כל כותרת מדגישה זווית אחרת של אותו דיון.",
       "status": "reported",
       "distillMode": "heuristic"
     },
@@ -1810,50 +1810,6 @@
       "distillMode": "heuristic"
     },
     {
-      "title": "הזמנתם חופשה בארץ ורוצים לבטל? רשתות המלונות מתחילות להקל במדיניות",
-      "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTE01Vm5tUEtYdE45Zl9WRFNkb0Q5TXNZeS0xSElvdVJDdkplWS1ndTdzeWFlZnR6ZnhPMW92ekc5X0tKWVhGel9vaTZzVlhJaFpCLXVweTJqRFlWenlSTE44QUZYZ3ZPXy0xcjJiaVNmOTlzNDJj0gF8QVVfeXFMUGZZNklBaWtnYVBUMHZnX2JRWVRwdmpDWm5KcHNZZy1Ja2pleXdia3RMLVpvOTlxVnpRMFlfaF8tV1Q3NUpPaU1DMVI2V3I0NmN2ZUc3b1YtS2FDWWg2dzhCMnNnRW00cUlqNGFzRXVxc1VhXzlQd0J5anRINg?oc=5",
-      "pubDate": "Wed, 05 Aug 2026 23:56:00 GMT",
-      "sources": [
-        {
-          "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE01Vm5tUEtYdE45Zl9WRFNkb0Q5TXNZeS0xSElvdVJDdkplWS1ndTdzeWFlZnR6ZnhPMW92ekc5X0tKWVhGel9vaTZzVlhJaFpCLXVweTJqRFlWenlSTE44QUZYZ3ZPXy0xcjJiaVNmOTlzNDJj0gF8QVVfeXFMUGZZNklBaWtnYVBUMHZnX2JRWVRwdmpDWm5KcHNZZy1Ja2pleXdia3RMLVpvOTlxVnpRMFlfaF8tV1Q3NUpPaU1DMVI2V3I0NmN2ZUc3b1YtS2FDWWg2dzhCMnNnRW00cUlqNGFzRXVxc1VhXzlQd0J5anRINg?oc=5",
-          "headline": "הזמנתם חופשה בארץ ורוצים לבטל? רשתות המלונות מתחילות להקל במדיניות",
-          "name": "היום"
-        }
-      ],
-      "image": null,
-      "topicHint": "leisure",
-      "distill": {
-        "title": "הזמנתם חופשה בארץ ורוצים לבטל? רשתות המלונות מתחילות להקל במדיניות",
-        "summary": "לפי הדיווחים, הזמנתם חופשה בארץ ורוצים לבטל? רשתות המלונות מתחילות להקל במדיניות.",
-        "why_matters": "זה רלוונטי לכיס ולתוכניות חופשה — מחירים, זמינות ומדיניות שמשפיעים על מטיילים עכשיו.",
-        "bullet_facts": [
-          "הזמנתם חופשה בארץ ורוצים לבטל? רשתות המלונות מתחילות להקל במדיניות",
-          "חלק מהפרטים עדיין לא הובהרו במקורות שנבדקו.",
-          "חלק מהפרטים עדיין לא הובהרו במקורות שנבדקו."
-        ],
-        "background": "ענף התיירות והנופש בישראל רגיש לביטחון, מחירים ועונות חגים. דיווחים על מלונות, מבצעים או מדיניות משפיעים ישירות על מטיילים ועל עסקים מקומיים.",
-        "outlook": "לעקוב אחרי שינויי מחיר, זמינות לחגים, והודעות של משרד התיירות או הרשתות. שינוי במדיניות ביטולים או הטבות הוא עדכון פרקטי.",
-        "insight": "",
-        "historical_context": "ענף התיירות והנופש בישראל רגיש לביטחון, מחירים ועונות חגים. דיווחים על מלונות, מבצעים או מדיניות משפיעים ישירות על מטיילים ועל עסקים מקומיים.",
-        "status": "reported",
-        "mode": "heuristic"
-      },
-      "dryTitle": "הזמנתם חופשה בארץ ורוצים לבטל? רשתות המלונות מתחילות להקל במדיניות",
-      "summary": "לפי הדיווחים, הזמנתם חופשה בארץ ורוצים לבטל? רשתות המלונות מתחילות להקל במדיניות.",
-      "why_matters": "זה רלוונטי לכיס ולתוכניות חופשה — מחירים, זמינות ומדיניות שמשפיעים על מטיילים עכשיו.",
-      "bullet_facts": [
-        "הזמנתם חופשה בארץ ורוצים לבטל? רשתות המלונות מתחילות להקל במדיניות",
-        "חלק מהפרטים עדיין לא הובהרו במקורות שנבדקו.",
-        "חלק מהפרטים עדיין לא הובהרו במקורות שנבדקו."
-      ],
-      "background": "ענף התיירות והנופש בישראל רגיש לביטחון, מחירים ועונות חגים. דיווחים על מלונות, מבצעים או מדיניות משפיעים ישירות על מטיילים ועל עסקים מקומיים.",
-      "outlook": "לעקוב אחרי שינויי מחיר, זמינות לחגים, והודעות של משרד התיירות או הרשתות. שינוי במדיניות ביטולים או הטבות הוא עדכון פרקטי.",
-      "insight": "",
-      "historical_context": "ענף התיירות והנופש בישראל רגיש לביטחון, מחירים ועונות חגים. דיווחים על מלונות, מבצעים או מדיניות משפיעים ישירות על מטיילים ועל עסקים מקומיים.",
-      "status": "reported",
-      "distillMode": "heuristic"
-    },
-    {
       "title": "בדרך ליותר חדרי מלון: משרד התיירות",
       "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE1wbVZrQ2szV29PNklPRzJFMHlqNHZoQTluNUR0dkJmQzEweXk4S1c4TTJfWEFiVzhmYTY5eHQ3MDltMG94bnpzVnFtaUh4NnhmTXZWWUN5bw?oc=5",
       "pubDate": "Sun, 02 Aug 2026 09:09:48 GMT",
@@ -1931,6 +1887,50 @@
       "why_matters": "זה רלוונטי לכיס ולתוכניות חופשה — מחירים, זמינות ומדיניות שמשפיעים על מטיילים עכשיו.",
       "bullet_facts": [
         "קנס של עד 3,000 אירו על חופשה תמימה: היעדים הפופולריים שמחמירים את החוקים לתיירים",
+        "חלק מהפרטים עדיין לא הובהרו במקורות שנבדקו.",
+        "חלק מהפרטים עדיין לא הובהרו במקורות שנבדקו."
+      ],
+      "background": "ענף התיירות והנופש בישראל רגיש לביטחון, מחירים ועונות חגים. דיווחים על מלונות, מבצעים או מדיניות משפיעים ישירות על מטיילים ועל עסקים מקומיים.",
+      "outlook": "לעקוב אחרי שינויי מחיר, זמינות לחגים, והודעות של משרד התיירות או הרשתות. שינוי במדיניות ביטולים או הטבות הוא עדכון פרקטי.",
+      "insight": "",
+      "historical_context": "ענף התיירות והנופש בישראל רגיש לביטחון, מחירים ועונות חגים. דיווחים על מלונות, מבצעים או מדיניות משפיעים ישירות על מטיילים ועל עסקים מקומיים.",
+      "status": "reported",
+      "distillMode": "heuristic"
+    },
+    {
+      "title": "רוב הישראלים מפספסים: אותה חופשה, אותו מלון - אבל במאות דולרים פחות",
+      "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTFBsMmxjZF9nbXZLOGZkbllxNmd5b0E1YTlyV3FkUmVWemVRM3AtWmxiX3ExMHZ0SG9JZE15anRDNHJ5clVzYVl0T3VGRHd3WU9ESWFLU21aWV8zbDBtcHEwazViT0Jrb2xSb1EtUnNWS0JydC1X0gF8QVVfeXFMTm5Wbk9CcExBcTdZYURxNENFeUdHd3VVYWRZa01kUVlIWl9nZUVidjFVQm5GaktjR1VYdWxqbUw2bEI4QVdJYml0VFUtakxOTE01WFBNUWxHeFZvVlVEcjJud0NsbExaSE5XNnZVOUhPWnJQbjY4Z3JIMFhRTQ?oc=5",
+      "pubDate": "Tue, 23 Jun 2026 07:00:00 GMT",
+      "sources": [
+        {
+          "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTFBsMmxjZF9nbXZLOGZkbllxNmd5b0E1YTlyV3FkUmVWemVRM3AtWmxiX3ExMHZ0SG9JZE15anRDNHJ5clVzYVl0T3VGRHd3WU9ESWFLU21aWV8zbDBtcHEwazViT0Jrb2xSb1EtUnNWS0JydC1X0gF8QVVfeXFMTm5Wbk9CcExBcTdZYURxNENFeUdHd3VVYWRZa01kUVlIWl9nZUVidjFVQm5GaktjR1VYdWxqbUw2bEI4QVdJYml0VFUtakxOTE01WFBNUWxHeFZvVlVEcjJud0NsbExaSE5XNnZVOUhPWnJQbjY4Z3JIMFhRTQ?oc=5",
+          "headline": "רוב הישראלים מפספסים: אותה חופשה, אותו מלון - אבל במאות דולרים פחות",
+          "name": "היום"
+        }
+      ],
+      "image": null,
+      "topicHint": "leisure",
+      "distill": {
+        "title": "רוב הישראלים מפספסים: אותה חופשה, אותו מלון - אבל במאות דולרים פחות",
+        "summary": "לפי הדיווחים, רוב הישראלים מפספסים: אותה חופשה, אותו מלון - אבל במאות דולרים פחות.",
+        "why_matters": "זה רלוונטי לכיס ולתוכניות חופשה — מחירים, זמינות ומדיניות שמשפיעים על מטיילים עכשיו.",
+        "bullet_facts": [
+          "רוב הישראלים מפספסים: אותה חופשה, אותו מלון - אבל במאות דולרים פחות",
+          "חלק מהפרטים עדיין לא הובהרו במקורות שנבדקו.",
+          "חלק מהפרטים עדיין לא הובהרו במקורות שנבדקו."
+        ],
+        "background": "ענף התיירות והנופש בישראל רגיש לביטחון, מחירים ועונות חגים. דיווחים על מלונות, מבצעים או מדיניות משפיעים ישירות על מטיילים ועל עסקים מקומיים.",
+        "outlook": "לעקוב אחרי שינויי מחיר, זמינות לחגים, והודעות של משרד התיירות או הרשתות. שינוי במדיניות ביטולים או הטבות הוא עדכון פרקטי.",
+        "insight": "",
+        "historical_context": "ענף התיירות והנופש בישראל רגיש לביטחון, מחירים ועונות חגים. דיווחים על מלונות, מבצעים או מדיניות משפיעים ישירות על מטיילים ועל עסקים מקומיים.",
+        "status": "reported",
+        "mode": "heuristic"
+      },
+      "dryTitle": "רוב הישראלים מפספסים: אותה חופשה, אותו מלון - אבל במאות דולרים פחות",
+      "summary": "לפי הדיווחים, רוב הישראלים מפספסים: אותה חופשה, אותו מלון - אבל במאות דולרים פחות.",
+      "why_matters": "זה רלוונטי לכיס ולתוכניות חופשה — מחירים, זמינות ומדיניות שמשפיעים על מטיילים עכשיו.",
+      "bullet_facts": [
+        "רוב הישראלים מפספסים: אותה חופשה, אותו מלון - אבל במאות דולרים פחות",
         "חלק מהפרטים עדיין לא הובהרו במקורות שנבדקו.",
         "חלק מהפרטים עדיין לא הובהרו במקורות שנבדקו."
       ],

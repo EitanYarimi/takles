@@ -178,6 +178,87 @@
       letter-spacing: 0.02em;
     }
 
+    .board-tools {
+      display: grid;
+      gap: 0.65rem;
+      margin: 0 0 1rem;
+      padding: 0 0.35rem;
+    }
+    .board-tools-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      align-items: center;
+    }
+    .board-search {
+      flex: 1 1 12rem;
+      min-width: 10rem;
+      border: 1px solid var(--rule-soft);
+      background: rgba(255, 255, 255, 0.78);
+      color: var(--ink);
+      font: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 0.55rem 0.75rem;
+      border-radius: 10px;
+      outline: none;
+    }
+    .board-search:focus {
+      border-color: rgba(11, 110, 92, 0.45);
+      box-shadow: 0 0 0 3px rgba(11, 110, 92, 0.1);
+    }
+    .board-chip,
+    .audio-brief-btn {
+      border: 1px solid var(--rule-soft);
+      background: rgba(255, 255, 255, 0.72);
+      color: var(--ink-soft);
+      font: inherit;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 0.42rem 0.7rem;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+    }
+    .board-chip:hover,
+    .audio-brief-btn:hover {
+      border-color: rgba(11, 110, 92, 0.35);
+      color: var(--accent);
+      background: rgba(11, 110, 92, 0.06);
+    }
+    .board-chip.active,
+    .audio-brief-btn.is-playing {
+      background: var(--ink);
+      border-color: var(--ink);
+      color: #fff;
+    }
+    .board-chip.pref-on {
+      background: rgba(11, 110, 92, 0.12);
+      border-color: rgba(11, 110, 92, 0.35);
+      color: var(--accent);
+    }
+    .board-tools-hint {
+      margin: 0;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--muted);
+      padding: 0 0.15rem;
+    }
+    .audio-brief-btn {
+      margin-top: 0.55rem;
+    }
+    .lead-copy .audio-brief-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .topic-cube.is-dimmed {
+      opacity: 0.38;
+    }
+    .topic-cube.is-dimmed header {
+      pointer-events: auto;
+    }
+
     .insights {
       margin: 1.75rem 0.35rem 0.5rem;
       padding-top: 1.25rem;
@@ -1026,6 +1107,24 @@
         <article class="world-lead" id="worldLead" hidden></article>
       </div>
       <p class="status-line" id="status">טוען…</p>
+      <div class="board-tools" id="boardTools">
+        <div class="board-tools-row">
+          <input
+            type="search"
+            class="board-search"
+            id="boardSearch"
+            placeholder="חיפוש מהיר בלוח…"
+            autocomplete="off"
+            enterkeyhint="search"
+          />
+          <button type="button" class="audio-brief-btn" id="audioBriefBtn" title="השמע את הכותרת הראשית">
+            השמע תקציר
+          </button>
+        </div>
+        <div class="board-tools-row" id="tagFilters" aria-label="סינון מהיר"></div>
+        <div class="board-tools-row" id="prefBar" hidden></div>
+        <p class="board-tools-hint">נושאים מועדפים נשמרים בדפדפן · לחיצה ממושכת על כותרת נושא = מועדף / ביטול</p>
+      </div>
       <p class="board-label">לפי נושא</p>
       <div class="cubes" id="cubes"></div>
       <section class="insights" id="insightsSection" aria-label="תובנות">
@@ -1049,7 +1148,10 @@
         <li><strong>ריבועי נושאים</strong> — ביטחון, פוליטיקה, אזור, בעולם, כלכלה, פנים, תיירות ונופש, ספורט.</li>
         <li><strong>סיכום מראש</strong> — לכל כתבה: עובדות, רקע ומבט קדימה — בלי שהמשתמש יריץ דבר.</li>
         <li><strong>תובנות</strong> — נתונים מאומתים (תפקוד הממשלה, מזג אוויר…) עם ניתוח קצר ומקורות, בלי כותרות.</li>
-        <li><strong>צפיתי</strong> — מוריד כתבה מהלוח הפעיל בלי למחוק אותה לגמרי.</li>
+        <li><strong>צפיתי</strong> — מוריד כתבה מהלוח הפעיל; נשמר ב־localStorage גם אחרי רענון.</li>
+        <li><strong>נושאים מועדפים</strong> — לחיצה ממושכת על כותרת נושא; נשמר מקומית בדפדפן.</li>
+        <li><strong>תקציר קולי</strong> — השמעת הכותרת הראשית + סיכום קצר (TTS).</li>
+        <li><strong>חיפוש וסינון</strong> — תיבת חיפוש ותגיות מהירות (הייטק, נדל״ן…).</li>
         <li><strong>בלי לינקים החוצה</strong> — נשארים בתוך תכל׳ס; העובדות מרוכזות כאן.</li>
       </ul>
       <p>מקורות מ־Google News ישראל, מסוננים ומסווגים אוטומטית.</p>
@@ -1401,9 +1503,17 @@
             <span>·</span>
             <span>${escapeHtml(relativeTime(lead.pubDate))}</span>
           </div>
+          <button type="button" class="audio-brief-btn" data-audio-lead title="השמע תקציר">השמע תקציר</button>
           <div class="lead-cta">לקרוא בתכל׳ס ←</div>
         </div>
       `;
+      const audioBtn = els.lead.querySelector("[data-audio-lead]");
+      if (audioBtn) {
+        audioBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          speakBriefing(lead, audioBtn);
+        });
+      }
       renderWorldLead(cards, lead.id);
     }
 
@@ -1761,7 +1871,9 @@
     }
 
     function renderTopicCubes(cards) {
-      const topicIds = TOPICS.filter((t) => t.id !== "all");
+      const prefSet = new Set(preferredTopics);
+      let topicIds = TOPICS.filter((t) => t.id !== "all");
+      if (prefSet.size) topicIds = topicIds.filter((t) => prefSet.has(t.id));
       els.cubes.innerHTML = topicIds
         .map((topic) => {
           const items = cards
@@ -1785,9 +1897,10 @@
                 })
                 .join("")}</ul>`
             : `<div class="cube-empty">אין עדכונים בנושא כרגע</div>`;
+          const star = prefSet.has(topic.id) ? " ★" : "";
           return `<section class="topic-cube" data-topic="${topic.id}">
-            <header>
-              <h2>${topic.label}</h2>
+            <header title="לחיצה: פתיחת נושא · לחיצה ממושכת: מועדף / ביטול">
+              <h2>${topic.label}${star}</h2>
               <span class="n">${items.length}</span>
             </header>
             ${list}
@@ -1798,9 +1911,16 @@
 
     function applyTopicFilter() {
       const active = activeCards();
-      renderLead(active);
-      renderTopicCubes(active);
-      els.status.textContent = `${active.length} עדכונים פעילים`;
+      const visible = boardVisibleCards(active);
+      renderLead(visible.length ? visible : active);
+      renderTopicCubes(visible);
+      const bits = [`${active.length} עדכונים פעילים`];
+      if (boardQuery.trim() || boardTag || preferredTopics.length) {
+        bits.push(`${visible.length} אחרי סינון`);
+      }
+      els.status.textContent = bits.join(" · ");
+      syncAudioBriefButton();
+      renderPrefBar();
     }
 
     function classifyTopic(title, sources = []) {
@@ -1957,6 +2077,7 @@
     };
 
     const SEEN_KEY = "takles_seen_map";
+    const PREF_TOPICS_KEY = "takles_pref_topics";
     const SEEN_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 ימים בנצפו
     const ACTIVE_TTL_H = {
       security: 12,
@@ -1969,6 +2090,168 @@
       sport: 18,
     };
     const ACTIVE_TTL_DEFAULT_H = 24;
+
+    const QUICK_TAGS = [
+      { id: "hi-tech", label: "הייטק", re: /היי.?טק|סייבר|סטארט.?אפ|בינה מלאכות|תוכנ|טכנולוג|AI\b/i },
+      { id: "realestate", label: "נדל״ן", re: /נדל|דיור|דירות|שכירות|מחירי דיר|משכנת/ },
+      { id: "transport", label: "תחבורה", re: /תחבור|רכבת|כביש 6|מטרו|אוטובוס|נמל תעופ|כבישים/ },
+      { id: "health", label: "בריאות", re: /בריאות|קופ.?ח|בית חולים|רופא|רפוא/ },
+      { id: "education", label: "חינוך", re: /חינוך|בית ספר|אוניברסיט|סטודנט|משרד החינוך/ },
+    ];
+
+    let boardQuery = "";
+    let boardTag = "";
+    let preferredTopics = loadPreferredTopics();
+    let speakingUtterance = null;
+
+    function loadPreferredTopics() {
+      try {
+        const raw = JSON.parse(localStorage.getItem(PREF_TOPICS_KEY) || "[]");
+        if (!Array.isArray(raw)) return [];
+        const allowed = new Set(TOPICS.map((t) => t.id));
+        return raw.filter((id) => allowed.has(id) && id !== "all");
+      } catch {
+        return [];
+      }
+    }
+
+    function savePreferredTopics(list) {
+      preferredTopics = list;
+      localStorage.setItem(PREF_TOPICS_KEY, JSON.stringify(list));
+    }
+
+    function togglePreferredTopic(topicId) {
+      if (!topicId || topicId === "all") return;
+      const set = new Set(preferredTopics);
+      if (set.has(topicId)) set.delete(topicId);
+      else set.add(topicId);
+      savePreferredTopics([...set]);
+      applyTopicFilter();
+    }
+
+    function cardSearchBlob(c) {
+      return [
+        c.title,
+        c.summary,
+        c.background,
+        c.historical_context,
+        c.outlook,
+        c.why_matters,
+        TOPIC_HE[c.topic] || "",
+        ...(c.bullet_facts || []),
+      ]
+        .filter(Boolean)
+        .join(" ");
+    }
+
+    function boardVisibleCards(base) {
+      let cards = base || activeCards();
+      if (preferredTopics.length) {
+        const pref = new Set(preferredTopics);
+        cards = cards.filter((c) => pref.has(c.topic));
+      }
+      if (boardTag) {
+        const tag = QUICK_TAGS.find((t) => t.id === boardTag);
+        if (tag) cards = cards.filter((c) => tag.re.test(cardSearchBlob(c)));
+      }
+      const q = boardQuery.trim();
+      if (q) {
+        cards = cards.filter((c) => cardSearchBlob(c).includes(q));
+      }
+      return cards;
+    }
+
+    function briefingLines(card) {
+      if (!card) return [];
+      const lines = [card.title];
+      const deck = shortDeck(
+        card.summary ||
+          card.why_matters ||
+          (card.bullet_facts && card.bullet_facts[0]) ||
+          card.background ||
+          "",
+        160
+      );
+      if (deck) lines.push(deck);
+      const third = shortDeck(card.why_matters || card.outlook || "", 120);
+      if (third && third !== deck) lines.push(third);
+      return lines.slice(0, 3);
+    }
+
+    function stopBriefing() {
+      if (window.speechSynthesis) window.speechSynthesis.cancel();
+      speakingUtterance = null;
+      document.querySelectorAll(".audio-brief-btn.is-playing").forEach((btn) => {
+        btn.classList.remove("is-playing");
+        btn.textContent = "השמע תקציר";
+      });
+    }
+
+    function speakBriefing(card, btn) {
+      if (!window.speechSynthesis) {
+        alert("הדפדפן לא תומך בהקראה קולית.");
+        return;
+      }
+      if (btn?.classList.contains("is-playing")) {
+        stopBriefing();
+        return;
+      }
+      const lines = briefingLines(card);
+      if (!lines.length) return;
+      stopBriefing();
+      const text = lines.join(". ");
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = "he-IL";
+      u.rate = 1.02;
+      const voices = window.speechSynthesis.getVoices();
+      const he = voices.find((v) => /he|iw|Hebrew/i.test(`${v.lang} ${v.name}`));
+      if (he) u.voice = he;
+      speakingUtterance = u;
+      if (btn) {
+        btn.classList.add("is-playing");
+        btn.textContent = "עצור";
+      }
+      u.onend = () => stopBriefing();
+      u.onerror = () => stopBriefing();
+      window.speechSynthesis.speak(u);
+    }
+
+    function syncAudioBriefButton() {
+      const btn = document.getElementById("audioBriefBtn");
+      if (!btn) return;
+      btn.disabled = !pickLeadStory(boardVisibleCards());
+    }
+
+    function renderTagFilters() {
+      const host = document.getElementById("tagFilters");
+      if (!host) return;
+      host.innerHTML = QUICK_TAGS.map(
+        (t) =>
+          `<button type="button" class="board-chip${boardTag === t.id ? " active" : ""}" data-tag="${t.id}">${t.label}</button>`
+      ).join("");
+    }
+
+    function renderPrefBar() {
+      const host = document.getElementById("prefBar");
+      if (!host) return;
+      if (!preferredTopics.length) {
+        host.hidden = true;
+        host.innerHTML = "";
+        return;
+      }
+      host.hidden = false;
+      const labels = preferredTopics
+        .map((id) => TOPIC_HE[id] || id)
+        .join(" · ");
+      host.innerHTML = `
+        <span class="board-tools-hint" style="padding:0">מועדפים: ${escapeHtml(labels)}</span>
+        <button type="button" class="board-chip" id="clearPrefsBtn">הצג הכל</button>
+      `;
+      document.getElementById("clearPrefsBtn")?.addEventListener("click", () => {
+        savePreferredTopics([]);
+        applyTopicFilter();
+      });
+    }
 
     function loadSeenMap() {
       try {
@@ -2616,7 +2899,14 @@
       connect();
     }
 
+    let topicPressTimer = null;
+    let topicPressMoved = false;
+
     els.cubes.addEventListener("click", (e) => {
+      if (topicPressMoved) {
+        topicPressMoved = false;
+        return;
+      }
       const header = e.target.closest(".topic-cube header");
       if (header) {
         const topic = header.closest(".topic-cube")?.dataset.topic;
@@ -2628,7 +2918,28 @@
       showDetail(row.dataset.id);
     });
 
-    els.lead.addEventListener("click", () => {
+    els.cubes.addEventListener("pointerdown", (e) => {
+      const header = e.target.closest(".topic-cube header");
+      if (!header) return;
+      const topic = header.closest(".topic-cube")?.dataset.topic;
+      if (!topic) return;
+      topicPressMoved = false;
+      clearTimeout(topicPressTimer);
+      topicPressTimer = setTimeout(() => {
+        topicPressMoved = true;
+        togglePreferredTopic(topic);
+      }, 550);
+    });
+    const clearTopicPress = () => {
+      clearTimeout(topicPressTimer);
+      topicPressTimer = null;
+    };
+    els.cubes.addEventListener("pointerup", clearTopicPress);
+    els.cubes.addEventListener("pointerleave", clearTopicPress);
+    els.cubes.addEventListener("pointercancel", clearTopicPress);
+
+    els.lead.addEventListener("click", (e) => {
+      if (e.target.closest(".audio-brief-btn")) return;
       if (els.lead.dataset.id) showDetail(els.lead.dataset.id);
     });
 
@@ -2639,6 +2950,32 @@
     }
 
     document.getElementById("aboutBackBtn")?.addEventListener("click", showHome);
+
+    renderTagFilters();
+    document.getElementById("tagFilters")?.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-tag]");
+      if (!btn) return;
+      const id = btn.dataset.tag;
+      boardTag = boardTag === id ? "" : id;
+      renderTagFilters();
+      applyTopicFilter();
+    });
+
+    const searchEl = document.getElementById("boardSearch");
+    searchEl?.addEventListener("input", () => {
+      boardQuery = searchEl.value || "";
+      applyTopicFilter();
+    });
+
+    document.getElementById("audioBriefBtn")?.addEventListener("click", () => {
+      const lead = pickLeadStory(boardVisibleCards());
+      if (!lead) return;
+      speakBriefing(lead, document.getElementById("audioBriefBtn"));
+    });
+
+    if (window.speechSynthesis) {
+      window.speechSynthesis.onvoiceschanged = () => {};
+    }
 
     window.addEventListener("popstate", openFromHash);
     window.addEventListener("hashchange", openFromHash);
