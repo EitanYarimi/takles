@@ -24,10 +24,13 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Install Python deps
+        run: pip install -r requirements.txt
       - name: Fetch news feeds
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: python3 scripts/build_news.py
+        timeout-minutes: 12
       - name: Stage site
         run: |
           mkdir -p _site

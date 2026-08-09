@@ -1,1 +1,2 @@
 edge-tts>=6.1.0
+googlenewsdecoder>=0.1.7

@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Pre-distill news items: facts, background, outlook (Gemini + heuristic fallback)."""
+"""Pre-distill news items: facts, background, outlook (Gemini + heuristic fallback).
+
+Reads publisher article bodies (via Google News URL decode), then asks Gemini
+for a cross-source factual summary and reliability check.
+"""
 from __future__ import annotations
 
 import hashlib
@@ -7,17 +11,30 @@ import json
 import os
 import re
 import ssl
+import threading
 import time
 import urllib.error
 import urllib.request
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from html import unescape
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 CACHE_PATH = ROOT / "distill_cache.json"
-DISTILL_VERSION = "v9-no-opinion-clusters"
+ARTICLE_CACHE_PATH = ROOT / "article_cache.json"
+DISTILL_VERSION = "v10-article-reliability"
 SSL_CTX = ssl._create_unverified_context()
-UA = "Mozilla/5.0 ClearNewsPOC/0.5"
+UA = (
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+    "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+)
 GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.0-flash")
+MAX_DEEP_ITEMS = int(os.environ.get("DISTILL_MAX_DEEP", "28"))
+MAX_SOURCES_FETCH = int(os.environ.get("DISTILL_MAX_SOURCES", "3"))
+MAX_ARTICLE_CHARS = int(os.environ.get("DISTILL_ARTICLE_CHARS", "3200"))
+ARTICLE_CACHE_TTL = 60 * 60 * 36
+FETCH_TIMEOUT = 12
+_ARTICLE_LOCK = threading.Lock()
 DRAMATIC = (
     "שומט את הקרקע",
     "על חודו של קול",
@@ -160,21 +177,215 @@ def scrub_item_sources(item: dict) -> dict | None:
 
 
 PROMPT = """אתה עורך זיקוק עובדתי לפורטל "תכל׳ס" (ישראל).
-קלט: כותרת מקבץ + כותרות ממקורות חדשותיים בלבד (בלי דעות).
+קיבלת כותרת מקבץ + קטעי גוף כתבה ממקורות (אחרי פענוח קישורי Google News), או כותרות בלבד אם אין גוף.
+תפקידך: לקרוא את המקורות, להצליב נתונים, ולכתוב סיכום יבש אחרי בדיקת אמינות.
+
 החזר JSON בלבד (בלי markdown) עם השדות:
 - title: כותרת יבשה בעברית, בלי דרמה/קליקבייט/ציטוטי ספין
-- bullet_facts: מערך 3–6 נתונים שניתן לגזור מהקלט בלבד. אסור להעתיק כותרות דעה/פרשנות. אסור ציטוטי התקפה פוליטית כעובדה — רק מי אמר/הגיב למי אם זה הדיווח.
-- summary: ניתוח יבש 2–4 משפטים: מה אומת יחסית, מה דיווח יחיד, מה חסר. בלי דעה.
-- why_matters: השלכה עובדתית אחת שנגזרת מהנתונים, או מחרוזת ריקה אם אין השלכה ברורה
-- background: הקשר עובדתי קצר ורק אם נתמך; אחרת משפט אחד "חסר הקשר מצולב בקלט"
+- bullet_facts: מערך 3–6 נתונים שנגזרים מגופי הכתבות/כותרות בלבד. אסור דעה/פרשנות. ציטוט פוליטי = רק "מי אמר/הגיב למי" אם זה הדיווח.
+- summary: סיכום שלך אחרי הצלבה — 2–4 משפטים: מה חוזר בין מקורות, מה דיווח יחיד, איפה יש סתירה או חוסר. בלי דעה.
+- reliability: high | medium | low | unknown
+  high = לפחות שני מקורות עצמאיים על אותה עובדה ליבה, בלי סתירה מהותית
+  medium = יש גוף/מקורות אבל אימות חלקי או פרטים שנויים במחלוקת
+  low = מקור יחיד, או סתירות, או בעיקר ציטוט/ספין בלי נתון
+  unknown = אין גוף כתבה / לא ניתן לבדוק
+- reliability_notes: משפט–שניים בעברית: איך הגעת לרמת האמינות (מה הוצלב, מה חסר)
+- why_matters: השלכה עובדתית אחת שנגזרת מהנתונים, או מחרוזת ריקה
+- background: הקשר עובדתי קצר ורק אם נתמך; אחרת "חסר הקשר מצולב בקלט"
 - outlook: מה עוד לא ברור לאימות (לא תחזית)
 - status: confirmed | reported | denied | review
 
 כללים:
 - אל תמציא. אל תבחר צד. אל תשתמש במילות דרמה.
-- אם הקלט הוא בעיקר תגובה פוליטית/ציטוט — כתוב רק את ליבת האירוע (מי הגיב למי) וציין שחסר פירוט עובדתי.
+- הסתמך קודם על גופי הכתבות; כותרות רק כגיבוי.
 - confirmed רק עם לפחות שני מקורות על אותה עובדה בלי לשון ספק.
 """
+
+
+def load_article_cache() -> dict:
+    try:
+        if ARTICLE_CACHE_PATH.exists():
+            return json.loads(ARTICLE_CACHE_PATH.read_text(encoding="utf-8"))
+    except Exception:  # noqa: BLE001
+        pass
+    return {}
+
+
+def save_article_cache(cache: dict) -> None:
+    try:
+        now = int(time.time())
+        pruned = {
+            k: v
+            for k, v in cache.items()
+            if isinstance(v, dict) and now - int(v.get("_ts") or 0) < ARTICLE_CACHE_TTL
+        }
+        if len(pruned) > 500:
+            keys = sorted(pruned.keys(), key=lambda k: pruned[k].get("_ts", 0), reverse=True)
+            pruned = {k: pruned[k] for k in keys[:400]}
+        ARTICLE_CACHE_PATH.write_text(json.dumps(pruned, ensure_ascii=False), encoding="utf-8")
+    except Exception as exc:  # noqa: BLE001
+        print(f"[distill] article cache save failed: {exc}")
+
+
+def resolve_publisher_url(url: str) -> str | None:
+    u = (url or "").strip()
+    if not u:
+        return None
+    if "news.google.com" not in u:
+        return u
+    try:
+        from googlenewsdecoder import gnewsdecoder
+
+        result = gnewsdecoder(u, interval=0)
+        if isinstance(result, dict) and result.get("status") and result.get("decoded_url"):
+            return str(result["decoded_url"]).strip()
+    except Exception as exc:  # noqa: BLE001
+        print(f"[distill] gnews decode failed: {exc}")
+    return None
+
+
+def html_to_text(html: str) -> str:
+    raw = html or ""
+    raw = re.sub(r"(?is)<(script|style|noscript|svg|iframe)[^>]*>.*?</\1>", " ", raw)
+    raw = re.sub(r"(?is)<!--.*?-->", " ", raw)
+    raw = re.sub(r"(?is)</?(br|p|div|li|h[1-6]|tr|section|article)[^>]*>", "\n", raw)
+    raw = re.sub(r"(?s)<[^>]+>", " ", raw)
+    text = unescape(raw)
+    text = re.sub(r"[ \t\f\v]+", " ", text)
+    text = re.sub(r"\n{2,}", "\n", text)
+    lines = []
+    for line in text.split("\n"):
+        s = line.strip()
+        if len(s) < 40:
+            continue
+        # drop common chrome
+        if re.search(r"cookie|מדיניות הפרטיות|תנאי שימוש|כל הזכויות|פרסומת|subscribe", s, re.I):
+            continue
+        lines.append(s)
+    return "\n".join(lines).strip()
+
+
+def fetch_article_text(url: str) -> str:
+    u = (url or "").strip()
+    if not u.startswith("http"):
+        return ""
+    req = urllib.request.Request(
+        u,
+        headers={
+            "User-Agent": UA,
+            "Accept": "text/html,application/xhtml+xml;q=0.9,*/*;q=0.8",
+            "Accept-Language": "he-IL,he;q=0.9,en-US;q=0.8,en;q=0.7",
+        },
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=FETCH_TIMEOUT, context=SSL_CTX) as resp:
+            ctype = (resp.headers.get("Content-Type") or "").lower()
+            raw = resp.read()
+        if "html" not in ctype and not raw[:200].lstrip().lower().startswith(b"<!doctype"):
+            # still try decode if looks like html
+            if b"<html" not in raw[:800].lower() and b"<body" not in raw[:800].lower():
+                return ""
+        html = raw.decode("utf-8", "replace")
+        text = html_to_text(html)
+        if len(text) < 180:
+            return ""
+        return text[: MAX_ARTICLE_CHARS + 400]
+    except Exception as exc:  # noqa: BLE001
+        print(f"[distill] fetch failed {u[:60]}: {exc}")
+        return ""
+
+
+def _fetch_one_source(src: dict, article_cache: dict) -> dict:
+    out = dict(src)
+    url = (src.get("url") or "").strip()
+    if not url:
+        out["fetch_ok"] = False
+        return out
+    key = hashlib.sha1(url.encode("utf-8")).hexdigest()
+    now = int(time.time())
+    with _ARTICLE_LOCK:
+        hit = article_cache.get(key)
+        if (
+            isinstance(hit, dict)
+            and hit.get("text")
+            and now - int(hit.get("_ts") or 0) < ARTICLE_CACHE_TTL
+        ):
+            out["resolved_url"] = hit.get("resolved_url") or url
+            out["excerpt"] = str(hit["text"])[:MAX_ARTICLE_CHARS]
+            out["fetch_ok"] = True
+            return out
+
+    resolved = resolve_publisher_url(url) or ""
+    text = fetch_article_text(resolved) if resolved else ""
+    if text:
+        with _ARTICLE_LOCK:
+            article_cache[key] = {
+                "resolved_url": resolved,
+                "text": text[:MAX_ARTICLE_CHARS],
+                "_ts": now,
+            }
+        out["resolved_url"] = resolved
+        out["excerpt"] = text[:MAX_ARTICLE_CHARS]
+        out["fetch_ok"] = True
+    else:
+        out["resolved_url"] = resolved or url
+        out["excerpt"] = ""
+        out["fetch_ok"] = False
+    return out
+
+
+def hydrate_item_sources(item: dict, article_cache: dict, deep: bool) -> dict:
+    """Resolve Google News links and attach article excerpts when deep=True."""
+    out = dict(item)
+    sources = list(out.get("sources") or [])
+    if not deep or not sources:
+        out["digest_basis"] = "headlines"
+        out["sources"] = sources
+        return out
+
+    jobs = sources[:MAX_SOURCES_FETCH]
+    rest = sources[MAX_SOURCES_FETCH:]
+    fetched: list[dict] = [dict(s) for s in jobs]
+    with ThreadPoolExecutor(max_workers=min(4, len(jobs) or 1)) as pool:
+        futs = {pool.submit(_fetch_one_source, s, article_cache): i for i, s in enumerate(jobs)}
+        for fut in as_completed(futs):
+            i = futs[fut]
+            try:
+                fetched[i] = fut.result()
+            except Exception as exc:  # noqa: BLE001
+                print(f"[distill] source hydrate error: {exc}")
+                fetched[i] = {**jobs[i], "fetch_ok": False, "excerpt": ""}
+
+    out["sources"] = fetched + [dict(s) for s in rest]
+    ok = sum(1 for s in fetched if s.get("fetch_ok") and s.get("excerpt"))
+    out["digest_basis"] = "fulltext" if ok else "headlines"
+    out["_fetched_count"] = ok
+    return out
+
+
+def _reliability_fallback(item: dict) -> tuple[str, str]:
+    sources = item.get("sources") or []
+    fetched = [s for s in sources if s.get("fetch_ok") and s.get("excerpt")]
+    names = []
+    for s in fetched:
+        n = (s.get("name") or "").strip()
+        if n and n not in names:
+            names.append(n)
+    if len(fetched) >= 2:
+        return (
+            "medium",
+            f"נמשכו גופי כתבה מ־{len(fetched)} מקורות ({', '.join(names[:3])}), "
+            "אך בלי בדיקת AI — חסר מפתח Gemini או שהקריאה נכשלה.",
+        )
+    if len(fetched) == 1:
+        return (
+            "low",
+            "נמשך גוף כתבה ממקור יחיד בלבד; בלי הצלבה מול AI אי אפשר לאשר אמינות גבוהה.",
+        )
+    return (
+        "unknown",
+        "לא נמשכו גופי כתבות מהמקורות; הסיכום מבוסס כותרות בלבד, בלי בדיקת אמינות AI.",
+    )
 
 
 def _api_key() -> str:
@@ -191,10 +402,13 @@ def dry_title(title: str) -> str:
 
 
 def item_fingerprint(item: dict) -> str:
-    parts = [DISTILL_VERSION, item.get("title") or ""]
+    parts = [DISTILL_VERSION, item.get("title") or "", item.get("digest_basis") or ""]
     for s in item.get("sources") or []:
         parts.append(s.get("name") or "")
         parts.append(s.get("headline") or "")
+        excerpt = (s.get("excerpt") or "")[:240]
+        if excerpt:
+            parts.append(hashlib.sha1(excerpt.encode("utf-8")).hexdigest()[:12])
     blob = "|".join(parts)
     return hashlib.sha1(blob.encode("utf-8")).hexdigest()
 
@@ -434,6 +648,27 @@ def heuristic_distill(item: dict) -> dict:
     else:
         background, outlook, why_matters = _substantive_fallback(title, headlines, names)
 
+    reliability, reliability_notes = _reliability_fallback(item)
+    basis = item.get("digest_basis") or "headlines"
+    if basis == "fulltext" and any(s.get("excerpt") for s in sources):
+        # Prefer short extracts from bodies over headline-only narrative when available
+        body_bits = []
+        for s in sources:
+            ex = (s.get("excerpt") or "").strip()
+            if not ex:
+                continue
+            first = re.split(r"[\n\.!?]", ex)[0].strip()
+            if len(first) > 40:
+                body_bits.append(f"{s.get('name') or 'מקור'}: {first[:140]}")
+            if len(body_bits) >= 2:
+                break
+        if body_bits:
+            summary = (
+                "סיכום מגופי כתבות (בלי AI): "
+                + " | ".join(body_bits)
+                + f". רמת אמינות משוערת: {reliability}."
+            )
+
     return {
         "title": title,
         "summary": summary,
@@ -444,6 +679,9 @@ def heuristic_distill(item: dict) -> dict:
         "insight": "",
         "historical_context": background,
         "status": status,
+        "reliability": reliability,
+        "reliability_notes": reliability_notes,
+        "digest_basis": basis,
         "mode": "heuristic",
     }
 
@@ -471,9 +709,23 @@ def gemini_distill(item: dict) -> dict | None:
     if not key:
         return None
     sources = item.get("sources") or []
-    lines = [f"כותרת מקבץ: {item.get('title') or ''}"]
-    for s in sources[:6]:
-        lines.append(f"- {s.get('name') or 'מקור'}: {s.get('headline') or ''}")
+    lines = [
+        f"כותרת מקבץ: {item.get('title') or ''}",
+        f"בסיס קלט: {item.get('digest_basis') or 'headlines'}",
+        "",
+    ]
+    for s in sources[:MAX_SOURCES_FETCH]:
+        name = s.get("name") or "מקור"
+        head = s.get("headline") or ""
+        lines.append(f"### {name}")
+        lines.append(f"כותרת: {head}")
+        excerpt = (s.get("excerpt") or "").strip()
+        if excerpt:
+            lines.append("גוף כתבה (מקוצר):")
+            lines.append(excerpt[:MAX_ARTICLE_CHARS])
+        else:
+            lines.append("(אין גוף כתבה — כותרת בלבד)")
+        lines.append("")
     body = {
         "contents": [
             {
@@ -482,7 +734,7 @@ def gemini_distill(item: dict) -> dict | None:
             }
         ],
         "generationConfig": {
-            "temperature": 0.2,
+            "temperature": 0.15,
             "responseMimeType": "application/json",
         },
     }
@@ -497,7 +749,7 @@ def gemini_distill(item: dict) -> dict | None:
         method="POST",
     )
     try:
-        with urllib.request.urlopen(req, timeout=45, context=SSL_CTX) as resp:
+        with urllib.request.urlopen(req, timeout=60, context=SSL_CTX) as resp:
             raw = json.loads(resp.read().decode("utf-8"))
     except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError, json.JSONDecodeError) as exc:
         print(f"[distill] gemini failed: {exc}")
@@ -521,6 +773,17 @@ def gemini_distill(item: dict) -> dict | None:
     status = data.get("status") or "reported"
     if status not in {"confirmed", "reported", "denied", "review"}:
         status = "reported"
+    reliability = str(data.get("reliability") or "unknown").strip().lower()
+    if reliability not in {"high", "medium", "low", "unknown"}:
+        reliability = "unknown"
+    reliability_notes = str(data.get("reliability_notes") or "").strip()
+    if not reliability_notes:
+        reliability_notes = {
+            "high": "הצלבה חיובית בין מקורות על ליבת העובדה.",
+            "medium": "אימות חלקי — יש גוף/מקורות אך לא אישור מלא.",
+            "low": "אמינות נמוכה: מקור יחיד או סתירות/ספין.",
+            "unknown": "לא ניתן לבדוק אמינות מהקלט שסופק.",
+        }[reliability]
     background = str(data.get("background") or "").strip()
     outlook = str(data.get("outlook") or "").strip()
     insight = str(data.get("insight") or "").strip()
@@ -546,6 +809,9 @@ def gemini_distill(item: dict) -> dict | None:
         "insight": insight or background,
         "historical_context": background,
         "status": status,
+        "reliability": reliability,
+        "reliability_notes": reliability_notes,
+        "digest_basis": item.get("digest_basis") or "headlines",
         "mode": "gemini",
     }
 
@@ -561,6 +827,8 @@ def distill_item(item: dict, cache: dict | None = None) -> dict:
         and hit.get("outlook")
         and hit.get("summary")
         and hit.get("why_matters")
+        and hit.get("reliability")
+        and hit.get("reliability_notes")
     ):
         out = {k: v for k, v in hit.items() if not k.startswith("_")}
         return out
@@ -573,15 +841,36 @@ def distill_item(item: dict, cache: dict | None = None) -> dict:
 
 def enrich_items(items: list[dict]) -> list[dict]:
     cache = load_cache()
+    article_cache = load_article_cache()
     out = []
     dropped = 0
-    for item in items:
+    deep_ok = 0
+    for idx, item in enumerate(items):
         scrubbed = scrub_item_sources(item)
         if not scrubbed:
             dropped += 1
             continue
-        d = distill_item(scrubbed, cache=cache)
-        enriched = dict(scrubbed)
+        deep = idx < MAX_DEEP_ITEMS
+        hydrated = hydrate_item_sources(scrubbed, article_cache, deep=deep)
+        if hydrated.get("_fetched_count"):
+            deep_ok += 1
+        d = distill_item(hydrated, cache=cache)
+        enriched = dict(hydrated)
+        enriched.pop("_fetched_count", None)
+        # Don't ship huge excerpts to the client
+        slim_sources = []
+        for s in enriched.get("sources") or []:
+            slim = {
+                "url": s.get("url") or "",
+                "headline": s.get("headline") or "",
+                "name": s.get("name") or "",
+            }
+            if s.get("resolved_url"):
+                slim["resolved_url"] = s.get("resolved_url")
+            if s.get("fetch_ok"):
+                slim["fetch_ok"] = True
+            slim_sources.append(slim)
+        enriched["sources"] = slim_sources
         enriched["distill"] = d
         enriched["dryTitle"] = d.get("title")
         enriched["summary"] = d.get("summary")
@@ -592,9 +881,14 @@ def enrich_items(items: list[dict]) -> list[dict]:
         enriched["insight"] = d.get("insight")
         enriched["historical_context"] = d.get("historical_context")
         enriched["status"] = d.get("status")
+        enriched["reliability"] = d.get("reliability")
+        enriched["reliability_notes"] = d.get("reliability_notes")
+        enriched["digest_basis"] = d.get("digest_basis") or hydrated.get("digest_basis")
         enriched["distillMode"] = d.get("mode")
         out.append(enriched)
     if dropped:
         print(f"[distill] dropped {dropped} opinion/noise clusters")
+    print(f"[distill] fulltext hydrate on {deep_ok}/{len(out)} kept items (cap {MAX_DEEP_ITEMS})")
     save_cache(cache)
+    save_article_cache(article_cache)
     return out

@@ -1009,6 +1009,10 @@
     .badge.confirmed { color: var(--ok); background: rgba(234, 246, 239, 0.95); }
     .badge.denied { color: var(--spot); background: rgba(248, 234, 234, 0.95); }
     .badge.review { color: var(--info); background: rgba(234, 240, 247, 0.95); }
+    .badge.rel-high { color: var(--ok); background: rgba(234, 246, 239, 0.95); }
+    .badge.rel-medium { color: var(--warn); background: rgba(255, 247, 232, 0.9); }
+    .badge.rel-low { color: var(--spot); background: rgba(248, 234, 234, 0.95); }
+    .badge.rel-unknown { color: var(--muted); background: rgba(16, 32, 51, 0.06); }
     .badge.sources {
       color: var(--muted);
       font-weight: 600;
@@ -1191,6 +1195,13 @@
       reported: "דיווח",
       denied: "הכחשה",
       review: "בבדיקה",
+    };
+
+    const RELIABILITY_HE = {
+      high: "אמינות גבוהה",
+      medium: "אמינות בינונית",
+      low: "אמינות נמוכה",
+      unknown: "לא נבדק",
     };
 
     const TOPICS = [
@@ -2687,6 +2698,7 @@
           ${storyVisual(c)}
           <div class="meta">
             <span class="badge ${escapeHtml(c.status)}">${STATUS_HE[c.status] || c.status}</span>
+            <span class="badge rel-${escapeHtml(c.reliability || "unknown")}">${RELIABILITY_HE[c.reliability] || RELIABILITY_HE.unknown}</span>
             <span class="badge sources">${escapeHtml(TOPIC_HE[c.topic] || "פנים")}</span>
             <span class="badge sources">${names.length} מקורות</span>
             ${seen ? `<span class="badge sources">נצפה</span>` : ""}
@@ -2697,6 +2709,27 @@
         </article>
         <div class="detail-body">
           <div class="block">
+            <h3>בדיקת אמינות</h3>
+            <p>${escapeHtml(c.reliability_notes || "טרם בוצעה בדיקת אמינות מול המקורות.")}</p>
+            <p class="hint" style="margin:0.55rem 0 0">
+              ${
+                c.digest_basis === "fulltext"
+                  ? "נקראו גופי כתבות מהמקורות · הצלבה בשרת"
+                  : "מבוסס בעיקר על כותרות · גופי כתבות לא נמשכו במלואם"
+              }
+              ${c.mode === "gemini" ? " · סיכום AI" : " · סיכום שרת (בלי AI)"}
+            </p>
+          </div>
+          <div class="block">
+            <h3>סיכום אחרי הצלבה</h3>
+            <p>${escapeHtml(c.summary || "")}</p>
+            ${
+              c.why_matters
+                ? `<p class="why-matters"><strong>השלכה</strong> — ${escapeHtml(c.why_matters)}</p>`
+                : ""
+            }
+          </div>
+          <div class="block">
             <h3>נתונים</h3>
             ${
               (c.bullet_facts || []).length
@@ -2705,16 +2738,6 @@
                     .join("")}</ul>`
                 : `<p>אין עדיין נתונים מצולבים מספיק מהמקורות.</p>`
             }
-          </div>
-          <div class="block">
-            <h3>ניתוח</h3>
-            <p>${escapeHtml(c.summary || "")}</p>
-            ${
-              c.why_matters
-                ? `<p class="why-matters"><strong>השלכה</strong> — ${escapeHtml(c.why_matters)}</p>`
-                : ""
-            }
-            <p class="hint" style="margin:0.65rem 0 0">מבוסס על הצלבת מקורות בלבד · בלי דעה · בלי המצאת נתונים</p>
           </div>
           <div class="block">
             <h3>רקע</h3>
@@ -2809,6 +2832,12 @@
           title,
           bullet_facts: serverFacts.length ? serverFacts : [title || "חסר פירוט עובדתי מהשרת"],
           status: pre?.status || item.status || "reported",
+          reliability: pre?.reliability || item.reliability || "unknown",
+          reliability_notes:
+            pre?.reliability_notes ||
+            item.reliability_notes ||
+            "טרם בוצעה בדיקת אמינות מול המקורות.",
+          digest_basis: pre?.digest_basis || item.digest_basis || "headlines",
           insight: "",
           historical_context: pre?.historical_context || item.historical_context || item.background || pre?.background || "",
           background: pre?.background || item.background || pre?.historical_context || "",
@@ -2833,6 +2862,9 @@
         title: title || "ללא כותרת",
         bullet_facts: bullets.slice(0, 5),
         status,
+        reliability: "unknown",
+        reliability_notes: "חסר זיקוק שרת — לא בוצעה בדיקת אמינות.",
+        digest_basis: "headlines",
         insight: "",
         historical_context: "חסר זיקוק שרת לכרטיס זה.",
         background: "חסר זיקוק שרת לכרטיס זה.",

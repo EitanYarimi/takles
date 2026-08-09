@@ -4,3 +4,4 @@ __pycache__/
 .venv/
 .env
 distill_cache.json
+article_cache.json
