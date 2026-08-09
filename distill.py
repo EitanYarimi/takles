@@ -22,19 +22,22 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 CACHE_PATH = ROOT / "distill_cache.json"
 ARTICLE_CACHE_PATH = ROOT / "article_cache.json"
-DISTILL_VERSION = "v10-article-reliability"
+DISTILL_VERSION = "v11-flash-latest-throttle"
 SSL_CTX = ssl._create_unverified_context()
 UA = (
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
     "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
 )
-GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.0-flash")
+GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-flash-latest")
 MAX_DEEP_ITEMS = int(os.environ.get("DISTILL_MAX_DEEP", "28"))
 MAX_SOURCES_FETCH = int(os.environ.get("DISTILL_MAX_SOURCES", "3"))
 MAX_ARTICLE_CHARS = int(os.environ.get("DISTILL_ARTICLE_CHARS", "3200"))
+MAX_GEMINI_ITEMS = int(os.environ.get("DISTILL_MAX_GEMINI", "18"))
+GEMINI_MIN_INTERVAL = float(os.environ.get("DISTILL_GEMINI_INTERVAL", "1.2"))
 ARTICLE_CACHE_TTL = 60 * 60 * 36
 FETCH_TIMEOUT = 12
 _ARTICLE_LOCK = threading.Lock()
+_LAST_GEMINI_TS = 0.0
 DRAMATIC = (
     "שומט את הקרקע",
     "על חודו של קול",
@@ -375,7 +378,7 @@ def _reliability_fallback(item: dict) -> tuple[str, str]:
         return (
             "medium",
             f"נמשכו גופי כתבה מ־{len(fetched)} מקורות ({', '.join(names[:3])}), "
-            "אך בלי בדיקת AI — חסר מפתח Gemini או שהקריאה נכשלה.",
+            "אך בלי בדיקת AI — מפתח Gemini חסר, מכסת API מלאה, או שהקריאה נכשלה.",
         )
     if len(fetched) == 1:
         return (
@@ -705,6 +708,7 @@ def _extract_json(text: str) -> dict | None:
 
 
 def gemini_distill(item: dict) -> dict | None:
+    global _LAST_GEMINI_TS
     key = _api_key()
     if not key:
         return None
@@ -742,17 +746,44 @@ def gemini_distill(item: dict) -> dict | None:
         f"https://generativelanguage.googleapis.com/v1beta/models/"
         f"{GEMINI_MODEL}:generateContent?key={key}"
     )
-    req = urllib.request.Request(
-        url,
-        data=json.dumps(body).encode("utf-8"),
-        headers={"Content-Type": "application/json", "User-Agent": UA},
-        method="POST",
-    )
-    try:
-        with urllib.request.urlopen(req, timeout=60, context=SSL_CTX) as resp:
-            raw = json.loads(resp.read().decode("utf-8"))
-    except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError, json.JSONDecodeError) as exc:
-        print(f"[distill] gemini failed: {exc}")
+    payload = json.dumps(body).encode("utf-8")
+    raw = None
+    for attempt in range(4):
+        wait = GEMINI_MIN_INTERVAL - (time.time() - _LAST_GEMINI_TS)
+        if wait > 0:
+            time.sleep(wait)
+        req = urllib.request.Request(
+            url,
+            data=payload,
+            headers={"Content-Type": "application/json", "User-Agent": UA},
+            method="POST",
+        )
+        try:
+            _LAST_GEMINI_TS = time.time()
+            with urllib.request.urlopen(req, timeout=60, context=SSL_CTX) as resp:
+                raw = json.loads(resp.read().decode("utf-8"))
+            break
+        except urllib.error.HTTPError as exc:
+            detail = ""
+            try:
+                detail = exc.read().decode("utf-8", "replace")[:240]
+            except Exception:  # noqa: BLE001
+                pass
+            if exc.code == 429 and attempt < 3:
+                # honor Retry-After-ish hint when present
+                retry_after = 8.0 * (attempt + 1)
+                m = re.search(r"retry in ([0-9.]+)s", detail, re.I)
+                if m:
+                    retry_after = min(45.0, float(m.group(1)) + 0.5)
+                print(f"[distill] gemini 429, retry in {retry_after:.1f}s")
+                time.sleep(retry_after)
+                continue
+            print(f"[distill] gemini failed: {exc} {detail}")
+            return None
+        except (urllib.error.URLError, TimeoutError, json.JSONDecodeError) as exc:
+            print(f"[distill] gemini failed: {exc}")
+            return None
+    if not raw:
         return None
 
     try:
@@ -816,7 +847,7 @@ def gemini_distill(item: dict) -> dict | None:
     }
 
 
-def distill_item(item: dict, cache: dict | None = None) -> dict:
+def distill_item(item: dict, cache: dict | None = None, *, use_gemini: bool = True) -> dict:
     cache = cache if cache is not None else load_cache()
     fp = item_fingerprint(item)
     hit = cache.get(fp)
@@ -833,7 +864,11 @@ def distill_item(item: dict, cache: dict | None = None) -> dict:
         out = {k: v for k, v in hit.items() if not k.startswith("_")}
         return out
 
-    distilled = gemini_distill(item) or heuristic_distill(item)
+    distilled = None
+    if use_gemini:
+        distilled = gemini_distill(item)
+    if not distilled:
+        distilled = heuristic_distill(item)
     cache[fp] = {**distilled, "_ts": int(time.time())}
     save_cache(cache)
     return distilled
@@ -845,6 +880,8 @@ def enrich_items(items: list[dict]) -> list[dict]:
     out = []
     dropped = 0
     deep_ok = 0
+    gemini_ok = 0
+    gemini_attempts = 0
     for idx, item in enumerate(items):
         scrubbed = scrub_item_sources(item)
         if not scrubbed:
@@ -854,7 +891,12 @@ def enrich_items(items: list[dict]) -> list[dict]:
         hydrated = hydrate_item_sources(scrubbed, article_cache, deep=deep)
         if hydrated.get("_fetched_count"):
             deep_ok += 1
-        d = distill_item(hydrated, cache=cache)
+        use_gemini = gemini_attempts < MAX_GEMINI_ITEMS and bool(_api_key())
+        if use_gemini:
+            gemini_attempts += 1
+        d = distill_item(hydrated, cache=cache, use_gemini=use_gemini)
+        if d.get("mode") == "gemini":
+            gemini_ok += 1
         enriched = dict(hydrated)
         enriched.pop("_fetched_count", None)
         # Don't ship huge excerpts to the client
@@ -888,7 +930,11 @@ def enrich_items(items: list[dict]) -> list[dict]:
         out.append(enriched)
     if dropped:
         print(f"[distill] dropped {dropped} opinion/noise clusters")
-    print(f"[distill] fulltext hydrate on {deep_ok}/{len(out)} kept items (cap {MAX_DEEP_ITEMS})")
+    print(
+        f"[distill] fulltext hydrate on {deep_ok}/{len(out)} kept items "
+        f"(cap {MAX_DEEP_ITEMS}); gemini {gemini_ok}/{gemini_attempts} "
+        f"(cap {MAX_GEMINI_ITEMS}, model {GEMINI_MODEL})"
+    )
     save_cache(cache)
     save_article_cache(article_cache)
     return out
