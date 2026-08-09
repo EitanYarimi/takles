@@ -27,6 +27,12 @@ GOOGLE_RSS = "https://news.google.com/rss?hl=he&gl=IL&ceid=IL:he"
 GOOGLE_WORLD = (
     "https://news.google.com/rss/headlines/section/topic/WORLD?hl=he&gl=IL&ceid=IL:he"
 )
+GOOGLE_NATION = (
+    "https://news.google.com/rss/headlines/section/topic/NATION?hl=he&gl=IL&ceid=IL:he"
+)
+GOOGLE_BUSINESS = (
+    "https://news.google.com/rss/headlines/section/topic/BUSINESS?hl=he&gl=IL&ceid=IL:he"
+)
 GOOGLE_SPORTS = (
     "https://news.google.com/rss/headlines/section/topic/SPORTS?hl=he&gl=IL&ceid=IL:he"
 )
@@ -59,7 +65,9 @@ LEISURE_DROP = re.compile(
     r"רוסיה|אוקראינ|ים השחור|קאן טו|לייף סטייל|פיננסים וטכנול|"
     r"פורצת דרך|FlyAll|הונאות|תיירות אקולוגית|"
     r"מגזר התיירות של|מעלימה|קניון|גניב|"
-    r"מינוי סמנכ",
+    r"מינוי סמנכ|"
+    r"טרגדיה|טבע למוות|נפטר|נרצח|אלימות|מעצר|"
+    r"יעל בר זוהר|ספרה על משבר|סלבריט|רכילות",
     re.I,
 )
 
@@ -146,6 +154,28 @@ def parse_google(xml: bytes, limit: int = 24, topic_hint: str | None = None) -> 
     return items
 
 
+def is_relevant_business(item: dict) -> bool:
+    title = item.get("title") or ""
+    heads = " ".join(s.get("headline") or "" for s in item.get("sources") or [])
+    blob = f"{title} {heads}"
+    # צרכנות/גאדג'טים/משלוחים רכים — לא כלכלה
+    if re.search(
+        r"אייפון|גלקסי|סמסונג|וואטסאפ|טיקטוק|נטפליקס|רכילות|אמזון שלחה|משלוח חינם|מוצרים בחינם",
+        blob,
+        re.I,
+    ):
+        return False
+    return bool(
+        re.search(
+            r"בנק|ריבית|בורסה|אינפלצ|דולר|שקל|תקציב|יוקר|מני[וה]|אקזיט|"
+            r"השקע|כלכל|נדל|דיור|משכנת|שכר|מע.?מ|אבטלה|תוצר|צמיחה|"
+            r"היי.?טק|סטארט.?אפ|גיוס|הנפקה|OpenAI|סייבר|כרייה|אנרגי",
+            blob,
+            re.I,
+        )
+    )
+
+
 def is_relevant_leisure(item: dict) -> bool:
     title = item.get("title") or ""
     heads = " ".join(s.get("headline") or "" for s in item.get("sources") or [])
@@ -173,6 +203,8 @@ def safe_feed(url: str, limit: int, topic_hint: str | None = None) -> list[dict]
         items = parse_google(fetch(url), limit=limit, topic_hint=topic_hint)
         if topic_hint == "leisure":
             items = [it for it in items if is_relevant_leisure(it)]
+        if topic_hint == "economy":
+            items = [it for it in items if is_relevant_business(it)]
         return items
     except Exception as exc:  # noqa: BLE001
         print(f"[poc] feed failed ({topic_hint or 'main'}): {exc}")
@@ -182,12 +214,14 @@ def safe_feed(url: str, limit: int, topic_hint: str | None = None) -> list[dict]
 def build_payload() -> dict:
     from distill import enrich_items
 
-    main = safe_feed(GOOGLE_RSS, 20)
-    world = safe_feed(GOOGLE_WORLD, 12, "world")
+    main = safe_feed(GOOGLE_RSS, 18)
+    # בלי topicHint קשיח — הסיווג בצד הלקוח/enrich יפריד אזור/עולם/ביטחון
+    world = safe_feed(GOOGLE_WORLD, 10)
+    nation = safe_feed(GOOGLE_NATION, 12)
+    business = safe_feed(GOOGLE_BUSINESS, 12, "economy")[:8]
     sports = safe_feed(GOOGLE_SPORTS, 8, "sport")
-    # מושכים יותר ואז מסננים לרלוונטי תיירות/נופש
-    leisure = safe_feed(GOOGLE_TRAVEL, 25, "leisure")[:6]
-    clusters = enrich_items(merge_items(main, world, sports, leisure))
+    leisure = safe_feed(GOOGLE_TRAVEL, 25, "leisure")[:5]
+    clusters = enrich_items(merge_items(main, world, nation, business, sports, leisure))
     return {
         "fetchedAt": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "count": len(clusters),

@@ -1964,42 +1964,45 @@
       }
       const blob = parts.join(" ");
 
-      // תיירות / נופש בלבד (בלי בידור טלוויזיה)
       if (
-        /תייר|נופש|מלונ|חופשה|אתר נופש|חבילת נופש|משרד התיירות|חדרי מלון|למטייל|ריזורט|אטרקצי/.test(
-          blob
-        ) &&
-        !/דה\s*וויס|The Voice|סדרת טלוויז|עונה \d|נטפליקס|מכבי|הפועל|איראן|מלחמ/.test(blob)
-      ) {
-        return "leisure";
-      }
-
-      // בידור רך → פנים (לא פנאי/תיירות)
-      if (/דה\s*וויס|The Voice|פייטן|לווי[יה]|סדרת טלוויז|עונה \d|נטפליקס|קונצרט/.test(blob)) {
-        return "domestic";
-      }
-
-      // ספורט
-      if (
-        /ספורט|כדורגל|כדורסל|מכבי|הפועל|בית.?ר|נבחרת|אליפות|ליגת|גמר|שער|NBA|FIFA|אולימפ|טניס|שחי[יה]|אימון|מאמן|שחקנ/.test(
+        /ספורט|כדורגל|כדורסל|מכבי|הפועל|בית.?ר|נבחרת|אליפות|ליגת|גמר|שער|NBA|FIFA|אולימפ|טניס|שחי[יה]|אימון|מאמן|שחקנ|WNBA|פרמייר/.test(
           blob
         )
       ) {
         return "sport";
       }
 
-      if (/בנק ישראל|ריבית|בורסה|אינפלצ|יוקר המחיה|תקציב|דולר|השקע|מניות|מני[וה]|אקזיט|ברקשייר|כלכל/.test(blob)) {
-        return "economy";
-      }
-
-      // ביטחון ישראלי מובהק קודם
-      if (/חיזבאללה|לבנון|רחפן|צה["׳']?ל|יירוט|כיפת ברזל|חמאס|עזה|פיקוד העורף|מחבל|חטופ|שבוי/.test(blob)) {
+      if (
+        /חיזבאללה|לבנון|רחפן|צה["׳']?ל|יירוט|כיפת ברזל|חמאס|עזה|פיקוד העורף|מחבל|חטופ|שבוי|רקטות?|אזעק/.test(
+          blob
+        )
+      ) {
         return "security";
       }
 
-      // בעולם — ארה״ב/אירופה/סין/אוקראינה וכו׳ (לפני אזור, כדי שלא ייבלע ב״איראן״)
+      if (
+        /משרד התיירות|ענף התיירות|בתי.?המלון|מלונ|חבילת נופש|חדרי מלון|למטייל|ריזורט|דיל טיס/.test(
+          blob
+        ) &&
+        !/טרגדיה|טבע למוות|אלימות|דה\s*וויס|מכבי|הפועל|איראן|מלחמ/.test(blob)
+      ) {
+        return "leisure";
+      }
+
+      if (/אייפון|גלקסי|סמסונג|וואטסאפ|טיקטוק|מזג|חום|שרב|תחזית|גשם/.test(blob)) {
+        return "domestic";
+      }
+
+      if (
+        /בנק ישראל|ריבית|בורסה|אינפלצ|יוקר המחיה|תקציב|דולר|השקע|מניות|מני[וה]|אקזיט|ברקשייר|כלכל|משכנת|אבטלה|תוצר|צמיחה|הנפקה|גיוס הון/.test(
+          blob
+        )
+      ) {
+        return "economy";
+      }
+
       const worldHit =
-        /ארה["׳']?ב|טראמפ|ביידן|וושינגטון|סנאט|הבית הלבן|פנטגון|נאט.?ו|תובע הכללי|או["״]ם|איחוד האירופי|בריטניה|צרפת|גרמניה|רוסיה|סין|אוקראינ|הודו|ברזיל|אפריק|אוסטרלי|קנדה|הקונגרס|הנשיא האמריק|הבחירות בארה|מוסקבה|בייג['׳]ין|קייב/.test(
+        /ארה["׳']?ב|טראמפ|ביידן|וושינגטון|סנאט|הבית הלבן|פנטגון|נאט.?ו|או["״]ם|איחוד האירופי|בריטניה|צרפת|גרמניה|רוסיה|סין|אוקראינ|הודו|ברזיל|אפריק|אוסטרלי|קנדה|הקונגרס|מוסקבה|קייב|בייג['׳]ין/.test(
           blob
         );
       const regionHit =
@@ -2008,7 +2011,6 @@
         );
       if (worldHit && !regionHit) return "world";
       if (regionHit && !worldHit) return "region";
-      // גם ארה״ב וגם איראן/הורמוז — אם הדגש אמריקאי/גלובלי: בעולם; אחרת אזור
       if (worldHit && regionHit) {
         if (/פנטגון|נאט.?ו|קונגרס|סנאט|הבית הלבן|רוסיה|סין|אוקראינ|מאגרי הנשק|צבא ארה/.test(blob)) {
           return "world";
@@ -2016,21 +2018,46 @@
         return "region";
       }
 
-      // פוליטיקה ישראלית בלבד — בלי "שר " כללי
       if (
-        /כנסת|ממשלת ישראל|הממשלה|קואליצ|אופוזיצ|פריימר|רע["׳']?ם|מפלג|נתניהו|לפיד|גנץ|סמוטריץ|בן גביר|בחירות|שר בממשלה|שר הביטחון|שר האוצר|שר החוץ הישראלי/.test(
+        /כנסת|ממשלת ישראל|הממשלה|קואליצ|אופוזיצ|פריימר|רע["׳']?ם|מפלג|נתניהו|לפיד|גנץ|סמוטריץ|בן גביר|בחירות|שר בממשלה|שר הביטחון|שר האוצר|שר החוץ הישראלי|ח["״]כ/.test(
           blob
         )
       ) {
         return "politics";
       }
 
-      if (/מזג|חום|שרב|תחזית|גשם|שריפה|תאונה|משטרה|פשיעה|עירי|גלקסי|סמסונג/.test(blob)) {
+      if (/שריפה|תאונה|משטרה|פשיעה|עירי|נתב.?ג|דירת|נדל|אמזון|טרגדיה|טבע למוות/.test(blob)) {
         return "domestic";
       }
 
       return "domestic";
     }
+
+    function resolveTopic(item, title) {
+      const classified = classifyTopic(title, item.sources);
+      const hint = item.topicHint;
+      if (!hint) return classified;
+      if (classified === "security") return "security";
+      if (hint === "sport") return "sport";
+      if (hint === "economy") {
+        if (classified === "economy") return "economy";
+        if (
+          classified === "world" ||
+          classified === "region" ||
+          classified === "politics" ||
+          classified === "domestic" ||
+          classified === "leisure"
+        ) {
+          return classified;
+        }
+        return "economy";
+      }
+      if (hint === "leisure") {
+        return classified === "leisure" ? "leisure" : classified;
+      }
+      return classified;
+    }
+
 
     const FALLBACK = {
       fetchedAt: "2026-08-08T20:05:55Z",
@@ -2792,10 +2819,7 @@
           original_headlines: headlines,
           pubDate: item.pubDate,
           link: item.link,
-          topic:
-            item.topicHint ||
-            item.topic ||
-            classifyTopic(title, item.sources),
+          topic: resolveTopic(item, title),
           mode: pre?.mode || item.distillMode || "server",
         };
       }
@@ -2821,7 +2845,7 @@
         original_headlines: headlines,
         pubDate: item.pubDate,
         link: item.link,
-        topic: item.topicHint || classifyTopic(title, item.sources),
+        topic: resolveTopic(item, title),
         mode: "client-fallback",
       };
     }
