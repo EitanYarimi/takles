@@ -25,7 +25,7 @@ from zoneinfo import ZoneInfo
 ROOT = Path(__file__).resolve().parent
 CACHE_PATH = ROOT / "distill_cache.json"
 ARTICLE_CACHE_PATH = ROOT / "article_cache.json"
-DISTILL_VERSION = "v11-flash-latest-throttle"
+DISTILL_VERSION = "v12-quota-circuit-cache"
 SSL_CTX = ssl._create_unverified_context()
 UA = (
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
@@ -35,12 +35,14 @@ GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-flash-latest")
 MAX_DEEP_ITEMS = int(os.environ.get("DISTILL_MAX_DEEP", "28"))
 MAX_SOURCES_FETCH = int(os.environ.get("DISTILL_MAX_SOURCES", "3"))
 MAX_ARTICLE_CHARS = int(os.environ.get("DISTILL_ARTICLE_CHARS", "3200"))
-MAX_GEMINI_ITEMS = int(os.environ.get("DISTILL_MAX_GEMINI", "18"))
-GEMINI_MIN_INTERVAL = float(os.environ.get("DISTILL_GEMINI_INTERVAL", "1.2"))
+MAX_GEMINI_ITEMS = int(os.environ.get("DISTILL_MAX_GEMINI", "10"))
+GEMINI_MIN_INTERVAL = float(os.environ.get("DISTILL_GEMINI_INTERVAL", "2.0"))
 ARTICLE_CACHE_TTL = 60 * 60 * 36
 FETCH_TIMEOUT = 12
 _ARTICLE_LOCK = threading.Lock()
 _LAST_GEMINI_TS = 0.0
+_GEMINI_CIRCUIT_OPEN = False
+_GEMINI_CONSEC_429 = 0
 DRAMATIC = (
     "שומט את הקרקע",
     "על חודו של קול",
@@ -398,6 +400,79 @@ def _api_key() -> str:
     return (os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY") or "").strip()
 
 
+def _gemini_available() -> bool:
+    return bool(_api_key()) and not _GEMINI_CIRCUIT_OPEN
+
+
+def _open_gemini_circuit(reason: str) -> None:
+    global _GEMINI_CIRCUIT_OPEN
+    if _GEMINI_CIRCUIT_OPEN:
+        return
+    _GEMINI_CIRCUIT_OPEN = True
+    print(f"[distill] gemini circuit OPEN — skipping further AI calls this build ({reason})")
+
+
+def _gemini_generate(prompt_body: dict, *, retries: int = 2) -> dict | None:
+    """Shared Gemini generateContent with throttle + quota circuit breaker."""
+    global _LAST_GEMINI_TS, _GEMINI_CONSEC_429
+    if not _gemini_available():
+        return None
+    key = _api_key()
+    url = (
+        f"https://generativelanguage.googleapis.com/v1beta/models/"
+        f"{GEMINI_MODEL}:generateContent?key={key}"
+    )
+    payload = json.dumps(prompt_body).encode("utf-8")
+    for attempt in range(max(1, retries)):
+        wait = GEMINI_MIN_INTERVAL - (time.time() - _LAST_GEMINI_TS)
+        if wait > 0:
+            time.sleep(wait)
+        req = urllib.request.Request(
+            url,
+            data=payload,
+            headers={"Content-Type": "application/json", "User-Agent": UA},
+            method="POST",
+        )
+        try:
+            _LAST_GEMINI_TS = time.time()
+            with urllib.request.urlopen(req, timeout=60, context=SSL_CTX) as resp:
+                raw = json.loads(resp.read().decode("utf-8"))
+            _GEMINI_CONSEC_429 = 0
+            return raw
+        except urllib.error.HTTPError as exc:
+            detail = ""
+            try:
+                detail = exc.read().decode("utf-8", "replace")[:500]
+            except Exception:  # noqa: BLE001
+                pass
+            if exc.code == 429:
+                _GEMINI_CONSEC_429 += 1
+                hard = bool(
+                    re.search(r"limit:\s*0\b", detail, re.I)
+                    or re.search(r"quota exceeded", detail, re.I)
+                )
+                # Hard daily/plan quota → stop burning the build; soft RPM → brief retry
+                if hard or _GEMINI_CONSEC_429 >= 2:
+                    _open_gemini_circuit(f"429 after {_GEMINI_CONSEC_429}: {detail[:120]}")
+                    return None
+                if attempt + 1 < retries:
+                    retry_after = 6.0 * (attempt + 1)
+                    m = re.search(r"retry in ([0-9.]+)s", detail, re.I)
+                    if m:
+                        retry_after = min(40.0, float(m.group(1)) + 0.5)
+                    print(f"[distill] gemini 429, retry in {retry_after:.1f}s")
+                    time.sleep(retry_after)
+                    continue
+                print(f"[distill] gemini failed: {exc} {detail[:180]}")
+                return None
+            print(f"[distill] gemini failed: {exc} {detail[:180]}")
+            return None
+        except (urllib.error.URLError, TimeoutError, json.JSONDecodeError) as exc:
+            print(f"[distill] gemini failed: {exc}")
+            return None
+    return None
+
+
 def dry_title(title: str) -> str:
     t = title or ""
     t = KICKER_RE.sub("", t)
@@ -670,9 +745,9 @@ def heuristic_distill(item: dict) -> dict:
                 break
         if body_bits:
             summary = (
-                "סיכום מגופי כתבות (בלי AI): "
-                + " | ".join(body_bits)
-                + f". רמת אמינות משוערת: {reliability}."
+                f"על פי {len(body_bits)} מקורות שנקראו במלואם: "
+                + " · ".join(body_bits)
+                + "."
             )
 
     return {
@@ -711,9 +786,7 @@ def _extract_json(text: str) -> dict | None:
 
 
 def gemini_distill(item: dict) -> dict | None:
-    global _LAST_GEMINI_TS
-    key = _api_key()
-    if not key:
+    if not _gemini_available():
         return None
     sources = item.get("sources") or []
     lines = [
@@ -745,47 +818,7 @@ def gemini_distill(item: dict) -> dict | None:
             "responseMimeType": "application/json",
         },
     }
-    url = (
-        f"https://generativelanguage.googleapis.com/v1beta/models/"
-        f"{GEMINI_MODEL}:generateContent?key={key}"
-    )
-    payload = json.dumps(body).encode("utf-8")
-    raw = None
-    for attempt in range(4):
-        wait = GEMINI_MIN_INTERVAL - (time.time() - _LAST_GEMINI_TS)
-        if wait > 0:
-            time.sleep(wait)
-        req = urllib.request.Request(
-            url,
-            data=payload,
-            headers={"Content-Type": "application/json", "User-Agent": UA},
-            method="POST",
-        )
-        try:
-            _LAST_GEMINI_TS = time.time()
-            with urllib.request.urlopen(req, timeout=60, context=SSL_CTX) as resp:
-                raw = json.loads(resp.read().decode("utf-8"))
-            break
-        except urllib.error.HTTPError as exc:
-            detail = ""
-            try:
-                detail = exc.read().decode("utf-8", "replace")[:240]
-            except Exception:  # noqa: BLE001
-                pass
-            if exc.code == 429 and attempt < 3:
-                # honor Retry-After-ish hint when present
-                retry_after = 8.0 * (attempt + 1)
-                m = re.search(r"retry in ([0-9.]+)s", detail, re.I)
-                if m:
-                    retry_after = min(45.0, float(m.group(1)) + 0.5)
-                print(f"[distill] gemini 429, retry in {retry_after:.1f}s")
-                time.sleep(retry_after)
-                continue
-            print(f"[distill] gemini failed: {exc} {detail}")
-            return None
-        except (urllib.error.URLError, TimeoutError, json.JSONDecodeError) as exc:
-            print(f"[distill] gemini failed: {exc}")
-            return None
+    raw = _gemini_generate(body, retries=2)
     if not raw:
         return None
 
@@ -894,7 +927,7 @@ def enrich_items(items: list[dict]) -> list[dict]:
         hydrated = hydrate_item_sources(scrubbed, article_cache, deep=deep)
         if hydrated.get("_fetched_count"):
             deep_ok += 1
-        use_gemini = gemini_attempts < MAX_GEMINI_ITEMS and bool(_api_key())
+        use_gemini = gemini_attempts < MAX_GEMINI_ITEMS and _gemini_available()
         if use_gemini:
             gemini_attempts += 1
         d = distill_item(hydrated, cache=cache, use_gemini=use_gemini)
@@ -1118,7 +1151,10 @@ def _heuristic_daily_points(items: list[dict]) -> list[str]:
         if bullets:
             candidates.append(str(bullets[0]))
         if item.get("summary"):
-            candidates.append(str(item.get("summary")))
+            # Skip meta "no AI" / raw body dumps in daily points
+            s = str(item.get("summary"))
+            if not re.search(r"בלי AI|על פי \d+ מקורות שנקראו", s):
+                candidates.append(s)
         candidates.append(str(item.get("dryTitle") or item.get("title") or ""))
         point = ""
         for c in candidates:
@@ -1138,9 +1174,7 @@ def _heuristic_daily_points(items: list[dict]) -> list[str]:
 
 
 def _gemini_daily_points(items: list[dict]) -> list[str] | None:
-    global _LAST_GEMINI_TS
-    key = _api_key()
-    if not key or not items:
+    if not _gemini_available() or not items:
         return None
     lines = ["סיפורים לדירוג (מהחשוב לפחות):", ""]
     for idx, item in enumerate(items, 1):
@@ -1171,41 +1205,7 @@ def _gemini_daily_points(items: list[dict]) -> list[str] | None:
             "responseMimeType": "application/json",
         },
     }
-    url = (
-        f"https://generativelanguage.googleapis.com/v1beta/models/"
-        f"{GEMINI_MODEL}:generateContent?key={key}"
-    )
-    payload = json.dumps(body).encode("utf-8")
-    raw = None
-    for attempt in range(3):
-        wait = GEMINI_MIN_INTERVAL - (time.time() - _LAST_GEMINI_TS)
-        if wait > 0:
-            time.sleep(wait)
-        req = urllib.request.Request(
-            url,
-            data=payload,
-            headers={"Content-Type": "application/json", "User-Agent": UA},
-            method="POST",
-        )
-        try:
-            _LAST_GEMINI_TS = time.time()
-            with urllib.request.urlopen(req, timeout=60, context=SSL_CTX) as resp:
-                raw = json.loads(resp.read().decode("utf-8"))
-            break
-        except urllib.error.HTTPError as exc:
-            detail = ""
-            try:
-                detail = exc.read().decode("utf-8", "replace")[:200]
-            except Exception:  # noqa: BLE001
-                pass
-            if exc.code == 429 and attempt < 2:
-                time.sleep(8.0 * (attempt + 1))
-                continue
-            print(f"[distill] daily brief gemini failed: {exc} {detail}")
-            return None
-        except (urllib.error.URLError, TimeoutError, json.JSONDecodeError) as exc:
-            print(f"[distill] daily brief gemini failed: {exc}")
-            return None
+    raw = _gemini_generate(body, retries=2)
     if not raw:
         return None
     try:
@@ -1237,7 +1237,7 @@ def build_daily_brief(items: list[dict]) -> dict:
     top = ranked[:DAILY_BRIEF_CANDIDATES]
 
     mode = "heuristic"
-    points = _gemini_daily_points(top) if top and _api_key() else None
+    points = _gemini_daily_points(top) if top and _gemini_available() else None
     if points:
         mode = "gemini"
     else:

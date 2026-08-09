@@ -26,9 +26,20 @@ jobs:
           python-version: "3.12"
       - name: Install Python deps
         run: pip install -r requirements.txt
+      - name: Restore distill caches
+        uses: actions/cache@v4
+        with:
+          path: |
+            distill_cache.json
+            article_cache.json
+          key: distill-${{ runner.os }}-${{ github.run_id }}
+          restore-keys: |
+            distill-${{ runner.os }}-
       - name: Fetch news feeds
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: gemini-flash-latest
+          DISTILL_MAX_GEMINI: "10"
         run: python3 scripts/build_news.py
         timeout-minutes: 25
       - name: Stage site
