@@ -10,6 +10,7 @@
 ## הרצה מקומית
 
 ```bash
+python3 -m pip install -r requirements.txt
 # אופציונלי לזיקוק AI:
 export GEMINI_API_KEY=AIza...
 python3 serve.py
@@ -19,6 +20,8 @@ python3 serve.py
 
 בלי מפתח — סיכום היוריסטי מראש (עדיין בלי פעולה מהמשתמש).
 עם מפתח — Gemini; תוצאות נשמרות ב־`distill_cache.json`.
+
+**תקציר קולי:** מקומית משתמש ב־Edge TTS (Hila, חינם) דרך `/api/tts`. ב־GitHub Pages — נפילה להקראת הדפדפן.
 
 לבניית `news.json` ל־Pages:
 

@@ -2,6 +2,7 @@
 """ClearNews POC: static files, news API, and WebSocket push for headlines."""
 from __future__ import annotations
 
+import asyncio
 import base64
 import hashlib
 import html
@@ -11,6 +12,7 @@ import ssl
 import struct
 import threading
 import time
+import urllib.parse
 import urllib.request
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -62,6 +64,31 @@ _lock = threading.Lock()
 _clients: set = set()
 _latest_payload: dict | None = None
 _latest_fp = ""
+
+TTS_VOICE = "he-IL-HilaNeural"
+TTS_MAX_CHARS = 480
+
+
+async def _edge_tts_bytes(text: str, voice: str = TTS_VOICE) -> bytes:
+    import edge_tts
+
+    communicate = edge_tts.Communicate(text, voice, rate="-8%")
+    chunks: list[bytes] = []
+    async for chunk in communicate.stream():
+        if chunk["type"] == "audio":
+            chunks.append(chunk["data"])
+    if not chunks:
+        raise RuntimeError("edge-tts returned no audio")
+    return b"".join(chunks)
+
+
+def synthesize_hebrew(text: str, voice: str = TTS_VOICE) -> bytes:
+    clean = re.sub(r"\s+", " ", (text or "")).strip()
+    if not clean:
+        raise ValueError("empty text")
+    if len(clean) > TTS_MAX_CHARS:
+        clean = clean[: TTS_MAX_CHARS - 1].rsplit(" ", 1)[0] + "…"
+    return asyncio.run(_edge_tts_bytes(clean, voice or TTS_VOICE))
 
 
 def fetch(url: str, timeout: int = 20) -> bytes:
@@ -303,7 +330,45 @@ class Handler(SimpleHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(body)
             return
+        if self.path.startswith("/api/tts"):
+            self._handle_tts()
+            return
         return super().do_GET()
+
+    def do_POST(self):
+        if self.path.startswith("/api/tts"):
+            self._handle_tts()
+            return
+        self.send_error(404, "Not found")
+
+    def _handle_tts(self) -> None:
+        try:
+            text = ""
+            voice = TTS_VOICE
+            if self.command == "POST":
+                length = int(self.headers.get("Content-Length") or 0)
+                raw = self.rfile.read(length) if length else b"{}"
+                data = json.loads(raw.decode("utf-8") or "{}")
+                text = str(data.get("text") or "")
+                voice = str(data.get("voice") or TTS_VOICE)
+            else:
+                parsed = urllib.parse.urlparse(self.path)
+                qs = urllib.parse.parse_qs(parsed.query)
+                text = (qs.get("text") or [""])[0]
+                voice = (qs.get("voice") or [TTS_VOICE])[0]
+            audio = synthesize_hebrew(text, voice)
+            self.send_response(200)
+            self.send_header("Content-Type", "audio/mpeg")
+            self.send_header("Content-Length", str(len(audio)))
+            self.send_header("Cache-Control", "no-store")
+            self.end_headers()
+            self.wfile.write(audio)
+        except Exception as exc:  # noqa: BLE001
+            body = json.dumps({"error": str(exc)}, ensure_ascii=False).encode("utf-8")
+            self.send_response(502)
+            self.send_header("Content-Type", "application/json; charset=utf-8")
+            self.end_headers()
+            self.wfile.write(body)
 
     def end_headers(self):
         # POC: always serve fresh HTML/JS so UI removals (e.g. seen accordion) show up

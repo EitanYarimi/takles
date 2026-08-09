@@ -7,11 +7,18 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&family=Secular+One&display=swap" rel="stylesheet" />
+  <script>
+    try {
+      if (localStorage.getItem("takles_theme") === "dark") {
+        document.documentElement.setAttribute("data-theme", "dark");
+      }
+    } catch (_) {}
+  </script>
   <style>
     :root {
-      --ink: #102033;
-      --ink-soft: #2c3f52;
-      --headline: #0f2740;
+      --ink: #1c1a17;
+      --ink-soft: #3f3b35;
+      --headline: #1a2a24;
       --accent: #0b6e5c;
       --h-security: #0b6e5c;
       --h-politics: #4a3f72;
@@ -21,16 +28,54 @@
       --h-domestic: #8a4a1a;
       --h-leisure: #6d4560;
       --h-sport: #176878;
-      --muted: #5a6b7a;
-      --rule: #102033;
-      --rule-soft: rgba(16, 32, 51, 0.12);
+      --muted: #6b665e;
+      --rule: #1c1a17;
+      --rule-soft: rgba(40, 36, 30, 0.12);
       --spot: #9b1c1c;
       --ok: #0f5c3b;
       --warn: #8a5a00;
       --info: #1e3f66;
-      --badge-bg: rgba(16, 32, 51, 0.05);
+      --badge-bg: rgba(40, 36, 30, 0.05);
+      --panel: rgba(255, 252, 247, 0.7);
+      --panel-solid: rgba(255, 253, 249, 0.86);
+      --bg0: #ebe8e2;
+      --bg1: #f4f2ed;
+      --bg2: #e5ebe6;
+      --wash-a: rgba(120, 150, 130, 0.16);
+      --wash-b: rgba(200, 170, 120, 0.12);
       --font: "Heebo", "Arial Hebrew", Arial, sans-serif;
       --font-display: "Secular One", "Heebo", "Arial Hebrew", Arial, sans-serif;
+    }
+
+    html[data-theme="dark"] {
+      --ink: #e6eef5;
+      --ink-soft: #c5d2de;
+      --headline: #f2f6fa;
+      --accent: #3dbea3;
+      --h-security: #3dbea3;
+      --h-politics: #b7a8e0;
+      --h-region: #6eb6e3;
+      --h-world: #9eb0c2;
+      --h-economy: #c4d36a;
+      --h-domestic: #e0a06a;
+      --h-leisure: #d0a0c0;
+      --h-sport: #6ec4d4;
+      --muted: #8fa0b0;
+      --rule: #e6eef5;
+      --rule-soft: rgba(230, 238, 245, 0.14);
+      --spot: #ef7a7a;
+      --ok: #5dcc9a;
+      --warn: #e0b45a;
+      --info: #8eb4e0;
+      --badge-bg: rgba(230, 238, 245, 0.08);
+      --panel: rgba(18, 28, 40, 0.82);
+      --panel-solid: rgba(22, 34, 48, 0.92);
+      --bg0: #0d141c;
+      --bg1: #121c28;
+      --bg2: #0f1822;
+      --wash-a: rgba(61, 190, 163, 0.08);
+      --wash-b: rgba(110, 182, 227, 0.06);
+      color-scheme: dark;
     }
 
     * { box-sizing: border-box; }
@@ -42,12 +87,28 @@
       line-height: 1.5;
       -webkit-font-smoothing: antialiased;
       background:
-        radial-gradient(1100px 560px at 88% -8%, rgba(11, 110, 92, 0.07), transparent 55%),
-        radial-gradient(900px 480px at -8% 18%, rgba(26, 95, 143, 0.05), transparent 52%),
-        linear-gradient(165deg, #f7fafb 0%, #ffffff 45%, #f5f8f7 100%);
+        radial-gradient(1100px 560px at 88% -8%, var(--wash-a), transparent 55%),
+        radial-gradient(900px 480px at -8% 18%, var(--wash-b), transparent 52%),
+        linear-gradient(165deg, var(--bg0) 0%, var(--bg1) 45%, var(--bg2) 100%);
       background-attachment: fixed;
+      transition: background 0.25s ease, color 0.25s ease;
     }
 
+    .theme-toggle {
+      border: 1px solid var(--rule-soft);
+      background: var(--panel);
+      color: var(--ink-soft);
+      font: inherit;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 0.35rem 0.65rem;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+    .theme-toggle:hover {
+      color: var(--accent);
+      border-color: rgba(11, 110, 92, 0.35);
+    }
     body::before {
       content: "";
       position: fixed;
@@ -68,23 +129,31 @@
 
     header.hero {
       text-align: center;
-      padding: 1.25rem 0.5rem 0.2rem;
+      padding: 1.1rem 0.5rem 0.15rem;
       margin-bottom: 0;
       animation: brand-in 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
     }
 
     .mast-top {
       display: flex;
-      justify-content: center;
-      gap: 0.65rem;
-      align-items: baseline;
-      font-size: 0.78rem;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 0.45rem 0.75rem;
+      align-items: center;
+      font-size: 0.74rem;
       letter-spacing: 0.03em;
       color: var(--muted);
-      margin-bottom: 0.3rem;
+      margin-bottom: 0.2rem;
       font-weight: 600;
+      opacity: 0.85;
     }
-    .mast-top span + span::before {
+    .mast-top .mast-meta {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      align-items: baseline;
+    }
+    .mast-top .mast-meta span + span::before {
       content: "·";
       margin-inline-end: 0.65rem;
       opacity: 0.5;
@@ -92,7 +161,7 @@
 
     .brand {
       font-family: var(--font-display);
-      font-size: clamp(3.8rem, 12vw, 5.8rem);
+      font-size: clamp(4rem, 13vw, 6rem);
       font-weight: 400;
       letter-spacing: -0.03em;
       margin: 0;
@@ -101,12 +170,7 @@
     }
 
     .tagline {
-      margin: 0.55rem auto 0;
-      color: var(--ink-soft);
-      font-size: 1.06rem;
-      font-weight: 500;
-      max-width: 26rem;
-      line-height: 1.4;
+      display: none;
     }
 
     .about-link {
@@ -155,10 +219,10 @@
       min-height: 0;
       color: var(--muted);
       font-size: 0.78rem;
-      margin: 1.4rem 0 0.85rem;
+      margin: 1.65rem 0 0.75rem;
       font-weight: 600;
       padding: 0 0.5rem;
-      opacity: 0.7;
+      opacity: 0.65;
       letter-spacing: 0.01em;
     }
 
@@ -166,13 +230,15 @@
 
     .home-stage {
       padding: 0;
-      margin-top: 0.85rem;
+      margin-top: 1rem;
+      display: grid;
+      gap: 0.65rem;
     }
 
     .board-label {
-      margin: 0 0 0.65rem;
+      margin: 0.35rem 0 0.75rem;
       padding: 0 0.5rem;
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       font-weight: 700;
       color: var(--muted);
       letter-spacing: 0.02em;
@@ -190,27 +256,10 @@
       gap: 0.45rem;
       align-items: center;
     }
-    .board-search {
-      flex: 1 1 12rem;
-      min-width: 10rem;
-      border: 1px solid var(--rule-soft);
-      background: rgba(255, 255, 255, 0.78);
-      color: var(--ink);
-      font: inherit;
-      font-size: 0.9rem;
-      font-weight: 600;
-      padding: 0.55rem 0.75rem;
-      border-radius: 10px;
-      outline: none;
-    }
-    .board-search:focus {
-      border-color: rgba(11, 110, 92, 0.45);
-      box-shadow: 0 0 0 3px rgba(11, 110, 92, 0.1);
-    }
     .board-chip,
     .audio-brief-btn {
       border: 1px solid var(--rule-soft);
-      background: rgba(255, 255, 255, 0.72);
+      background: var(--panel);
       color: var(--ink-soft);
       font: inherit;
       font-size: 0.8rem;
@@ -232,18 +281,6 @@
       border-color: var(--ink);
       color: #fff;
     }
-    .board-chip.pref-on {
-      background: rgba(11, 110, 92, 0.12);
-      border-color: rgba(11, 110, 92, 0.35);
-      color: var(--accent);
-    }
-    .board-tools-hint {
-      margin: 0;
-      font-size: 0.72rem;
-      font-weight: 600;
-      color: var(--muted);
-      padding: 0 0.15rem;
-    }
     .audio-brief-btn {
       margin-top: 0.55rem;
     }
@@ -251,12 +288,6 @@
       display: inline-flex;
       align-items: center;
       gap: 0.35rem;
-    }
-    .topic-cube.is-dimmed {
-      opacity: 0.38;
-    }
-    .topic-cube.is-dimmed header {
-      pointer-events: auto;
     }
 
     .insights {
@@ -288,8 +319,8 @@
       gap: 0.85rem;
     }
     .insight-panel {
-      background: rgba(255, 255, 255, 0.92);
-      border: 1px solid rgba(16, 32, 51, 0.1);
+      background: var(--panel-solid);
+      border: 1px solid var(--rule-soft);
       border-radius: 14px;
       padding: 1rem 1.05rem 1.05rem;
       box-shadow: 0 8px 22px rgba(16, 32, 51, 0.04);
@@ -447,20 +478,20 @@
     .cubes {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 1rem 1.5rem;
+      gap: 1.15rem 1.75rem;
       margin-top: 0.15rem;
       padding: 0 0.35rem;
     }
     .topic-cube {
-      background: rgba(255, 255, 255, 0.92);
-      border: 1px solid rgba(16, 32, 51, 0.1);
-      border-radius: 14px;
+      background: transparent;
+      border: 0;
+      border-radius: 0;
       min-height: 0;
       display: flex;
       flex-direction: column;
-      overflow: hidden;
-      padding: 0.75rem 0.85rem 0.55rem;
-      box-shadow: 0 8px 22px rgba(16, 32, 51, 0.04);
+      overflow: visible;
+      padding: 0;
+      box-shadow: none;
       animation: cube-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
     }
     .topic-cube:nth-child(1) { animation-delay: 0.08s; }
@@ -477,8 +508,8 @@
       justify-content: space-between;
       align-items: baseline;
       gap: 0.5rem;
-      padding: 0.2rem 0 0.5rem;
-      border-bottom: 0;
+      padding: 0 0 0.4rem;
+      border-bottom: 1px solid var(--rule-soft);
       background: transparent;
       cursor: pointer;
     }
@@ -500,25 +531,25 @@
     .topic-cube header h2 {
       margin: 0;
       font-family: var(--font-display);
-      font-size: 1.2rem;
+      font-size: 1.28rem;
       font-weight: 400;
       letter-spacing: -0.01em;
       color: var(--headline);
     }
     .topic-cube header .n {
       color: var(--muted);
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 700;
     }
     .cube-list {
       list-style: none;
       margin: 0;
-      padding: 0.15rem 0 0.4rem;
+      padding: 0.2rem 0 0;
       flex: 1;
     }
     .cube-list li {
       border-bottom: 0;
-      padding: 0.45rem 0;
+      padding: 0.4rem 0;
       cursor: pointer;
     }
     .cube-list li:hover .cube-title { color: var(--accent); }
@@ -528,14 +559,14 @@
       display: flex;
       gap: 0.4rem;
       flex-wrap: wrap;
-      margin-bottom: 0.12rem;
-      font-size: 0.68rem;
+      margin-bottom: 0.1rem;
+      font-size: 0.66rem;
       font-weight: 600;
       color: var(--muted);
-      opacity: 0.85;
+      opacity: 0.8;
     }
     .cube-title {
-      font-size: 0.95rem;
+      font-size: 0.94rem;
       font-weight: 600;
       line-height: 1.35;
       letter-spacing: -0.01em;
@@ -585,27 +616,26 @@
     .lead {
       display: none;
       margin: 0;
-      padding: 0;
+      padding: 0.35rem 0.35rem 0.15rem;
       border: 0;
-      border-radius: 18px;
-      background: rgba(255, 255, 255, 0.72);
-      box-shadow: 0 18px 40px rgba(16, 32, 51, 0.06);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
       cursor: pointer;
-      overflow: hidden;
+      overflow: visible;
       animation: lead-in 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.12s both;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      transition: transform 0.2s ease;
     }
     .lead.visible { display: block; }
-    .lead:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 22px 48px rgba(16, 32, 51, 0.09);
-    }
+    .lead:hover { transform: translateY(-1px); }
     .lead:hover .lead-title { color: var(--accent); }
+    .lead .viz,
+    .lead .title-cover,
+    .lead .lead-meta,
+    .lead .audio-brief-btn { display: none; }
 
     .lead-copy {
-      padding: 1.15rem 1.35rem 1.35rem;
+      padding: 0.35rem 0.15rem 0.15rem;
     }
 
     .viz,
@@ -696,8 +726,8 @@
     }
 
     .lead-kicker {
-      margin: 0 0 0.45rem;
-      font-size: 0.76rem;
+      margin: 0 0 0.4rem;
+      font-size: 0.74rem;
       font-weight: 700;
       letter-spacing: 0.04em;
       text-transform: none;
@@ -705,10 +735,10 @@
     }
     .lead-title {
       font-family: var(--font-display);
-      margin: 0 0 0.6rem;
-      font-size: clamp(1.85rem, 5vw, 2.55rem);
+      margin: 0 0 0.55rem;
+      font-size: clamp(2rem, 5.6vw, 2.85rem);
       font-weight: 400;
-      line-height: 1.12;
+      line-height: 1.1;
       letter-spacing: -0.02em;
       color: var(--headline);
     }
@@ -721,12 +751,12 @@
     .lead-title.t-leisure { color: var(--h-leisure); }
     .lead-title.t-sport { color: var(--h-sport); }
     .lead-deck {
-      margin: 0 0 0.55rem;
-      font-size: 1.08rem;
+      margin: 0 0 0.35rem;
+      font-size: 1.05rem;
       font-weight: 500;
       color: var(--ink-soft);
       line-height: 1.45;
-      max-width: 36rem;
+      max-width: 34rem;
     }
     .lead-meta {
       display: flex;
@@ -738,39 +768,42 @@
     }
     .lead-cta {
       display: inline-flex;
-      margin-top: 0.85rem;
-      font-size: 0.88rem;
+      margin-top: 0.7rem;
+      font-size: 0.9rem;
       font-weight: 800;
       color: var(--accent);
     }
 
     .world-lead {
       display: none;
-      margin: 0.85rem 0.35rem 0.15rem;
-      padding: 0.85rem 1rem;
+      margin: 0.15rem 0.35rem 0;
+      padding: 0.55rem 0.15rem 0.35rem;
       border: 0;
-      border-radius: 14px;
-      background: rgba(255, 255, 255, 0.28);
+      border-top: 1px solid var(--rule-soft);
+      border-radius: 0;
+      background: transparent;
       cursor: pointer;
       animation: lead-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.22s both;
+      opacity: 0.82;
     }
     .world-lead.visible { display: block; }
-    .world-lead:hover { background: rgba(255, 255, 255, 0.45); }
+    .world-lead:hover { opacity: 1; }
     .world-lead:hover .lead-title { color: var(--accent); }
     .world-lead .lead-kicker {
-      color: var(--h-world);
-      font-size: 0.72rem;
-      margin-bottom: 0.25rem;
+      color: var(--muted);
+      font-size: 0.7rem;
+      margin-bottom: 0.2rem;
       letter-spacing: 0.02em;
       text-transform: none;
       font-weight: 700;
     }
     .world-lead .lead-title {
       font-family: var(--font);
-      font-size: clamp(1.05rem, 2.4vw, 1.22rem);
-      font-weight: 700;
+      font-size: clamp(0.98rem, 2.2vw, 1.12rem);
+      font-weight: 600;
       margin: 0;
       line-height: 1.35;
+      color: var(--ink-soft);
     }
     .world-lead .lead-deck,
     .world-lead .lead-meta { display: none; }
@@ -801,7 +834,7 @@
     }
     .sort-bar button {
       border: 1px solid var(--rule-soft);
-      background: rgba(255,255,255,0.7);
+      background: var(--panel);
       color: var(--ink-soft);
       font: inherit;
       font-size: 0.82rem;
@@ -812,7 +845,7 @@
     .sort-bar button.active {
       background: var(--ink);
       border-color: var(--ink);
-      color: #fff;
+      color: var(--bg1);
     }
 
     .topic-full-list {
@@ -891,13 +924,13 @@
     }
     .action-row .restore-seen {
       border-color: var(--rule-soft);
-      background: rgba(255, 255, 255, 0.65);
+      background: var(--panel);
       color: var(--ink-soft);
     }
     .action-row .restore-seen:hover {
-      background: #fff;
+      background: var(--panel-solid);
       color: var(--ink);
-      border-color: rgba(16, 32, 51, 0.2);
+      border-color: var(--rule-soft);
     }
 
     .detail-hero {
@@ -907,7 +940,7 @@
       padding: 1.2rem 1.25rem 1.3rem;
       border-bottom: 0;
       border-radius: 18px;
-      background: rgba(255, 255, 255, 0.72);
+      background: var(--panel);
       box-shadow: 0 14px 34px rgba(16, 32, 51, 0.05);
       overflow: hidden;
     }
@@ -919,8 +952,8 @@
     }
 
     @media (max-width: 720px) {
-      .cubes { grid-template-columns: 1fr; gap: 0.85rem; }
-      .lead-copy { padding: 1rem 1.05rem 1.15rem; }
+      .cubes { grid-template-columns: 1fr; gap: 0.95rem; }
+      .lead-copy { padding: 0.25rem 0.05rem 0.1rem; }
       .detail-hero { padding: 1rem 1.05rem; border-radius: 16px; }
       .detail-hero .viz { margin: -1rem -1.05rem 0.85rem; border-radius: 16px 16px 0 0; }
     }
@@ -1094,11 +1127,13 @@
   <div class="wrap">
     <header class="hero">
       <div class="mast-top">
-        <span id="editionDate">מהדורה יומית</span>
-        <span>עובדות · בלי דרמה</span>
+        <div class="mast-meta">
+          <span id="editionDate">מהדורה יומית</span>
+          <span>עובדות · בלי דרמה</span>
+        </div>
+        <button type="button" class="theme-toggle" id="themeToggle" aria-pressed="false">מצב כהה</button>
       </div>
       <h1 class="brand">תכל׳ס</h1>
-      <p class="tagline">מה חשוב עכשיו — בקצרה, בלי רעש.</p>
     </header>
 
     <div class="home-view" id="homeView">
@@ -1108,22 +1143,7 @@
       </div>
       <p class="status-line" id="status">טוען…</p>
       <div class="board-tools" id="boardTools">
-        <div class="board-tools-row">
-          <input
-            type="search"
-            class="board-search"
-            id="boardSearch"
-            placeholder="חיפוש מהיר בלוח…"
-            autocomplete="off"
-            enterkeyhint="search"
-          />
-          <button type="button" class="audio-brief-btn" id="audioBriefBtn" title="השמע את הכותרת הראשית">
-            השמע תקציר
-          </button>
-        </div>
         <div class="board-tools-row" id="tagFilters" aria-label="סינון מהיר"></div>
-        <div class="board-tools-row" id="prefBar" hidden></div>
-        <p class="board-tools-hint">נושאים מועדפים נשמרים בדפדפן · לחיצה ממושכת על כותרת נושא = מועדף / ביטול</p>
       </div>
       <p class="board-label">לפי נושא</p>
       <div class="cubes" id="cubes"></div>
@@ -1149,9 +1169,9 @@
         <li><strong>סיכום מראש</strong> — לכל כתבה: עובדות, רקע ומבט קדימה — בלי שהמשתמש יריץ דבר.</li>
         <li><strong>תובנות</strong> — נתונים מאומתים (תפקוד הממשלה, מזג אוויר…) עם ניתוח קצר ומקורות, בלי כותרות.</li>
         <li><strong>צפיתי</strong> — מוריד כתבה מהלוח הפעיל; נשמר ב־localStorage גם אחרי רענון.</li>
-        <li><strong>נושאים מועדפים</strong> — לחיצה ממושכת על כותרת נושא; נשמר מקומית בדפדפן.</li>
         <li><strong>תקציר קולי</strong> — השמעת הכותרת הראשית + סיכום קצר (TTS).</li>
-        <li><strong>חיפוש וסינון</strong> — תיבת חיפוש ותגיות מהירות (הייטק, נדל״ן…).</li>
+        <li><strong>סינון מהיר</strong> — תגיות כמו הייטק, נדל״ן, תחבורה.</li>
+        <li><strong>מצב כהה</strong> — כפתור בראש העמוד; נשמר בדפדפן.</li>
         <li><strong>בלי לינקים החוצה</strong> — נשארים בתוך תכל׳ס; העובדות מרוכזות כאן.</li>
       </ul>
       <p>מקורות מ־Google News ישראל, מסוננים ומסווגים אוטומטית.</p>
@@ -1268,7 +1288,7 @@
       })[0];
     }
 
-    function shortDeck(text, max = 140) {
+    function shortDeck(text, max = 110) {
       const raw = String(text || "").replace(/\s+/g, " ").trim();
       if (!raw) return "";
       const sentence = raw.split(/(?<=[.!?…])\s+|־\s+/)[0] || raw;
@@ -1448,16 +1468,6 @@
       </div>`;
     }
 
-    function storyTitleCover(card) {
-      const key = pickVisualContext(card?.title || "", card?.topic || "domestic");
-      const chosen = VISUAL_PACK[key] || VISUAL_PACK.domestic;
-      return titleCoverHtml({
-        src: chosen.src,
-        title: card?.title || chosen.label,
-        key,
-      });
-    }
-
     function topicCoverHtml(topicId) {
       const key = topicId && VISUAL_PACK[topicId] ? topicId : "domestic";
       const chosen = VISUAL_PACK[key] || VISUAL_PACK.domestic;
@@ -1479,7 +1489,6 @@
         renderWorldLead(cards, null);
         return;
       }
-      const names = [...new Set(lead.sources.map((s) => s.name))];
       const deck = shortDeck(
         lead.summary ||
           lead.why_matters ||
@@ -1491,29 +1500,13 @@
       els.lead.classList.add("visible");
       els.lead.dataset.id = lead.id;
       els.lead.innerHTML = `
-        ${storyVisual(lead)}
         <div class="lead-copy">
           <p class="lead-kicker">ישראל · ${escapeHtml(TOPIC_HE[lead.topic] || "")}</p>
           <h2 class="lead-title t-${escapeHtml(lead.topic || "domestic")}">${escapeHtml(lead.title)}</h2>
           ${deck ? `<p class="lead-deck">${escapeHtml(deck)}</p>` : ""}
-          <div class="lead-meta">
-            <span>${STATUS_HE[lead.status] || lead.status}</span>
-            <span>·</span>
-            <span>${names.length} מקורות</span>
-            <span>·</span>
-            <span>${escapeHtml(relativeTime(lead.pubDate))}</span>
-          </div>
-          <button type="button" class="audio-brief-btn" data-audio-lead title="השמע תקציר">השמע תקציר</button>
           <div class="lead-cta">לקרוא בתכל׳ס ←</div>
         </div>
       `;
-      const audioBtn = els.lead.querySelector("[data-audio-lead]");
-      if (audioBtn) {
-        audioBtn.addEventListener("click", (e) => {
-          e.stopPropagation();
-          speakBriefing(lead, audioBtn);
-        });
-      }
       renderWorldLead(cards, lead.id);
     }
 
@@ -1871,9 +1864,7 @@
     }
 
     function renderTopicCubes(cards) {
-      const prefSet = new Set(preferredTopics);
-      let topicIds = TOPICS.filter((t) => t.id !== "all");
-      if (prefSet.size) topicIds = topicIds.filter((t) => prefSet.has(t.id));
+      const topicIds = TOPICS.filter((t) => t.id !== "all");
       els.cubes.innerHTML = topicIds
         .map((topic) => {
           const items = cards
@@ -1897,10 +1888,9 @@
                 })
                 .join("")}</ul>`
             : `<div class="cube-empty">אין עדכונים בנושא כרגע</div>`;
-          const star = prefSet.has(topic.id) ? " ★" : "";
           return `<section class="topic-cube" data-topic="${topic.id}">
-            <header title="לחיצה: פתיחת נושא · לחיצה ממושכת: מועדף / ביטול">
-              <h2>${topic.label}${star}</h2>
+            <header>
+              <h2>${topic.label}</h2>
               <span class="n">${items.length}</span>
             </header>
             ${list}
@@ -1915,12 +1905,8 @@
       renderLead(visible.length ? visible : active);
       renderTopicCubes(visible);
       const bits = [`${active.length} עדכונים פעילים`];
-      if (boardQuery.trim() || boardTag || preferredTopics.length) {
-        bits.push(`${visible.length} אחרי סינון`);
-      }
+      if (boardTag) bits.push(`${visible.length} אחרי סינון`);
       els.status.textContent = bits.join(" · ");
-      syncAudioBriefButton();
-      renderPrefBar();
     }
 
     function classifyTopic(title, sources = []) {
@@ -2077,7 +2063,6 @@
     };
 
     const SEEN_KEY = "takles_seen_map";
-    const PREF_TOPICS_KEY = "takles_pref_topics";
     const SEEN_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 ימים בנצפו
     const ACTIVE_TTL_H = {
       security: 12,
@@ -2099,34 +2084,31 @@
       { id: "education", label: "חינוך", re: /חינוך|בית ספר|אוניברסיט|סטודנט|משרד החינוך/ },
     ];
 
-    let boardQuery = "";
     let boardTag = "";
-    let preferredTopics = loadPreferredTopics();
     let speakingUtterance = null;
+    const THEME_KEY = "takles_theme";
 
-    function loadPreferredTopics() {
+    function currentTheme() {
+      return document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
+    }
+
+    function applyTheme(theme) {
+      const next = theme === "dark" ? "dark" : "light";
+      if (next === "dark") document.documentElement.setAttribute("data-theme", "dark");
+      else document.documentElement.removeAttribute("data-theme");
       try {
-        const raw = JSON.parse(localStorage.getItem(PREF_TOPICS_KEY) || "[]");
-        if (!Array.isArray(raw)) return [];
-        const allowed = new Set(TOPICS.map((t) => t.id));
-        return raw.filter((id) => allowed.has(id) && id !== "all");
-      } catch {
-        return [];
+        localStorage.setItem(THEME_KEY, next);
+      } catch (_) {}
+      const btn = document.getElementById("themeToggle");
+      if (btn) {
+        const dark = next === "dark";
+        btn.textContent = dark ? "מצב בהיר" : "מצב כהה";
+        btn.setAttribute("aria-pressed", dark ? "true" : "false");
       }
     }
 
-    function savePreferredTopics(list) {
-      preferredTopics = list;
-      localStorage.setItem(PREF_TOPICS_KEY, JSON.stringify(list));
-    }
-
-    function togglePreferredTopic(topicId) {
-      if (!topicId || topicId === "all") return;
-      const set = new Set(preferredTopics);
-      if (set.has(topicId)) set.delete(topicId);
-      else set.add(topicId);
-      savePreferredTopics([...set]);
-      applyTopicFilter();
+    function toggleTheme() {
+      applyTheme(currentTheme() === "dark" ? "light" : "dark");
     }
 
     function cardSearchBlob(c) {
@@ -2146,17 +2128,9 @@
 
     function boardVisibleCards(base) {
       let cards = base || activeCards();
-      if (preferredTopics.length) {
-        const pref = new Set(preferredTopics);
-        cards = cards.filter((c) => pref.has(c.topic));
-      }
       if (boardTag) {
         const tag = QUICK_TAGS.find((t) => t.id === boardTag);
         if (tag) cards = cards.filter((c) => tag.re.test(cardSearchBlob(c)));
-      }
-      const q = boardQuery.trim();
-      if (q) {
-        cards = cards.filter((c) => cardSearchBlob(c).includes(q));
       }
       return cards;
     }
@@ -2178,48 +2152,222 @@
       return lines.slice(0, 3);
     }
 
+    function prepareHebrewSpeechText(raw) {
+      let t = String(raw || "")
+        .replace(/\u05F3/g, "'")
+        .replace(/[״″]/g, '"')
+        .replace(/[׳']/g, "'")
+        .replace(/&quot;|&ldquo;|&rdquo;/g, '"')
+        .replace(/\s+/g, " ")
+        .trim();
+      // קיצורים נפוצים שקשה ל-TTS
+      const swaps = [
+        [/צה["׳']?ל/g, "צהל"],
+        [/ארה["׳']?ב/g, "ארצות הברית"],
+        [/למ["׳']?ס/g, "הלמס"],
+        [/קופ["׳']?ח/g, "קופת חולים"],
+        [/רע["׳']?ם/g, "רעם"],
+        [/בל["׳']?ד/g, "בלד"],
+        [/ת["׳']?א/g, "תל אביב"],
+        [/י["׳']?ם/g, "ירושלים"],
+        [/אח["׳']?כ/g, "אחר כך"],
+        [/וכו['׳']?/g, "וכולי"],
+        [/מ["׳']?מ/g, "מילימטר"],
+        [/קמ["׳']?ש/g, "קילומטר לשעה"],
+        [/°C|°/g, " מעלות "],
+        [/(\d)%/g, "$1 אחוז"],
+        [/(\d)\.(\d)/g, "$1 נקודה $2"],
+        [/[-–—]/g, ", "],
+        [/\|/g, ", "],
+        [/:{2,}/g, "."],
+        [/([.!?…])\1+/g, "$1"],
+      ];
+      for (const [re, to] of swaps) t = t.replace(re, to);
+      t = t.replace(/\s{2,}/g, " ").replace(/\s+([,.!?])/g, "$1").trim();
+      if (t && !/[.!?…]$/.test(t)) t += ".";
+      return t;
+    }
+
+    function scoreHebrewVoice(v) {
+      const name = `${v.name || ""} ${v.lang || ""}`;
+      let score = 0;
+      if (/^he(-IL)?$/i.test(v.lang) || /^iw/i.test(v.lang)) score += 40;
+      else if (/he|iw|Hebrew|עברית/i.test(name)) score += 25;
+      else return -1;
+      // קולות מערכת/ענן איכותיים יותר
+      if (/Carmit|כרמית/i.test(name)) score += 50;
+      if (/Google.*(Hebrew|עברית)|עברית.*Google/i.test(name)) score += 45;
+      if (/Microsoft.*(Hila|Avri)|Hila|Avri|הילה|אברי/i.test(name)) score += 42;
+      if (/Enhanced|Premium|Neural|Natural|Online|Natural HD/i.test(name)) score += 20;
+      if (v.localService === false) score += 8; // לעיתים קול ענן טוב יותר
+      if (/compact|eloquence|novelty/i.test(name)) score -= 15;
+      return score;
+    }
+
+    function pickHebrewVoice(voices) {
+      const ranked = (voices || [])
+        .map((v) => ({ v, score: scoreHebrewVoice(v) }))
+        .filter((x) => x.score >= 0)
+        .sort((a, b) => b.score - a.score);
+      return ranked[0]?.v || null;
+    }
+
+    function loadSpeechVoices() {
+      return new Promise((resolve) => {
+        if (!window.speechSynthesis) {
+          resolve([]);
+          return;
+        }
+        const ready = () => resolve(window.speechSynthesis.getVoices() || []);
+        const existing = window.speechSynthesis.getVoices();
+        if (existing?.length) {
+          ready();
+          return;
+        }
+        const onChange = () => {
+          window.speechSynthesis.removeEventListener("voiceschanged", onChange);
+          ready();
+        };
+        window.speechSynthesis.addEventListener("voiceschanged", onChange);
+        setTimeout(() => {
+          window.speechSynthesis.removeEventListener("voiceschanged", onChange);
+          ready();
+        }, 1200);
+      });
+    }
+
+    let speechWarm = false;
+    let briefingAudio = null;
+    let briefingToken = 0;
+
+    async function warmSpeechEngine(voice) {
+      if (speechWarm || !window.speechSynthesis) return;
+      await new Promise((r) => {
+        const warm = new SpeechSynthesisUtterance(".");
+        warm.volume = 0;
+        warm.rate = 1;
+        warm.lang = "he-IL";
+        if (voice) warm.voice = voice;
+        warm.onend = () => r();
+        warm.onerror = () => r();
+        window.speechSynthesis.speak(warm);
+        setTimeout(r, 400);
+      });
+      speechWarm = true;
+    }
+
     function stopBriefing() {
+      briefingToken += 1;
       if (window.speechSynthesis) window.speechSynthesis.cancel();
       speakingUtterance = null;
+      if (briefingAudio) {
+        try {
+          briefingAudio.pause();
+          briefingAudio.removeAttribute("src");
+          briefingAudio.load();
+        } catch (_) {}
+        briefingAudio = null;
+      }
       document.querySelectorAll(".audio-brief-btn.is-playing").forEach((btn) => {
         btn.classList.remove("is-playing");
         btn.textContent = "השמע תקציר";
       });
     }
 
-    function speakBriefing(card, btn) {
-      if (!window.speechSynthesis) {
-        alert("הדפדפן לא תומך בהקראה קולית.");
-        return;
+    function playHtmlAudio(src) {
+      return new Promise((resolve, reject) => {
+        const audio = new Audio(src);
+        briefingAudio = audio;
+        audio.onended = () => resolve();
+        audio.onerror = () => reject(new Error("audio play failed"));
+        audio.play().catch(reject);
+      });
+    }
+
+    async function fetchEdgeTtsUrl(text) {
+      const res = await fetch("/api/tts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text, voice: "he-IL-HilaNeural" }),
+      });
+      if (!res.ok) throw new Error(`tts ${res.status}`);
+      const blob = await res.blob();
+      if (!blob.size) throw new Error("empty audio");
+      return URL.createObjectURL(blob);
+    }
+
+    async function speakLinesNeural(lines, btn, token) {
+      for (const line of lines) {
+        if (token !== briefingToken || (btn && !btn.classList.contains("is-playing"))) return;
+        let objectUrl = null;
+        try {
+          objectUrl = await fetchEdgeTtsUrl(line);
+          if (token !== briefingToken) return;
+          await playHtmlAudio(objectUrl);
+          await new Promise((r) => setTimeout(r, 220));
+        } finally {
+          if (objectUrl) URL.revokeObjectURL(objectUrl);
+        }
       }
+    }
+
+    async function speakLinesBrowser(lines, btn, token) {
+      if (!window.speechSynthesis) throw new Error("no speechSynthesis");
+      const voices = await loadSpeechVoices();
+      const voice = pickHebrewVoice(voices);
+      await warmSpeechEngine(voice);
+      for (const line of lines) {
+        if (token !== briefingToken || (btn && !btn.classList.contains("is-playing"))) return;
+        await new Promise((resolve, reject) => {
+          const u = new SpeechSynthesisUtterance(line);
+          u.lang = voice?.lang || "he-IL";
+          if (voice) u.voice = voice;
+          u.rate = 0.92;
+          u.pitch = 1;
+          speakingUtterance = u;
+          u.onend = () => resolve();
+          u.onerror = () => reject(new Error("utterance error"));
+          window.speechSynthesis.speak(u);
+        });
+        await new Promise((r) => setTimeout(r, 220));
+      }
+    }
+
+    async function speakBriefing(card, btn) {
       if (btn?.classList.contains("is-playing")) {
         stopBriefing();
         return;
       }
-      const lines = briefingLines(card);
+      const lines = briefingLines(card)
+        .map(prepareHebrewSpeechText)
+        .filter(Boolean);
       if (!lines.length) return;
+
       stopBriefing();
-      const text = lines.join(". ");
-      const u = new SpeechSynthesisUtterance(text);
-      u.lang = "he-IL";
-      u.rate = 1.02;
-      const voices = window.speechSynthesis.getVoices();
-      const he = voices.find((v) => /he|iw|Hebrew/i.test(`${v.lang} ${v.name}`));
-      if (he) u.voice = he;
-      speakingUtterance = u;
+      const token = briefingToken;
       if (btn) {
         btn.classList.add("is-playing");
         btn.textContent = "עצור";
       }
-      u.onend = () => stopBriefing();
-      u.onerror = () => stopBriefing();
-      window.speechSynthesis.speak(u);
-    }
 
-    function syncAudioBriefButton() {
-      const btn = document.getElementById("audioBriefBtn");
-      if (!btn) return;
-      btn.disabled = !pickLeadStory(boardVisibleCards());
+      try {
+        // מקומי: Edge TTS (Hila) דרך /api/tts — איכות טובה וחינם
+        if (!IS_PAGES) {
+          await speakLinesNeural(lines, btn, token);
+        } else {
+          throw new Error("pages-no-edge");
+        }
+      } catch (e) {
+        console.warn("edge tts fallback", e);
+        try {
+          await speakLinesBrowser(lines, btn, token);
+        } catch (e2) {
+          console.warn("browser tts failed", e2);
+          alert("לא ניתן להשמיע תקציר כרגע.");
+        }
+      } finally {
+        if (token === briefingToken) stopBriefing();
+      }
     }
 
     function renderTagFilters() {
@@ -2229,28 +2377,6 @@
         (t) =>
           `<button type="button" class="board-chip${boardTag === t.id ? " active" : ""}" data-tag="${t.id}">${t.label}</button>`
       ).join("");
-    }
-
-    function renderPrefBar() {
-      const host = document.getElementById("prefBar");
-      if (!host) return;
-      if (!preferredTopics.length) {
-        host.hidden = true;
-        host.innerHTML = "";
-        return;
-      }
-      host.hidden = false;
-      const labels = preferredTopics
-        .map((id) => TOPIC_HE[id] || id)
-        .join(" · ");
-      host.innerHTML = `
-        <span class="board-tools-hint" style="padding:0">מועדפים: ${escapeHtml(labels)}</span>
-        <button type="button" class="board-chip" id="clearPrefsBtn">הצג הכל</button>
-      `;
-      document.getElementById("clearPrefsBtn")?.addEventListener("click", () => {
-        savePreferredTopics([]);
-        applyTopicFilter();
-      });
     }
 
     function loadSeenMap() {
@@ -2574,7 +2700,7 @@
           }
         </div>
         <article class="detail-hero">
-          ${storyTitleCover(c)}
+          ${storyVisual(c)}
           <div class="meta">
             <span class="badge ${escapeHtml(c.status)}">${STATUS_HE[c.status] || c.status}</span>
             <span class="badge sources">${escapeHtml(TOPIC_HE[c.topic] || "פנים")}</span>
@@ -2583,6 +2709,7 @@
           </div>
           <h2 class="title t-${escapeHtml(c.topic || "domestic")}" style="margin:0">${escapeHtml(c.title)}</h2>
           <div class="time" style="margin:0">${escapeHtml(relativeTime(c.pubDate))}</div>
+          <button type="button" class="audio-brief-btn" id="detailAudioBtn" title="השמע תקציר">השמע תקציר</button>
         </article>
         <div class="detail-body">
           <div class="block">
@@ -2605,7 +2732,10 @@
           <div class="sources-row">${sourceChips}</div>
         </div>
       `;
-      hydrateTitleCovers(els.detailView);
+      document.getElementById("detailAudioBtn")?.addEventListener("click", (e) => {
+        e.stopPropagation();
+        speakBriefing(c, e.currentTarget);
+      });
       document.getElementById("backBtn").addEventListener("click", showHome);
       const seenBtn = document.getElementById("seenBtn");
       if (seenBtn) {
@@ -2899,14 +3029,7 @@
       connect();
     }
 
-    let topicPressTimer = null;
-    let topicPressMoved = false;
-
     els.cubes.addEventListener("click", (e) => {
-      if (topicPressMoved) {
-        topicPressMoved = false;
-        return;
-      }
       const header = e.target.closest(".topic-cube header");
       if (header) {
         const topic = header.closest(".topic-cube")?.dataset.topic;
@@ -2917,26 +3040,6 @@
       if (!row) return;
       showDetail(row.dataset.id);
     });
-
-    els.cubes.addEventListener("pointerdown", (e) => {
-      const header = e.target.closest(".topic-cube header");
-      if (!header) return;
-      const topic = header.closest(".topic-cube")?.dataset.topic;
-      if (!topic) return;
-      topicPressMoved = false;
-      clearTimeout(topicPressTimer);
-      topicPressTimer = setTimeout(() => {
-        topicPressMoved = true;
-        togglePreferredTopic(topic);
-      }, 550);
-    });
-    const clearTopicPress = () => {
-      clearTimeout(topicPressTimer);
-      topicPressTimer = null;
-    };
-    els.cubes.addEventListener("pointerup", clearTopicPress);
-    els.cubes.addEventListener("pointerleave", clearTopicPress);
-    els.cubes.addEventListener("pointercancel", clearTopicPress);
 
     els.lead.addEventListener("click", (e) => {
       if (e.target.closest(".audio-brief-btn")) return;
@@ -2961,17 +3064,8 @@
       applyTopicFilter();
     });
 
-    const searchEl = document.getElementById("boardSearch");
-    searchEl?.addEventListener("input", () => {
-      boardQuery = searchEl.value || "";
-      applyTopicFilter();
-    });
-
-    document.getElementById("audioBriefBtn")?.addEventListener("click", () => {
-      const lead = pickLeadStory(boardVisibleCards());
-      if (!lead) return;
-      speakBriefing(lead, document.getElementById("audioBriefBtn"));
-    });
+    applyTheme(currentTheme());
+    document.getElementById("themeToggle")?.addEventListener("click", toggleTheme);
 
     if (window.speechSynthesis) {
       window.speechSynthesis.onvoiceschanged = () => {};
