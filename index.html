@@ -2456,16 +2456,6 @@
       });
     }
 
-    function decodeHtml(s) {
-      const t = document.createElement("textarea");
-      t.innerHTML = s;
-      return t.value;
-    }
-
-    function stripTags(s) {
-      return decodeHtml(String(s || "").replace(/<[^>]+>/g, "")).trim();
-    }
-
     function dryTitle(title) {
       let t = title;
       for (const w of DRAMATIC) {
@@ -2490,37 +2480,6 @@
       const hours = Math.round(mins / 60);
       if (hours < 24) return `לפני ${hours} שע׳`;
       return d.toLocaleString("he-IL", { dateStyle: "short", timeStyle: "short" });
-    }
-
-    function parseGoogleRss(xmlText) {
-      const doc = new DOMParser().parseFromString(xmlText, "text/xml");
-      const nodes = [...doc.querySelectorAll("item")].slice(0, 10);
-      return nodes.map((item) => {
-        let title = (item.querySelector("title")?.textContent || "").trim();
-        const link = (item.querySelector("link")?.textContent || "").trim();
-        const pubDate = (item.querySelector("pubDate")?.textContent || "").trim();
-        const desc = item.querySelector("description")?.textContent || "";
-        let mainSource = "";
-        if (title.includes(" - ")) {
-          const parts = title.split(" - ");
-          mainSource = parts.pop().trim();
-          title = parts.join(" - ").trim();
-        }
-        const sources = [];
-        const re = /<a href="([^"]+)"[^>]*>(.*?)<\/a>\s*&nbsp;&nbsp;<font[^>]*>(.*?)<\/font>/g;
-        let m;
-        while ((m = re.exec(desc))) {
-          sources.push({
-            url: decodeHtml(m[1]),
-            headline: stripTags(m[2]),
-            name: decodeHtml(m[3]).trim(),
-          });
-        }
-        if (!sources.length) {
-          sources.push({ url: link, headline: title, name: mainSource || "Google News" });
-        }
-        return { title, link, pubDate, sources: sources.slice(0, 6) };
-      });
     }
 
     function enrichCard(card, item) {
