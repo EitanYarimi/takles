@@ -30,7 +30,7 @@ jobs:
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: python3 scripts/build_news.py
-        timeout-minutes: 12
+        timeout-minutes: 25
       - name: Stage site
         run: |
           mkdir -p _site

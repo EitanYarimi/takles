@@ -178,7 +178,7 @@ Workflow: `.github/workflows/deploy-pages.yml`
 
 `news.json` rebuilds hourly on the schedule (and on every push). The client on Pages may still poll `./news.json` every 5 minutes; between rebuilds that poll just reloads the same file.
 
-Steps: checkout → Python 3.12 → `pip install -r requirements.txt` → `scripts/build_news.py` (timeout 12m, `GEMINI_API_KEY` מ־Secrets) → stage `_site/` (`index.html`, `news.json`, `insights.json`, `media/`) → upload artifact → deploy Pages.
+Steps: checkout → Python 3.12 → `pip install -r requirements.txt` → `scripts/build_news.py` (timeout 25m, `GEMINI_API_KEY` מ־Secrets) → stage `_site/` (`index.html`, `news.json`, `insights.json`, `media/`) → upload artifact → deploy Pages.
 
 **חובה לסיכום AI ב־Pages:** Secret בשם `GEMINI_API_KEY`. בלי זה — hydrate של גופים + heuristic בלבד.
 
