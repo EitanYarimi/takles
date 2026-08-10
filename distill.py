@@ -25,7 +25,7 @@ from zoneinfo import ZoneInfo
 ROOT = Path(__file__).resolve().parent
 CACHE_PATH = ROOT / "distill_cache.json"
 ARTICLE_CACHE_PATH = ROOT / "article_cache.json"
-DISTILL_VERSION = "v12-quota-circuit-cache"
+DISTILL_VERSION = "v13-cross-source-verification"
 SSL_CTX = ssl._create_unverified_context()
 UA = (
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
@@ -86,6 +86,22 @@ QUOTE_REACTION_RE = re.compile(
     r"(מגיב|בתגובה|תוקף|מתוקף).{0,40}[:\"״]|[\"״].{15,}[\"״]",
     re.I,
 )
+EMOJI_RE = re.compile(
+    "[\U0001f300-\U0001faff\U00002600-\U000027bf\U0001f1e6-\U0001f1ff\u2b00-\u2bff]"
+)
+SOCIAL_NOISE_RE = re.compile(
+    r"קרדיט ל|צילום מסך|הפוסט של|פוסט של|ציוץ של|הסטורי של|"
+    r"בטוויטר|באינסטגרם|בטיקטוק|ריל של|תודה ל",
+    re.I,
+)
+
+
+def is_social_noise(text: str) -> bool:
+    """Social/aggregator posts that are not reported news."""
+    t = text or ""
+    if SOCIAL_NOISE_RE.search(t):
+        return True
+    return bool(EMOJI_RE.search(t))
 
 
 def _strip_quotes_and_tail(text: str) -> str:
@@ -97,7 +113,7 @@ def _strip_quotes_and_tail(text: str) -> str:
 
 def is_opinion_text(text: str) -> bool:
     t = text or ""
-    if OPINION_LABEL_RE.search(t):
+    if OPINION_LABEL_RE.search(t) or is_social_noise(t):
         return True
     core = _strip_quotes_and_tail(t)
     if FACT_SIGNAL_RE.search(core):
@@ -125,20 +141,27 @@ def looks_like_fact_line(text: str) -> bool:
     return False
 
 
+MIN_CORE_TITLE = 18
+
+
 def factual_core_title(title: str) -> str:
     """Strip quoted spin after a reaction lead-in."""
-    t = dry_title(title or "")
+    full = dry_title(title or "")
+    t = full
     # יועץ X מגיב ל-Y: "ספין..." → שמור רק את הליבה
     m = re.match(
         r'^(.{8,80}?(?:מגיב|הודיע|מסר|אישר|הכחיש)\s+ל[^:\"״]{2,40})\s*[:\-–—]\s*[\"״].*',
         t,
     )
     if m:
-        return m.group(1).strip(" -:·")
+        core = m.group(1).strip(" -:·")
+        return core if len(core) >= MIN_CORE_TITLE else full
     # חתוך ציטוט ארוך אחרי נקודתיים
     if re.search(r'[:\-–—]\s*[\"״]', t):
-        t = re.split(r'[:\-–—]\s*[\"״]', t, maxsplit=1)[0].strip(" -:·")
-    return t or dry_title(title or "")
+        core = re.split(r'[:\-–—]\s*[\"״]', t, maxsplit=1)[0].strip(" -:·")
+        # "טראמפ" is not a headline — keep the original when trimming guts it.
+        t = core if len(core) >= MIN_CORE_TITLE else full
+    return t or full
 
 
 def scrub_item_sources(item: dict) -> dict | None:
@@ -371,29 +394,188 @@ def hydrate_item_sources(item: dict, article_cache: dict, deep: bool) -> dict:
     return out
 
 
-def _reliability_fallback(item: dict) -> tuple[str, str]:
-    sources = item.get("sources") or []
-    fetched = [s for s in sources if s.get("fetch_ok") and s.get("excerpt")]
-    names = []
-    for s in fetched:
-        n = (s.get("name") or "").strip()
-        if n and n not in names:
-            names.append(n)
-    if len(fetched) >= 2:
-        return (
-            "medium",
-            f"נמשכו גופי כתבה מ־{len(fetched)} מקורות ({', '.join(names[:3])}), "
-            "אך בלי בדיקת AI — מפתח Gemini חסר, מכסת API מלאה, או שהקריאה נכשלה.",
+HEB_STOPWORDS = {
+    "אבל", "אחר", "אחרי", "אחרת", "איך", "אין", "איפה", "אלא", "אלה", "אמר", "אמרה",
+    "אנחנו", "אני", "אשר", "אתמול", "בגלל", "בזמן", "בין", "בלבד", "במהלך", "בתוך",
+    "גם", "היא", "היה", "היום", "היות", "הייתה", "הם", "הן", "הוא", "זאת", "זהו",
+    "יותר", "ישנם", "כאשר", "כדי", "כלומר", "כמו", "לאחר", "לפי", "לפני", "מאוד",
+    "מול", "מתוך", "נגד", "עדיין", "עוד", "עכשיו", "פחות", "רק", "שוב", "שלא",
+    "שנה", "שני", "שתי", "תוך", "אמור", "כבר", "מה", "מי", "למה", "אולם", "יחד",
+    "כתב", "כתבה", "דיווח", "דיווחה", "לפיה", "כמה", "הרבה", "בעוד", "בנוסף",
+}
+_PREFIX_RE = re.compile(r"^[והבלמשכ]")
+_TOKEN_RE = re.compile(r"[A-Za-z\u0590-\u05FF]{3,}")
+_NUM_CLAIM_RE = re.compile(
+    r"(\d[\d.,]*)\s*"
+    r"(%|אחוז|הרוגים|הרוג|פצועים|פצוע|נעדרים|חטופים|רקטות|רקטה|כטב\"?מים|"
+    r"מיליון|מיליארד|אלף|ק\"?מ|מטרים|שעות|ימים|שנים|חודשים|דונם|מעלות|"
+    r"אנשים|ילדים|חיילים|מטוסים|טילים)"
+)
+MIN_SHARED_STRONG = int(os.environ.get("DISTILL_SHARED_STRONG", "12"))
+MIN_SHARED_WEAK = int(os.environ.get("DISTILL_SHARED_WEAK", "5"))
+MIN_OVERLAP_STRONG = float(os.environ.get("DISTILL_OVERLAP_STRONG", "0.30"))
+MIN_OVERLAP_WEAK = float(os.environ.get("DISTILL_OVERLAP_WEAK", "0.14"))
+
+
+def _norm_token(word: str) -> str:
+    w = word.strip()
+    if len(w) > 4 and _PREFIX_RE.match(w):
+        return w[1:]
+    return w
+
+
+def _content_tokens(text: str) -> set[str]:
+    """Meaningful words from an article body, prefix-normalized for matching."""
+    tokens: set[str] = set()
+    for raw in _TOKEN_RE.findall(text or ""):
+        norm = _norm_token(raw)
+        if len(norm) < 3 or norm in HEB_STOPWORDS or raw in HEB_STOPWORDS:
+            continue
+        tokens.add(norm.lower())
+    return tokens
+
+
+def _numeric_claims(text: str) -> dict[str, set[str]]:
+    """Map measured unit -> set of values stated in this article."""
+    claims: dict[str, set[str]] = {}
+    for value, unit in _NUM_CLAIM_RE.findall(text or ""):
+        clean = value.strip(".,")
+        if not clean:
+            continue
+        claims.setdefault(unit.strip(), set()).add(clean)
+    return claims
+
+
+def cross_source_verify(item: dict) -> dict:
+    """Compare fetched article bodies to see what independent outlets agree on.
+
+    Deterministic, so every hydrated story gets a reliability verdict even when
+    no AI call is available.
+    """
+    bodies: list[tuple[str, str]] = []
+    seen_outlets: set[str] = set()
+    for s in item.get("sources") or []:
+        excerpt = (s.get("excerpt") or "").strip()
+        if not (s.get("fetch_ok") and excerpt):
+            continue
+        outlet = (s.get("name") or "מקור").strip()
+        if outlet in seen_outlets:
+            continue
+        seen_outlets.add(outlet)
+        bodies.append((outlet, excerpt))
+
+    outlets = [name for name, _ in bodies]
+    result = {
+        "reliability": "unknown",
+        "notes": "",
+        "verified": False,
+        "shared_facts": [],
+        "contradictions": [],
+        "bodies": len(bodies),
+        "outlets": outlets,
+        "shared_terms": 0,
+        "overlap_ratio": 0.0,
+        "shared_topics": [],
+    }
+
+    if not bodies:
+        result["notes"] = (
+            "לא נמשכו גופי כתבות מהמקורות, ולכן לא בוצעה הצלבה — הכרטיס מבוסס כותרות בלבד."
         )
-    if len(fetched) == 1:
-        return (
-            "low",
-            "נמשך גוף כתבה ממקור יחיד בלבד; בלי הצלבה מול AI אי אפשר לאשר אמינות גבוהה.",
+        return result
+
+    if len(bodies) == 1:
+        result["reliability"] = "low"
+        result["notes"] = (
+            f"נקרא גוף כתבה ממקור יחיד ({outlets[0]}) — אין מקור עצמאי שני להצלבה, "
+            "ולכן אי אפשר לאשר את הפרטים."
         )
-    return (
-        "unknown",
-        "לא נמשכו גופי כתבות מהמקורות; הסיכום מבוסס כותרות בלבד, בלי בדיקת אמינות AI.",
+        return result
+
+    token_sets = [(name, _content_tokens(text)) for name, text in bodies]
+    shared_terms: set[str] = set()
+    best_ratio = 0.0
+    for i in range(len(token_sets)):
+        for j in range(i + 1, len(token_sets)):
+            a, b = token_sets[i][1], token_sets[j][1]
+            common = a & b
+            shared_terms |= common
+            smaller = min(len(a), len(b))
+            if smaller:
+                # Absolute overlap alone is misleading: any two Iran stories share
+                # plenty of vocabulary. Ratio tells us they cover the same event.
+                best_ratio = max(best_ratio, len(common) / smaller)
+    result["shared_terms"] = len(shared_terms)
+    result["overlap_ratio"] = round(best_ratio, 3)
+
+    # Words the headlines already care about describe the event; the longest
+    # words in a body are usually just long adjectives.
+    headline_blob = " ".join(
+        [item.get("title") or ""] + [s.get("headline") or "" for s in item.get("sources") or []]
     )
+    headline_tokens = _content_tokens(headline_blob)
+    hebrew_shared = [t for t in shared_terms if re.search(r"[\u0590-\u05FF]", t) and len(t) >= 4]
+    on_topic = sorted(t for t in hebrew_shared if t in headline_tokens)
+    rest = sorted((t for t in hebrew_shared if t not in headline_tokens), key=len, reverse=True)
+    result["shared_topics"] = (on_topic + rest)[:4]
+
+    # Numeric agreement and contradiction across outlets
+    per_outlet_claims = [(name, _numeric_claims(text)) for name, text in bodies]
+    units: set[str] = set()
+    for _, claims in per_outlet_claims:
+        units |= set(claims)
+
+    shared_facts: list[str] = []
+    contradictions: list[str] = []
+    for unit in sorted(units):
+        stating = [(name, claims[unit]) for name, claims in per_outlet_claims if claims.get(unit)]
+        if len(stating) < 2:
+            continue
+        common = set.intersection(*(vals for _, vals in stating))
+        if common:
+            value = sorted(common)[0]
+            shared_facts.append(f"{value} {unit}")
+        else:
+            detail = " / ".join(f"{name}: {sorted(vals)[0]} {unit}" for name, vals in stating[:3])
+            contradictions.append(detail)
+
+    result["shared_facts"] = shared_facts[:5]
+    result["contradictions"] = contradictions[:3]
+
+    outlet_list = ", ".join(outlets[:3])
+    topics = ", ".join(result["shared_topics"][:3])
+    strong = len(shared_terms) >= MIN_SHARED_STRONG and best_ratio >= MIN_OVERLAP_STRONG
+
+    if strong and not contradictions:
+        result["reliability"] = "high"
+        result["verified"] = True
+        note = f"הוצלבו {len(bodies)} מקורות עצמאיים ({outlet_list}) והם מתארים את אותו אירוע."
+        if shared_facts:
+            note += f" נתונים שחוזרים בכולם: {', '.join(shared_facts[:3])}."
+        elif topics:
+            note += f" פרטים משותפים בכל הדיווחים: {topics}."
+        note += " לא נמצאו סתירות מספריות בין הדיווחים."
+    elif contradictions:
+        result["reliability"] = "medium"
+        note = (
+            f"הוצלבו {len(bodies)} מקורות ({outlet_list}), אך יש אי־התאמה בנתונים: "
+            f"{'; '.join(contradictions[:2])}. ליבת האירוע חוזרת בכל המקורות."
+        )
+    elif len(shared_terms) >= MIN_SHARED_WEAK and best_ratio >= MIN_OVERLAP_WEAK:
+        result["reliability"] = "medium"
+        note = (
+            f"הוצלבו {len(bodies)} מקורות ({outlet_list}) עם חפיפה חלקית בפרטים"
+            + (f" ({topics})" if topics else "")
+            + ". ליבת הדיווח משותפת, אך אין מספיק פרטים זהים כדי לאשר את מלוא הנתונים."
+        )
+    else:
+        result["reliability"] = "low"
+        note = (
+            f"נקראו {len(bodies)} מקורות ({outlet_list}) אך הם חולקים מעט מאוד פרטים — "
+            "ככל הנראה מדובר בהיבטים שונים ולא באותו אירוע, ולכן אין כאן אימות מוצלב."
+        )
+    result["notes"] = note
+    return result
 
 
 def _api_key() -> str:
@@ -595,12 +777,18 @@ def _build_summary(title: str, headlines: list[str], names: list[str]) -> str:
     else:
         parts.append("מבוסס על מקור חדשותי יחיד — בלי הצלבה מספקת.")
 
-    if unique_heads:
-        parts.append("מה שניתן לגזור מהדיווחים: " + "; ".join(h.rstrip(".") for h in unique_heads[:3]) + ".")
+    # Restating the headline back at the reader adds nothing — it is already above.
+    title_key = re.sub(r"\W+", "", (title or "").lower())[:48]
+    fresh_heads = [h for h in unique_heads if re.sub(r"\W+", "", h.lower())[:48] != title_key]
+
+    if fresh_heads:
+        parts.append(
+            "פרטים נוספים מהמקורות: " + "; ".join(h.rstrip(".") for h in fresh_heads[:3]) + "."
+        )
     elif points:
         parts.append(f"מהדיווח עולה: {points[0].rstrip('.')}.")
     else:
-        parts.append("לא נמצאו עובדות יציבות מעבר לכותרת המקבץ.")
+        parts.append("מעבר לכותרת עצמה לא נמסרו פרטים עובדתיים נוספים במקורות שנבדקו.")
 
     soft = re.search(r"עשוי|אולי|חשד|דיווח|נמסר|לפי גורמ|לטענת|לא אושר|טרם אושר", title)
     if soft or n < 2 or QUOTE_REACTION_RE.search(title or ""):
@@ -658,9 +846,16 @@ def heuristic_distill(item: dict) -> dict:
     soft_claim = bool(
         re.search(r"עשוי|אולי|חשד|דיווח|נמסר|לפי גורמ|לטענת|לא אושר|טרם אושר", title)
     )
-    multi = len(names) >= 2
+    verdict = cross_source_verify(item)
+    # "confirmed" requires independent outlets agreeing on the same body text,
+    # never just a headline count.
     status = "reported"
-    if multi and not quoted and not soft_claim and not QUOTE_REACTION_RE.search(raw_title):
+    if (
+        verdict["verified"]
+        and not quoted
+        and not soft_claim
+        and not QUOTE_REACTION_RE.search(raw_title)
+    ):
         status = "confirmed"
     if re.search(r"הכחיש|הכחשה|דחה את", title):
         status = "denied"
@@ -729,26 +924,37 @@ def heuristic_distill(item: dict) -> dict:
     else:
         background, outlook, why_matters = _substantive_fallback(title, headlines, names)
 
-    reliability, reliability_notes = _reliability_fallback(item)
+    reliability = verdict["reliability"]
+    reliability_notes = verdict["notes"]
     basis = item.get("digest_basis") or "headlines"
-    if basis == "fulltext" and any(s.get("excerpt") for s in sources):
-        # Prefer short extracts from bodies over headline-only narrative when available
-        body_bits = []
-        for s in sources:
-            ex = (s.get("excerpt") or "").strip()
-            if not ex:
-                continue
-            first = re.split(r"[\n\.!?]", ex)[0].strip()
-            if len(first) > 40:
-                body_bits.append(f"{s.get('name') or 'מקור'}: {first[:140]}")
-            if len(body_bits) >= 2:
-                break
-        if body_bits:
-            summary = (
-                f"על פי {len(body_bits)} מקורות שנקראו במלואם: "
-                + " · ".join(body_bits)
-                + "."
-            )
+    if verdict["bodies"] >= 2:
+        outlet_list = ", ".join(verdict["outlets"][:3])
+        if verdict["reliability"] == "low":
+            parts = [
+                f"נקראו {verdict['bodies']} מקורות ({outlet_list}), אך הם חולקים מעט מאוד "
+                "פרטים — ייתכן שאינם מדווחים על אותו אירוע."
+            ]
+        else:
+            parts = [f"{verdict['bodies']} מקורות עצמאיים ({outlet_list}) מדווחים על אותו אירוע."]
+        if verdict["shared_facts"]:
+            parts.append("נתונים שחוזרים בכולם: " + ", ".join(verdict["shared_facts"][:3]) + ".")
+        elif verdict["shared_topics"]:
+            parts.append("פרטים משותפים: " + ", ".join(verdict["shared_topics"][:3]) + ".")
+        if verdict["contradictions"]:
+            parts.append("אי־התאמה בין הדיווחים: " + verdict["contradictions"][0] + ".")
+        if status != "confirmed":
+            parts.append("חלק מהפרטים עדיין ברמת דיווח ולא אושרו רשמית.")
+        summary = " ".join(parts)
+    elif verdict["bodies"] == 1:
+        summary = (
+            f"נקרא גוף הכתבה של {verdict['outlets'][0]} בלבד. "
+            "אין מקור עצמאי שני להצלבה, ולכן הפרטים עדיין לא מאומתים."
+        )
+
+    # Surface the mechanically verified numbers as evidence
+    if verdict["shared_facts"]:
+        evidence = [f"מוצלב בין מקורות: {f}" for f in verdict["shared_facts"][:2]]
+        bullets = evidence + [b for b in bullets if b not in evidence]
 
     return {
         "title": title,
@@ -763,6 +969,15 @@ def heuristic_distill(item: dict) -> dict:
         "reliability": reliability,
         "reliability_notes": reliability_notes,
         "digest_basis": basis,
+        "verification": {
+            "method": "cross-source" if verdict["bodies"] >= 2 else "none",
+            "bodies": verdict["bodies"],
+            "outlets": verdict["outlets"],
+            "shared_facts": verdict["shared_facts"],
+            "shared_topics": verdict["shared_topics"],
+            "contradictions": verdict["contradictions"],
+            "overlap_ratio": verdict["overlap_ratio"],
+        },
         "mode": "heuristic",
     }
 
@@ -866,6 +1081,16 @@ def gemini_distill(item: dict) -> dict | None:
             "כי מדובר במהלך שעדיין פתוח — אישור או דחייה ישנו את המציאות בשטח או במדיניות."
         )
 
+    # The model may still be generous; a single body can never be "confirmed".
+    verdict = cross_source_verify(item)
+    if verdict["bodies"] < 2:
+        if status == "confirmed":
+            status = "reported"
+        if reliability == "high":
+            reliability = "medium" if verdict["bodies"] == 1 else "unknown"
+    if verdict["contradictions"] and reliability == "high":
+        reliability = "medium"
+
     return {
         "title": title,
         "summary": summary,
@@ -879,14 +1104,22 @@ def gemini_distill(item: dict) -> dict | None:
         "reliability": reliability,
         "reliability_notes": reliability_notes,
         "digest_basis": item.get("digest_basis") or "headlines",
+        "verification": {
+            "method": "ai+cross-source" if verdict["bodies"] >= 2 else "ai",
+            "bodies": verdict["bodies"],
+            "outlets": verdict["outlets"],
+            "shared_facts": verdict["shared_facts"],
+            "shared_topics": verdict["shared_topics"],
+            "contradictions": verdict["contradictions"],
+            "overlap_ratio": verdict["overlap_ratio"],
+        },
         "mode": "gemini",
     }
 
 
-def distill_item(item: dict, cache: dict | None = None, *, use_gemini: bool = True) -> dict:
-    cache = cache if cache is not None else load_cache()
-    fp = item_fingerprint(item)
-    hit = cache.get(fp)
+def cached_distill(item: dict, cache: dict) -> dict | None:
+    """Return a complete cached digest for this item, if we already have one."""
+    hit = cache.get(item_fingerprint(item))
     if (
         isinstance(hit, dict)
         and hit.get("bullet_facts")
@@ -897,15 +1130,22 @@ def distill_item(item: dict, cache: dict | None = None, *, use_gemini: bool = Tr
         and hit.get("reliability")
         and hit.get("reliability_notes")
     ):
-        out = {k: v for k, v in hit.items() if not k.startswith("_")}
-        return out
+        return {k: v for k, v in hit.items() if not k.startswith("_")}
+    return None
+
+
+def distill_item(item: dict, cache: dict | None = None, *, use_gemini: bool = True) -> dict:
+    cache = cache if cache is not None else load_cache()
+    hit = cached_distill(item, cache)
+    if hit:
+        return hit
 
     distilled = None
     if use_gemini:
         distilled = gemini_distill(item)
     if not distilled:
         distilled = heuristic_distill(item)
-    cache[fp] = {**distilled, "_ts": int(time.time())}
+    cache[item_fingerprint(item)] = {**distilled, "_ts": int(time.time())}
     save_cache(cache)
     return distilled
 
@@ -913,26 +1153,48 @@ def distill_item(item: dict, cache: dict | None = None, *, use_gemini: bool = Tr
 def enrich_items(items: list[dict]) -> list[dict]:
     cache = load_cache()
     article_cache = load_article_cache()
-    out = []
     dropped = 0
     deep_ok = 0
-    gemini_ok = 0
+    gemini_shown = 0
     gemini_attempts = 0
+    reused = 0
+
+    kept: list[tuple[int, dict]] = []
     for idx, item in enumerate(items):
         scrubbed = scrub_item_sources(item)
         if not scrubbed:
             dropped += 1
             continue
-        deep = idx < MAX_DEEP_ITEMS
-        hydrated = hydrate_item_sources(scrubbed, article_cache, deep=deep)
+        kept.append((idx, scrubbed))
+
+    # Scarce budgets (article fetches, AI calls) go to the stories that matter,
+    # not to whichever feed happened to merge first.
+    now = datetime.now(IL_TZ)
+    by_importance = sorted(
+        kept, key=lambda pair: _importance_score(pair[1], now=now), reverse=True
+    )
+
+    results: dict[int, dict] = {}
+    for rank, (idx, scrubbed) in enumerate(by_importance):
+        hydrated = hydrate_item_sources(
+            scrubbed, article_cache, deep=rank < MAX_DEEP_ITEMS
+        )
         if hydrated.get("_fetched_count"):
             deep_ok += 1
-        use_gemini = gemini_attempts < MAX_GEMINI_ITEMS and _gemini_available()
-        if use_gemini:
-            gemini_attempts += 1
-        d = distill_item(hydrated, cache=cache, use_gemini=use_gemini)
+
+        # A cached digest costs nothing, so it never consumes AI budget —
+        # that is what lets good digests accumulate across hourly runs.
+        d = cached_distill(hydrated, cache)
+        if d:
+            reused += 1
+        else:
+            use_gemini = gemini_attempts < MAX_GEMINI_ITEMS and _gemini_available()
+            if use_gemini:
+                gemini_attempts += 1
+            d = distill_item(hydrated, cache=cache, use_gemini=use_gemini)
         if d.get("mode") == "gemini":
-            gemini_ok += 1
+            gemini_shown += 1
+
         enriched = dict(hydrated)
         enriched.pop("_fetched_count", None)
         # Don't ship huge excerpts to the client
@@ -961,15 +1223,21 @@ def enrich_items(items: list[dict]) -> list[dict]:
         enriched["status"] = d.get("status")
         enriched["reliability"] = d.get("reliability")
         enriched["reliability_notes"] = d.get("reliability_notes")
+        enriched["verification"] = d.get("verification")
         enriched["digest_basis"] = d.get("digest_basis") or hydrated.get("digest_basis")
         enriched["distillMode"] = d.get("mode")
-        out.append(enriched)
+        results[idx] = enriched
+
+    out = [results[idx] for idx, _ in kept]
     if dropped:
         print(f"[distill] dropped {dropped} opinion/noise clusters")
+    verified = sum(1 for i in out if i.get("status") == "confirmed")
     print(
         f"[distill] fulltext hydrate on {deep_ok}/{len(out)} kept items "
-        f"(cap {MAX_DEEP_ITEMS}); gemini {gemini_ok}/{gemini_attempts} "
-        f"(cap {MAX_GEMINI_ITEMS}, model {GEMINI_MODEL})"
+        f"(cap {MAX_DEEP_ITEMS}); gemini digests shown {gemini_shown} "
+        f"({gemini_attempts} new calls attempted, cap {MAX_GEMINI_ITEMS}, "
+        f"model {GEMINI_MODEL}); cache reuse {reused}; "
+        f"cross-source confirmed {verified}"
     )
     save_cache(cache)
     save_article_cache(article_cache)
@@ -980,6 +1248,7 @@ IL_TZ = ZoneInfo("Asia/Jerusalem")
 DAILY_BRIEF_MIN = 4
 DAILY_BRIEF_MAX = 7
 DAILY_BRIEF_CANDIDATES = 8
+DAILY_BRIEF_WINDOW_H = 18
 
 _TOPIC_SCORE = {
     "security": 100,
@@ -1131,35 +1400,64 @@ def _importance_score(item: dict, *, now: datetime | None = None) -> float:
     return relevance * recency * _reliability_factor(item)
 
 
+_QUOTE_CHARS = '"״„“”'
+
+
+def _quote_positions(text: str) -> list[int]:
+    """Quotation marks only — Hebrew acronyms like צה\"ל use the same glyph."""
+    spots = []
+    for i, ch in enumerate(text):
+        if ch not in _QUOTE_CHARS:
+            continue
+        inside_word = 0 < i < len(text) - 1 and text[i - 1].isalpha() and text[i + 1].isalpha()
+        if not inside_word:
+            spots.append(i)
+    return spots
+
+
+def _balance_quotes(text: str) -> str:
+    """Drop a dangling quote so points never end mid-quotation."""
+    t = (text or "").rstrip()
+    spots = _quote_positions(t)
+    if len(spots) % 2 == 1:
+        t = t[: spots[-1]].rstrip(" -:·|,")
+    return t
+
+
 def _short_point(text: str, max_len: int = 140) -> str:
     raw = dry_title(re.sub(r"\s+", " ", str(text or "")).strip())
     if not raw:
         return ""
     sentence = re.split(r"(?<=[.!?…])\s+", raw)[0] or raw
     sentence = sentence.strip(" -:·|")
-    if len(sentence) <= max_len:
-        return sentence
-    return sentence[: max_len - 1].rsplit(" ", 1)[0] + "…"
+    if len(sentence) > max_len:
+        sentence = sentence[: max_len - 1].rsplit(" ", 1)[0] + "…"
+    return _balance_quotes(sentence).strip(" -:·|")
+
+
+_BRIEF_FILLER_RE = re.compile(
+    r"הדיווח נוגע|חלק מהפרטים|מוצלב בין מקורות|מקורות עצמאיים|נקראו \d+ מקורות|"
+    r"השרת טרם|חסר זיקוק|לא הובהרו|מבוסס על מקור|בלי AI"
+)
 
 
 def _heuristic_daily_points(items: list[dict]) -> list[str]:
     points: list[str] = []
     seen: set[str] = set()
     for item in items:
-        candidates = []
-        bullets = item.get("bullet_facts") or []
-        if bullets:
-            candidates.append(str(bullets[0]))
-        if item.get("summary"):
-            # Skip meta "no AI" / raw body dumps in daily points
-            s = str(item.get("summary"))
-            if not re.search(r"בלי AI|על פי \d+ מקורות שנקראו", s):
-                candidates.append(s)
-        candidates.append(str(item.get("dryTitle") or item.get("title") or ""))
+        # A daily point must be a real statement, not a stub or our own boilerplate.
+        candidates = [
+            str(item.get("dryTitle") or item.get("title") or ""),
+            *[str(b) for b in (item.get("bullet_facts") or [])[:2]],
+            str(item.get("summary") or ""),
+        ]
         point = ""
         for c in candidates:
-            point = _short_point(c)
-            if point:
+            if _BRIEF_FILLER_RE.search(c):
+                continue
+            candidate = _short_point(c)
+            if candidate and len(candidate) >= 25:
+                point = candidate
                 break
         if not point:
             continue
@@ -1228,10 +1526,21 @@ def _gemini_daily_points(items: list[dict]) -> list[str] | None:
     return cleaned[:DAILY_BRIEF_MAX]
 
 
+def _in_brief_window(item: dict, now: datetime) -> bool:
+    """Today in Israel, or still within the rolling window just after midnight."""
+    if _is_today_israel(item, now=now):
+        return True
+    dt = _parse_item_time(item)
+    if not dt:
+        return False
+    age_h = (now - dt.astimezone(IL_TZ)).total_seconds() / 3600.0
+    return 0 <= age_h <= DAILY_BRIEF_WINDOW_H
+
+
 def build_daily_brief(items: list[dict]) -> dict:
-    """Rank today's stories and produce a short factual daily brief."""
+    """Rank recent stories and produce a short factual daily brief."""
     now = datetime.now(IL_TZ)
-    today_items = [it for it in items if _is_today_israel(it, now=now)]
+    today_items = [it for it in items if _in_brief_window(it, now)]
     pool = today_items if today_items else list(items)
     ranked = sorted(pool, key=lambda it: _importance_score(it, now=now), reverse=True)
     top = ranked[:DAILY_BRIEF_CANDIDATES]

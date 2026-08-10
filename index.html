@@ -1105,6 +1105,22 @@
       color: var(--ink);
       font-size: 1.02rem;
     }
+    ul.verified-facts {
+      margin-top: 0.6rem;
+      margin-bottom: 0;
+    }
+    ul.verified-facts li {
+      color: var(--ok);
+      font-size: 0.95rem;
+    }
+    ul.conflict-facts {
+      margin-top: 0.6rem;
+      margin-bottom: 0;
+    }
+    ul.conflict-facts li {
+      color: var(--spot);
+      font-size: 0.95rem;
+    }
 
     .block {
       margin: 0;
@@ -2812,13 +2828,27 @@
           <div class="block">
             <h3>בדיקת אמינות</h3>
             <p>${escapeHtml(c.reliability_notes || "טרם בוצעה בדיקת אמינות מול המקורות.")}</p>
+            ${
+              (c.verification?.shared_facts || []).length
+                ? `<ul class="facts verified-facts">${(c.verification.shared_facts || [])
+                    .map((f) => `<li>${escapeHtml(f)} — מופיע בכל המקורות שנבדקו</li>`)
+                    .join("")}</ul>`
+                : ""
+            }
+            ${
+              (c.verification?.contradictions || []).length
+                ? `<ul class="facts conflict-facts">${(c.verification.contradictions || [])
+                    .map((f) => `<li>סתירה בין המקורות: ${escapeHtml(f)}</li>`)
+                    .join("")}</ul>`
+                : ""
+            }
             <p class="hint" style="margin:0.55rem 0 0">
               ${
                 c.digest_basis === "fulltext"
-                  ? "נקראו גופי כתבות מהמקורות · הצלבה בשרת"
+                  ? `נקראו גופי כתבות מ־${c.verification?.bodies || 0} מקורות · הצלבה בשרת`
                   : "מבוסס בעיקר על כותרות · גופי כתבות לא נמשכו במלואם"
               }
-              ${c.mode === "gemini" ? " · סיכום AI" : " · סיכום שרת (בלי AI)"}
+              ${c.mode === "gemini" ? " · כולל בדיקת AI" : " · הצלבה מכנית בלבד"}
             </p>
           </div>
           <div class="block">
@@ -2938,6 +2968,7 @@
             pre?.reliability_notes ||
             item.reliability_notes ||
             "טרם בוצעה בדיקת אמינות מול המקורות.",
+          verification: pre?.verification || item.verification || null,
           digest_basis: pre?.digest_basis || item.digest_basis || "headlines",
           insight: "",
           historical_context: pre?.historical_context || item.historical_context || item.background || pre?.background || "",
@@ -2955,7 +2986,8 @@
       }
 
       const multi = names.length >= 2;
-      let status = multi ? "confirmed" : "reported";
+      // Without a server digest nothing has been cross-checked, so never claim "confirmed".
+      let status = "reported";
       if (/הכחיש|הכחשה/.test(title)) status = "denied";
       const bullets = [title || "חסר כותרת"].filter(Boolean);
       while (bullets.length < 3) bullets.push("השרת טרם סיפק זיקוק מלא לכרטיס זה.");
@@ -2965,6 +2997,7 @@
         status,
         reliability: "unknown",
         reliability_notes: "חסר זיקוק שרת — לא בוצעה בדיקת אמינות.",
+        verification: null,
         digest_basis: "headlines",
         insight: "",
         historical_context: "חסר זיקוק שרת לכרטיס זה.",
