@@ -1191,18 +1191,54 @@
       line-height: 1.55;
       max-width: 40rem;
     }
+    .story-block .story-text {
+      margin: 0;
+      color: var(--ink);
+      font-size: 1.12rem;
+      line-height: 1.65;
+      font-weight: 500;
+      max-width: 40rem;
+    }
     .block p.why-matters {
       margin-top: 0.85rem;
-      padding: 0.75rem 0.9rem;
+      padding: 0.7rem 0.85rem;
       border-top: 0;
       border-radius: 12px;
       background: var(--accent-soft);
       font-weight: 500;
       line-height: 1.5;
+      color: var(--ink-soft);
     }
-    .block p.why-matters strong {
-      color: var(--accent);
+    ul.tight-facts {
+      margin: 0;
+      padding: 0 1.1rem 0 0;
+    }
+    ul.tight-facts li {
+      margin: 0.45rem 0;
+      font-size: 1rem;
+      line-height: 1.45;
+      color: var(--ink-soft);
+    }
+    .trust-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem 0.75rem;
+      align-items: baseline;
+      padding: 0.75rem 0.85rem;
+      border-radius: 12px;
+      background: var(--surface-tint);
+      border: 1px solid var(--rule-soft);
+    }
+    .trust-label {
+      font-size: 0.78rem;
       font-weight: 800;
+      color: var(--accent);
+    }
+    .trust-copy {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--ink-soft);
+      line-height: 1.4;
     }
 
     .time {
@@ -2830,6 +2866,59 @@
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
+    function isFillerCopy(text) {
+      const t = String(text || "").trim();
+      if (!t || t.length < 12) return true;
+      return /חסר אישור רשמי|עדיין חסר פירוט|חסר הקשר מצולב|חסרים אישור|חסרים פרט|חסר פירוט עובדתי|הדיווח מתאר מהלך שעדיין|הדיווח נוגע ל|מבוסס על מקור|לאחר רענון השרת|חסר זיקוק|טרם בוצעה בדיקת|אין עדיין נתונים/.test(
+        t
+      );
+    }
+
+    function factKey(text) {
+      return String(text || "")
+        .toLowerCase()
+        .replace(/\W+/g, "")
+        .slice(0, 48);
+    }
+
+    function focusedFacts(card) {
+      const summaryKey = factKey(card.summary);
+      const titleKey = factKey(card.title);
+      const out = [];
+      for (const raw of card.bullet_facts || []) {
+        const line = String(raw || "").trim();
+        if (!line || line.length > 120) continue;
+        if (isFillerCopy(line)) continue;
+        const key = factKey(line);
+        if (!key || key === titleKey || key === summaryKey) continue;
+        if (summaryKey && summaryKey.includes(key.slice(0, 28))) continue;
+        if (out.some((x) => factKey(x) === key)) continue;
+        out.push(line);
+        if (out.length >= 4) break;
+      }
+      return out;
+    }
+
+    function trustLine(card) {
+      const v = card.verification || {};
+      const bodies = Number(v.bodies || 0);
+      const shared = (v.shared_facts || []).slice(0, 2);
+      const contra = (v.contradictions || []).slice(0, 1);
+      if (contra.length) {
+        return `המקורות חלוקים: ${contra[0]}`;
+      }
+      if (shared.length) {
+        return `מוסכם בין המקורות: ${shared.join(" · ")}`;
+      }
+      if (bodies >= 2) {
+        return `נבדק מול ${bodies} מקורות${v.outlets?.length ? ` (${v.outlets.slice(0, 3).join(", ")})` : ""}`;
+      }
+      if (bodies === 1) {
+        return "נקרא מקור אחד במלואו — בלי הצלבה נוספת";
+      }
+      return "";
+    }
+
     function showDetail(id) {
       const c = allCards.find((x) => x.id === id);
       if (!c) {
@@ -2841,6 +2930,13 @@
         .map((name) => `<span class="source-chip">${escapeHtml(name)}</span>`)
         .join("");
       const seen = isSeen(id);
+      const facts = focusedFacts(c);
+      const trust = trustLine(c);
+      const background = !isFillerCopy(c.background || c.historical_context)
+        ? c.background || c.historical_context
+        : "";
+      const outlook = !isFillerCopy(c.outlook) ? c.outlook : "";
+      const why = !isFillerCopy(c.why_matters) ? c.why_matters : "";
 
       els.homeView.classList.add("hidden");
       hideAbout();
@@ -2872,63 +2968,41 @@
           <button type="button" class="audio-brief-btn" id="detailAudioBtn" title="השמע תקציר">השמע תקציר</button>
         </article>
         <div class="detail-body">
-          <div class="block">
-            <h3>בדיקת אמינות</h3>
-            <p>${escapeHtml(c.reliability_notes || "טרם בוצעה בדיקת אמינות מול המקורות.")}</p>
-            ${
-              (c.verification?.shared_facts || []).length
-                ? `<ul class="facts verified-facts">${(c.verification.shared_facts || [])
-                    .map((f) => `<li>${escapeHtml(f)} — מופיע בכל המקורות שנבדקו</li>`)
-                    .join("")}</ul>`
-                : ""
-            }
-            ${
-              (c.verification?.contradictions || []).length
-                ? `<ul class="facts conflict-facts">${(c.verification.contradictions || [])
-                    .map((f) => `<li>סתירה בין המקורות: ${escapeHtml(f)}</li>`)
-                    .join("")}</ul>`
-                : ""
-            }
-          </div>
-          <div class="block">
-            <h3>מה שקרה</h3>
-            <p>${escapeHtml(c.summary || "")}</p>
-            ${
-              c.why_matters
-                ? `<p class="why-matters"><strong>השלכה</strong> — ${escapeHtml(c.why_matters)}</p>`
-                : ""
-            }
-          </div>
-          <div class="block">
-            <h3>נתונים</h3>
-            ${
-              (c.bullet_facts || []).length
-                ? `<ul class="facts">${(c.bullet_facts || [])
-                    .map((f) => `<li>${escapeHtml(f)}</li>`)
-                    .join("")}</ul>`
-                : `<p>אין עדיין נתונים מצולבים מספיק מהמקורות.</p>`
-            }
-          </div>
-          <div class="block">
-            <h3>רקע</h3>
-            <p>${escapeHtml(c.background || c.historical_context || "")}</p>
-          </div>
-          <div class="block">
-            <h3>מה עוד לא ברור</h3>
-            <p>${escapeHtml(c.outlook || "חסרים אישור רשמי ופרטי היקף / לוח זמנים.")}</p>
+          <div class="block story-block">
+            <p class="story-text">${escapeHtml(c.summary || "")}</p>
+            ${why ? `<p class="why-matters">${escapeHtml(why)}</p>` : ""}
           </div>
           ${
-            (c.sources || []).some((s) => s.headline)
+            facts.length
               ? `<div class="block">
-            <h3>כותרות מקורות</h3>
-            <ul class="facts">${(c.sources || [])
-              .filter((s) => s.headline)
-              .slice(0, 6)
-              .map(
-                (s) =>
-                  `<li>${escapeHtml(`${s.name ? s.name + ": " : ""}${s.headline}`)}</li>`
-              )
+            <h3>בקצרה</h3>
+            <ul class="facts tight-facts">${facts
+              .map((f) => `<li>${escapeHtml(f)}</li>`)
               .join("")}</ul>
+          </div>`
+              : ""
+          }
+          ${
+            trust
+              ? `<div class="trust-strip">
+            <span class="trust-label">${escapeHtml(RELIABILITY_HE[c.reliability] || "אמינות")}</span>
+            <span class="trust-copy">${escapeHtml(trust)}</span>
+          </div>`
+              : ""
+          }
+          ${
+            background
+              ? `<div class="block">
+            <h3>רקע</h3>
+            <p>${escapeHtml(background)}</p>
+          </div>`
+              : ""
+          }
+          ${
+            outlook
+              ? `<div class="block">
+            <h3>עדיין פתוח</h3>
+            <p>${escapeHtml(outlook)}</p>
           </div>`
               : ""
           }
@@ -2936,10 +3010,10 @@
           <p class="hint digest-meta">
             ${
               c.digest_basis === "fulltext"
-                ? `נקראו גופי כתבות מ־${c.verification?.bodies || 0} מקורות · הצלבה בשרת`
-                : "מבוסס בעיקר על כותרות · גופי כתבות לא נמשכו במלואם"
+                ? `נקראו גופי כתבות מ־${c.verification?.bodies || 0} מקורות`
+                : "מבוסס בעיקר על כותרות"
             }
-            ${c.mode === "gemini" ? " · כולל בדיקת AI" : " · הצלבה מכנית בלבד"}
+            ${c.mode === "gemini" ? " · כולל AI" : ""}
           </p>
         </div>
       `;

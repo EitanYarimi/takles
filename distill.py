@@ -25,7 +25,7 @@ from zoneinfo import ZoneInfo
 ROOT = Path(__file__).resolve().parent
 CACHE_PATH = ROOT / "distill_cache.json"
 ARTICLE_CACHE_PATH = ROOT / "article_cache.json"
-DISTILL_VERSION = "v14-unbiased-story"
+DISTILL_VERSION = "v15-focused-story"
 SSL_CTX = ssl._create_unverified_context()
 UA = (
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
@@ -791,6 +791,17 @@ SITE_PREFIX_RE = re.compile(
 GLUED_HEADLINE_RE = re.compile(
     r"\?\s+\S{3,}|\s-\s[A-Za-z\u0590-\u05FF].{0,40}\s-\s|•"
 )
+CLICKBAIT_LINE_RE = re.compile(
+    r"הנתונים שמוכיחים|כל מה שצריך לדעת|לא תאמינו|חשיפה:|בלעדי:|"
+    r"האמת מאחורי|מה באמת קורה|תפנית שאי אפשר|גל השמועות|"
+    r"מייצר תחושה של|אי אפשר להתעלם",
+    re.I,
+)
+FILLER_COPY_RE = re.compile(
+    r"חסר אישור רשמי|עדיין חסר פירוט|חסר הקשר מצולב|חסרים אישור|"
+    r"הדיווח מתאר מהלך שעדיין|הדיווח נוגע ל|מבוסס על מקור|"
+    r"חסר זיקוק|לאחר רענון השרת"
+)
 
 
 def _end_sentence(text: str) -> str:
@@ -814,7 +825,20 @@ def _clean_story_sentence(text: str) -> str:
         s,
         flags=re.I,
     ).strip(" -:·|•*")
+    # Strip a leftover clickbait title glued before the real sentence
+    s = re.sub(
+        r"^[^.]{8,80}\?\s+(?=[א-תA-Za-z])",
+        "",
+        s,
+    ).strip()
     return s
+
+
+def _scrub_filler(text: str) -> str:
+    t = (text or "").strip()
+    if not t or FILLER_COPY_RE.search(t):
+        return ""
+    return t
 
 
 def _split_body_sentences(text: str) -> list[str]:
@@ -830,6 +854,8 @@ def _split_body_sentences(text: str) -> list[str]:
         if len(s) < 28 or len(s) > 220:
             continue
         if BOILERPLATE_SENT_RE.search(s) or GLUED_HEADLINE_RE.search(s):
+            continue
+        if CLICKBAIT_LINE_RE.search(s):
             continue
         if is_social_noise(s):
             continue
@@ -867,14 +893,16 @@ def _rank_body_sentences(
             support = _sentence_support(sent, others)
             title_hit = len(tokens & title_tokens)
             quoted = sent.lstrip().startswith(('"', "״", "„", "'"))
+            title_dup = _near_duplicate(sent, title)
             score = (
                 support * 12
-                + title_hit * 3
+                + (title_hit * 3 if not title_dup else -8)
                 + (4 if re.search(r"\d", sent) else 0)
                 + (3 if FACT_SIGNAL_RE.search(sent) else 0)
                 + (2 if pos < 3 else 0)  # lead paragraphs usually hold the event
                 - (6 if quoted else 0)  # prefer reported fact over opening quote
                 - (3 if len(sent) > 180 else 0)
+                - (8 if "?" in sent and not re.search(r"\d", sent) else 0)
             )
             ranked.append(
                 {
@@ -1008,25 +1036,20 @@ def build_cross_source_story(item: dict, verdict: dict) -> tuple[str, list[str]]
 
     lead_pool = agreed or picked
     parts.append(_end_sentence(lead_pool[0]["text"]))
-    for row in lead_pool[1:3]:
+    for row in lead_pool[1:2]:
         # Keep multi-source sentences unattributed — they are the shared story.
         if row["support"] >= 1:
             parts.append(_end_sentence(row["text"]))
         else:
             parts.append(f"לפי {row['outlet']}: {_end_sentence(row['text'])}")
 
-    for row in solo:
-        if row in lead_pool[:3]:
-            continue
-        parts.append(f"לפי {row['outlet']}: {_end_sentence(row['text'])}")
-        break
-
     if verdict.get("contradictions"):
         parts.append("המקורות חלוקים בנתון: " + verdict["contradictions"][0] + ".")
 
     summary = " ".join(parts)
-    if len(summary) > 650:
-        summary = summary[:647].rsplit(" ", 1)[0] + "…"
+    # Soft cap — focused cards beat long dumps.
+    if len(summary) > 420:
+        summary = summary[:417].rsplit(" ", 1)[0] + "…"
 
     bullets: list[str] = []
 
@@ -1135,73 +1158,47 @@ def heuristic_distill(item: dict) -> dict:
     if not bullets and title:
         bullets = [title]
 
-    blob = " ".join([title, *headlines, summary])
-    thin_reaction = bool(QUOTE_REACTION_RE.search(raw_title)) and len(headlines) <= 2
-
-    if thin_reaction:
-        background = "חסר הקשר מצולב מעבר לדיווח על התגובה עצמה."
-        outlook = "חסר פירוט עובדתי: על מה בדיוק הגיבו, ומה אומת מעבר לציטוט."
-        why_matters = ""
-    elif re.search(r"הורמוז|איראן", blob):
-        why_matters = "הדיווח נוגע לנתיב שיט מרכזי — שינוי שם משפיע על אנרגיה ומחירים."
-        background = (
-            "מצר הורמוז הוא נתיב שיט מרכזי לנפט ולסחר במפרץ. "
-            "דיווחים על פתיחה/סגירה או הסכמות סביבו נוגעים לשיט ולשווקים."
-        )
-        outlook = (
-            "עדיין פתוח: האם יש הסכמה מעשית על פתיחת המעבר, ומה נאמר בפועל ע״י הצדדים. "
-            "חסרים פרטי לוח זמנים והיקף."
-        )
-    elif re.search(
-        r"חיזבאללה|לבנון|רחפן|יירוט|פיקוד העורף|חטופ|עזה|חמאס|רצועת|נסיגה|צה[\"׳']?ל|מערכת הביטחון|כוחות|לחימ",
-        blob,
-    ):
-        why_matters = "הדיווח נוגע לביטחון תושבים, לגבול או ללחימה."
-        background = (
-            "ממקורות חדשותיים: "
-            + ("; ".join(bullets[:3]) if bullets else title)
-            + ". עדיין מדובר בדיווח שדורש אישור/פירוט."
-        )
-        outlook = "חסרים אישור רשמי, היקף ולוח זמנים."
-    elif re.search(
-        r"תובע הכללי|סנאט|הבית הלבן|טראמפ|ביידן|ארה[\"׳']?ב|וושינגטון|פנטגון|נאט.?ו",
-        blob,
-    ):
-        why_matters = "מינוי או מהלך בכיר בוושינגטון משפיע על מדיניות אכיפה ותיקים רגישים."
-        background = "במערכת האמריקאית חשוב להפריד בין הודעה על מינוי לבין אישור סופי."
-        outlook = "עדיין פתוח: אישור סופי, מועד כניסה לתפקיד, וקווי מדיניות שפורסמו."
-    elif re.search(r"תייר|נופש|מלונ|חופשה|משרד התיירות", blob):
-        why_matters = "הדיווח נוגע למחירים, זמינות או מדיניות שמשפיעים על מטיילים."
-        background = "ענף התיירות רגיש לביטחון, מחירים ועונות חגים."
-        outlook = "חסרים פרטי מחיר/זמינות והודעות רשמיות."
-    elif re.search(r"ספורט|כדורגל|מכבי|הפועל|נבחרת|פרמייר|העברה|שחקנ", blob):
-        why_matters = "הדיווח נוגע לשינוי בסגל או לתוצאה רשמית."
-        background = "בספורט יש פער תכוף בין שמועה לאישור רשמי."
-        outlook = "חסר אישור המועדון/הליגה או תוצאה רשמית."
-    elif re.search(r"בורסה|ריבית|מני|דולר|השקע|בנק ישראל", blob):
-        why_matters = "הדיווח נוגע לנתון או מהלך כלכלי שפורסם."
-        background = "חשוב להבחין בין עובדה שפורסמה לבין פרשנות שוק."
-        outlook = "חסרים נתון מאושר או הודעה רשמית מעודכנת."
-    else:
-        background, outlook, why_matters = _substantive_fallback(title, headlines, names)
-
+    # Keep the card focused: no boilerplate background/outlook/why.
+    # Only surface open questions when sources actually disagree.
+    background = ""
+    why_matters = ""
+    outlook = ""
     if verdict.get("contradictions"):
-        outlook = (
-            "המקורות חלוקים בנתונים ("
-            + verdict["contradictions"][0]
-            + "). "
-            + outlook
-        )
+        outlook = "המקורות חלוקים בנתונים: " + verdict["contradictions"][0] + "."
+
+    # Prefer short, concrete bullets (numbers / named facts) over paragraph clones.
+    tight: list[str] = []
+    for b in bullets:
+        point = _short_point(str(b), max_len=110)
+        if not point or FILLER_COPY_RE.search(point):
+            continue
+        if len(point) > 110:
+            continue
+        if any(_near_duplicate(point, existing) for existing in tight):
+            continue
+        if _near_duplicate(point, summary):
+            continue
+        tight.append(point)
+        if len(tight) >= 4:
+            break
+    if verdict.get("shared_facts"):
+        for fact in verdict["shared_facts"][:2]:
+            line = str(fact).strip()
+            if line and line not in tight:
+                tight.insert(0, line)
 
     reliability = verdict["reliability"]
     reliability_notes = verdict["notes"]
     basis = item.get("digest_basis") or "headlines"
+    why_matters = _scrub_filler(why_matters)
+    background = _scrub_filler(background)
+    outlook = _scrub_filler(outlook)
 
     return {
         "title": title,
         "summary": summary,
         "why_matters": why_matters,
-        "bullet_facts": bullets[:6],
+        "bullet_facts": tight[:5],
         "background": background,
         "outlook": outlook,
         "insight": "",
@@ -1317,10 +1314,9 @@ def gemini_distill(item: dict) -> dict | None:
         return None
     if not summary:
         summary = background
-    if not why_matters:
-        why_matters = (
-            "כי מדובר במהלך שעדיין פתוח — אישור או דחייה ישנו את המציאות בשטח או במדיניות."
-        )
+    why_matters = _scrub_filler(why_matters)
+    background = _scrub_filler(background) or background
+    outlook = _scrub_filler(outlook) or outlook
 
     # The model may still be generous; a single body can never be "confirmed".
     verdict = cross_source_verify(item)
@@ -1381,7 +1377,6 @@ def cached_distill(item: dict, cache: dict) -> dict | None:
         and hit.get("background")
         and hit.get("outlook")
         and hit.get("summary")
-        and hit.get("why_matters")
         and hit.get("reliability")
         and hit.get("reliability_notes")
     ):
