@@ -71,7 +71,16 @@ Live: [eitanyarimi.github.io/takles](https://eitanyarimi.github.io/takles/) · R
    - סילוק `excerpt` מהמקורות לפני שליחה ללקוח (רק שם/כותרת/url)
 5. **Payload** — `{ fetchedAt, count, withImages, items, dailyBrief }` → API או `news.json`
 
-גרסת זיקוק נוכחית: **`DISTILL_VERSION = v13-cross-source-verification`**.
+גרסת זיקוק נוכחית: **`DISTILL_VERSION = v14-unbiased-story`**.
+
+### Unbiased story (`summary`)
+
+אחרי האימות, השרת כותב **סיפור אחד** של מה שקרה — לא מטא על "כמה מקורות דיווחו":
+
+- פרטים שחוזרים בין גופי כתבות → נאמרים כעובדה, בלי ייחוס למוציא לאור
+- פרט ממקור יחיד → `לפי X…`
+- סתירה מספרית → מוזכרת במפורש בסיכום וב־`outlook`
+- כשאין גוף כתבה → נפילה לכותרות בלבד (בלי למלא במלל ריק)
 
 ### Cross-source verification (`cross_source_verify`)
 

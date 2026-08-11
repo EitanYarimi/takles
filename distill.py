@@ -25,7 +25,7 @@ from zoneinfo import ZoneInfo
 ROOT = Path(__file__).resolve().parent
 CACHE_PATH = ROOT / "distill_cache.json"
 ARTICLE_CACHE_PATH = ROOT / "article_cache.json"
-DISTILL_VERSION = "v13-cross-source-verification"
+DISTILL_VERSION = "v14-unbiased-story"
 SSL_CTX = ssl._create_unverified_context()
 UA = (
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
@@ -207,21 +207,25 @@ def scrub_item_sources(item: dict) -> dict | None:
     return out
 
 
-PROMPT = """אתה עורך זיקוק עובדתי לפורטל "תכל׳ס" (ישראל).
-קיבלת כותרת מקבץ + קטעי גוף כתבה ממקורות (אחרי פענוח קישורי Google News), או כותרות בלבד אם אין גוף.
-תפקידך: לקרוא את המקורות, להצליב נתונים, ולכתוב סיכום יבש אחרי בדיקת אמינות.
+PROMPT = """אתה עורך חדשות יבש לפורטל "תכל׳ס" (ישראל).
+קיבלת כותרת מקבץ + גופי כתבה מכמה מוציאים לאור (או כותרות בלבד).
+תפקידך: למזג את המקורות לסיפור אחד נייטרלי של מה שקרה — לא מטא על "כמה מקורות דיווחו".
 
 החזר JSON בלבד (בלי markdown) עם השדות:
 - title: כותרת יבשה בעברית, בלי דרמה/קליקבייט/ציטוטי ספין
-- bullet_facts: מערך 3–6 נתונים שנגזרים מגופי הכתבות/כותרות בלבד. אסור דעה/פרשנות. ציטוט פוליטי = רק "מי אמר/הגיב למי" אם זה הדיווח.
-- summary: סיכום שלך אחרי הצלבה — 2–4 משפטים: מה חוזר בין מקורות, מה דיווח יחיד, איפה יש סתירה או חוסר. בלי דעה.
+- summary: 2–4 משפטים בעברית — סיפור אחד של מה שקרה.
+  * פרטים שחוזרים בין מקורות: כתוב כעובדה, בלי לייחס למוציא לאור.
+  * פרט שמופיע במקור יחיד: ייחס ("לפי X…").
+  * אם יש סתירה בנתון: ציין את שני הערכים במשפט אחד.
+  * אסור: "3 מקורות מדווחים", "הוצלבו", "פרטים משותפים", דעה, או צד.
+- bullet_facts: 3–6 עובדות קצרות מגופי הכתבות (מי/מה/כמה/מתי). בלי דעה. בלי למלא במלל ריק.
 - reliability: high | medium | low | unknown
   high = לפחות שני מקורות עצמאיים על אותה עובדה ליבה, בלי סתירה מהותית
   medium = יש גוף/מקורות אבל אימות חלקי או פרטים שנויים במחלוקת
   low = מקור יחיד, או סתירות, או בעיקר ציטוט/ספין בלי נתון
   unknown = אין גוף כתבה / לא ניתן לבדוק
-- reliability_notes: משפט–שניים בעברית: איך הגעת לרמת האמינות (מה הוצלב, מה חסר)
-- why_matters: השלכה עובדתית אחת שנגזרת מהנתונים, או מחרוזת ריקה
+- reliability_notes: משפט–שניים: איך נקבעה האמינות (מה הוצלב, מה חסר)
+- why_matters: השלכה עובדתית אחת, או מחרוזת ריקה
 - background: הקשר עובדתי קצר ורק אם נתמך; אחרת "חסר הקשר מצולב בקלט"
 - outlook: מה עוד לא ברור לאימות (לא תחזית)
 - status: confirmed | reported | denied | review
@@ -762,38 +766,302 @@ def _extract_fact_points(title: str, headlines: list[str]) -> list[str]:
     return points[:6]
 
 
-def _build_summary(title: str, headlines: list[str], names: list[str]) -> str:
-    """Dry cross-source analysis — no opinion, no invented facts."""
-    factual_heads = [h for h in headlines if looks_like_fact_line(h)]
-    points = _extract_fact_points(title, factual_heads)
-    n = len(names)
-    unique_heads = _unique_lines(factual_heads or ([factual_core_title(title)] if title else []), limit=4)
+BOILERPLATE_SENT_RE = re.compile(
+    r"כל הזכויות|פרסומת|לחצו כאן|להמשך קריאה|הצטרפו ל|עקבו אחרי|"
+    r"שתפו ב|לתגובות|כתבות נוספות|תמונה:|צילום:|הכתבה המלאה|"
+    r"רוצים לקבל|ניוזלטר|הירשמו|קראו גם|עוד באתר|תוכן מקודם|"
+    r"בשיתוף|לכתבה המלאה|פנו אלינו|מערכת .* כותבת|"
+    r"מאת investing|שוק ההון -|בחירות \d{4} -|"
+    r"גלובס ראשי|כל הכותרות|נדל.?ן ותשתיות|ניהול וקריירה|"
+    r"דעות שיווק|פיננסי כל|תפריט|התחברות|החשבון שלי|"
+    r"^עודכן:|פורסם ב-|כפי שפורסם לראשונה כאן",
+    re.I,
+)
+SITE_CHROME_RE = re.compile(
+    r"\s*[\|\-–—]\s*(?:הארץ|ynet|mako|N12|חדשות 12|חדשות 13|כאן 11|"
+    r"מעריב|גלובס|TheMarker|וואלה|סרוגים|ערוץ 7|Sport5|ספורט 1|"
+    r"Investing\.com|כלכליסט|הידברות)\s*$",
+    re.I,
+)
+SITE_PREFIX_RE = re.compile(
+    r"^(?:N12|חדשות 12|חדשות 13|כאן 11|ynet|mako|הארץ|מעריב|גלובס|"
+    r"TheMarker|וואלה|סרוגים|ערוץ 7|Sport5|ספורט 1)\s+",
+    re.I,
+)
+GLUED_HEADLINE_RE = re.compile(
+    r"\?\s+\S{3,}|\s-\s[A-Za-z\u0590-\u05FF].{0,40}\s-\s|•"
+)
 
-    parts: list[str] = []
-    if n >= 2:
-        parts.append(
-            f"הצלבה בין {n} מקורות חדשותיים ({', '.join(names[:4])}{'…' if n > 4 else ''})."
-        )
-    else:
-        parts.append("מבוסס על מקור חדשותי יחיד — בלי הצלבה מספקת.")
 
-    # Restating the headline back at the reader adds nothing — it is already above.
+def _end_sentence(text: str) -> str:
+    t = (text or "").strip()
+    if not t:
+        return ""
+    if t[-1] not in ".!?…":
+        t += "."
+    return t
+
+
+def _clean_story_sentence(text: str) -> str:
+    s = re.sub(r"\s+", " ", text or "").strip(" -:·|•*")
+    s = SITE_PREFIX_RE.sub("", s)
+    s = re.sub(r"עודכן:\s*\d{1,2}\.\d{1,2}\.\d{2,4},?\s*\d{1,2}:\d{2}\s*", "", s)
+    s = SITE_CHROME_RE.sub("", s).strip(" -:·|•*")
+    # Drop a trailing orphaned site crumb that survived without a separator
+    s = re.sub(
+        r"\s+(?:הארץ|ynet|mako|TheMarker|גלובס|מעריב|Investing\.com|N12)\s*$",
+        "",
+        s,
+        flags=re.I,
+    ).strip(" -:·|•*")
+    return s
+
+
+def _split_body_sentences(text: str) -> list[str]:
+    """Split an article excerpt into usable factual sentences."""
+    raw = re.sub(r"\s+", " ", text or "").strip()
+    if not raw:
+        return []
+    # Break on pipes / bullets — Hebrew sites glue related headlines with them
+    parts = re.split(r"(?<=[.!?…])\s+|\n+|\s\|\s|\s•\s", raw)
+    out: list[str] = []
+    for part in parts:
+        s = _clean_story_sentence(part)
+        if len(s) < 28 or len(s) > 220:
+            continue
+        if BOILERPLATE_SENT_RE.search(s) or GLUED_HEADLINE_RE.search(s):
+            continue
+        if is_social_noise(s):
+            continue
+        # Soft opinion filter: keep attributed quotes / reported speech
+        if is_opinion_text(s) and not FACT_SIGNAL_RE.search(s) and not re.search(r"\d", s):
+            continue
+        # Pure rhetorical questions rarely carry the event
+        if s.endswith("?") and not re.search(r"\d", s) and not FACT_SIGNAL_RE.search(s):
+            continue
+        out.append(s)
+    return out
+
+
+def _sentence_support(sentence: str, other_token_sets: list[set[str]]) -> int:
+    tokens = _content_tokens(sentence)
+    if len(tokens) < 3:
+        return 0
+    support = 0
+    for other in other_token_sets:
+        if len(tokens & other) >= 3:
+            support += 1
+    return support
+
+
+def _rank_body_sentences(
+    bodies: list[tuple[str, str]], title: str
+) -> list[dict]:
+    title_tokens = _content_tokens(title)
+    token_sets = [_content_tokens(text) for _, text in bodies]
+    ranked: list[dict] = []
+    for i, (outlet, text) in enumerate(bodies):
+        others = [ts for j, ts in enumerate(token_sets) if j != i]
+        for pos, sent in enumerate(_split_body_sentences(text)):
+            tokens = _content_tokens(sent)
+            support = _sentence_support(sent, others)
+            title_hit = len(tokens & title_tokens)
+            quoted = sent.lstrip().startswith(('"', "״", "„", "'"))
+            score = (
+                support * 12
+                + title_hit * 3
+                + (4 if re.search(r"\d", sent) else 0)
+                + (3 if FACT_SIGNAL_RE.search(sent) else 0)
+                + (2 if pos < 3 else 0)  # lead paragraphs usually hold the event
+                - (6 if quoted else 0)  # prefer reported fact over opening quote
+                - (3 if len(sent) > 180 else 0)
+            )
+            ranked.append(
+                {
+                    "text": sent,
+                    "outlet": outlet,
+                    "support": support,
+                    "score": score,
+                    "tokens": tokens,
+                }
+            )
+    ranked.sort(key=lambda row: (-row["score"], -len(row["text"])))
+    return ranked
+
+
+def _raw_tokens(text: str) -> set[str]:
+    """Content tokens without prefix stripping — safer for near-duplicate checks."""
+    tokens: set[str] = set()
+    for raw in _TOKEN_RE.findall(text or ""):
+        w = raw.lower()
+        if len(w) < 3 or w in HEB_STOPWORDS or raw in HEB_STOPWORDS:
+            continue
+        tokens.add(w)
+    return tokens
+
+
+def _near_duplicate(a: str, b: str) -> bool:
+    """True when two sentences retell the same fact with different wording."""
+    ta, tb = _raw_tokens(a), _raw_tokens(b)
+    if not ta or not tb:
+        return False
+    smaller = min(len(ta), len(tb))
+    if len(ta & tb) / smaller >= 0.55:
+        return True
+    # Same numeric claim ("47 הרוגים…") is enough to call it a duplicate.
+    na = _NUM_CLAIM_RE.findall(a)
+    nb = _NUM_CLAIM_RE.findall(b)
+    if na and nb and set(na) & set(nb):
+        return True
+    return False
+
+
+def _pick_story_sentences(ranked: list[dict], limit: int = 4) -> list[dict]:
+    picked: list[dict] = []
+    used: set[str] = set()
+    for row in ranked:
+        tokens = _raw_tokens(row["text"])
+        if len(tokens) < 3:
+            continue
+        if any(_near_duplicate(row["text"], p["text"]) for p in picked):
+            continue
+        overlap = len(tokens & used) / max(1, len(tokens))
+        if picked and overlap > 0.45:
+            continue
+        picked.append(row)
+        used |= tokens
+        if len(picked) >= limit:
+            break
+    return picked
+
+
+def _headline_fallback_story(
+    title: str, headlines: list[str], names: list[str]
+) -> tuple[str, list[str]]:
+    """When no article bodies exist, tell the story from distinct headlines."""
     title_key = re.sub(r"\W+", "", (title or "").lower())[:48]
-    fresh_heads = [h for h in unique_heads if re.sub(r"\W+", "", h.lower())[:48] != title_key]
+    fresh = []
+    for h in _unique_lines(headlines or ([title] if title else []), limit=5):
+        if re.sub(r"\W+", "", h.lower())[:48] == title_key:
+            continue
+        if looks_like_fact_line(h) or re.search(r"\d", h):
+            fresh.append(h)
+    parts: list[str] = []
+    if title:
+        parts.append(_end_sentence(title))
+    for h in fresh[:2]:
+        parts.append(_end_sentence(h))
+    if not parts:
+        parts.append("לא נמסרו פרטים עובדתיים מעבר לכותרת המקבץ.")
+    elif len(names) == 1:
+        parts.append(f"הדיווח נשען על מקור יחיד ({names[0]}) בלי גוף כתבה להצלבה.")
+    elif not fresh:
+        parts.append("מעבר לכותרת לא נמצאו פרטים נוספים בכותרות המקורות.")
+    bullets = [title] if title else []
+    for h in fresh:
+        if h not in bullets:
+            bullets.append(h)
+    return " ".join(parts), bullets[:6]
 
-    if fresh_heads:
-        parts.append(
-            "פרטים נוספים מהמקורות: " + "; ".join(h.rstrip(".") for h in fresh_heads[:3]) + "."
-        )
-    elif points:
-        parts.append(f"מהדיווח עולה: {points[0].rstrip('.')}.")
-    else:
-        parts.append("מעבר לכותרת עצמה לא נמסרו פרטים עובדתיים נוספים במקורות שנבדקו.")
 
-    soft = re.search(r"עשוי|אולי|חשד|דיווח|נמסר|לפי גורמ|לטענת|לא אושר|טרם אושר", title)
-    if soft or n < 2 or QUOTE_REACTION_RE.search(title or ""):
-        parts.append("חלק מהפרטים ברמת דיווח/תגובה — לא אומתו מעבר לכך במקורות שנבדקו.")
-    return " ".join(parts)
+def build_cross_source_story(item: dict, verdict: dict) -> tuple[str, list[str]]:
+    """Merge fetched article bodies into one unbiased 'what happened' story.
+
+    Agreed facts are stated flat. Single-outlet details are attributed.
+    Contradictions are named. No meta about 'N sources report'.
+    """
+    bodies: list[tuple[str, str]] = []
+    seen: set[str] = set()
+    for s in item.get("sources") or []:
+        excerpt = (s.get("excerpt") or "").strip()
+        if not (s.get("fetch_ok") and excerpt):
+            continue
+        outlet = (s.get("name") or "מקור").strip()
+        if outlet in seen:
+            continue
+        seen.add(outlet)
+        bodies.append((outlet, excerpt))
+
+    title = factual_core_title(item.get("title") or "")
+    headlines = [
+        s.get("headline") or ""
+        for s in (item.get("sources") or [])
+        if not is_opinion_text(s.get("headline") or "")
+    ]
+    names = list(verdict.get("outlets") or [])
+    if not names:
+        for s in item.get("sources") or []:
+            n = (s.get("name") or "").strip()
+            if n and n not in names:
+                names.append(n)
+
+    if not bodies:
+        return _headline_fallback_story(title, headlines, names)
+
+    picked = _pick_story_sentences(_rank_body_sentences(bodies, title), limit=4)
+    if not picked:
+        return _headline_fallback_story(title, headlines, names)
+
+    agreed = [p for p in picked if p["support"] >= 1]
+    solo = [p for p in picked if p["support"] < 1]
+    parts: list[str] = []
+
+    lead_pool = agreed or picked
+    parts.append(_end_sentence(lead_pool[0]["text"]))
+    for row in lead_pool[1:3]:
+        # Keep multi-source sentences unattributed — they are the shared story.
+        if row["support"] >= 1:
+            parts.append(_end_sentence(row["text"]))
+        else:
+            parts.append(f"לפי {row['outlet']}: {_end_sentence(row['text'])}")
+
+    for row in solo:
+        if row in lead_pool[:3]:
+            continue
+        parts.append(f"לפי {row['outlet']}: {_end_sentence(row['text'])}")
+        break
+
+    if verdict.get("contradictions"):
+        parts.append("המקורות חלוקים בנתון: " + verdict["contradictions"][0] + ".")
+
+    summary = " ".join(parts)
+    if len(summary) > 650:
+        summary = summary[:647].rsplit(" ", 1)[0] + "…"
+
+    bullets: list[str] = []
+
+    def add_bullet(line: str) -> None:
+        point = _short_point(line, max_len=130) if len(line) > 140 else line.strip()
+        if not point or len(point) < 8:
+            return
+        if any(_near_duplicate(point, existing) for existing in bullets):
+            return
+        if point in bullets:
+            return
+        bullets.append(point)
+
+    for fact in verdict.get("shared_facts") or []:
+        add_bullet(str(fact).strip())
+    for row in agreed or picked:
+        add_bullet(row["text"])
+    title_key = re.sub(r"\W+", "", title.lower())[:48]
+    for h in _unique_lines(headlines, limit=5):
+        if re.sub(r"\W+", "", h.lower())[:48] == title_key:
+            continue
+        if looks_like_fact_line(h) or re.search(r"\d", h):
+            add_bullet(h)
+        if len(bullets) >= 6:
+            break
+    if title and len(bullets) < 2:
+        add_bullet(title)
+
+    return summary, bullets[:6]
+
+
+def _build_summary(title: str, headlines: list[str], names: list[str]) -> str:
+    """Headline-only fallback used when no bodies are available."""
+    story, _ = _headline_fallback_story(title, headlines, names)
+    return story
 
 
 def _substantive_fallback(title: str, headlines: list[str], names: list[str]) -> tuple[str, str, str]:
@@ -862,18 +1130,12 @@ def heuristic_distill(item: dict) -> dict:
     if re.search(r"חשד|אולי|עשוי|נבדק", title) or QUOTE_REACTION_RE.search(raw_title):
         status = "review"
 
-    bullets = [
-        b
-        for b in _extract_fact_points(title, headlines)
-        if looks_like_fact_line(b) or str(b).startswith("נתון")
-    ]
+    # One unbiased story from the article bodies; verification stays in reliability_notes.
+    summary, bullets = build_cross_source_story(item, verdict)
     if not bullets and title:
         bullets = [title]
-    while len(bullets) < 3:
-        bullets.append("חלק מהפרטים העובדתיים עדיין לא הובהרו במקורות החדשותיים שנבדקו.")
 
-    summary = _build_summary(title, headlines, names)
-    blob = " ".join([title, *headlines])
+    blob = " ".join([title, *headlines, summary])
     thin_reaction = bool(QUOTE_REACTION_RE.search(raw_title)) and len(headlines) <= 2
 
     if thin_reaction:
@@ -894,11 +1156,10 @@ def heuristic_distill(item: dict) -> dict:
         r"חיזבאללה|לבנון|רחפן|יירוט|פיקוד העורף|חטופ|עזה|חמאס|רצועת|נסיגה|צה[\"׳']?ל|מערכת הביטחון|כוחות|לחימ",
         blob,
     ):
-        points = _extract_fact_points(title, headlines)
         why_matters = "הדיווח נוגע לביטחון תושבים, לגבול או ללחימה."
         background = (
             "ממקורות חדשותיים: "
-            + ("; ".join(points[:4]) if points else title)
+            + ("; ".join(bullets[:3]) if bullets else title)
             + ". עדיין מדובר בדיווח שדורש אישור/פירוט."
         )
         outlook = "חסרים אישור רשמי, היקף ולוח זמנים."
@@ -924,37 +1185,17 @@ def heuristic_distill(item: dict) -> dict:
     else:
         background, outlook, why_matters = _substantive_fallback(title, headlines, names)
 
+    if verdict.get("contradictions"):
+        outlook = (
+            "המקורות חלוקים בנתונים ("
+            + verdict["contradictions"][0]
+            + "). "
+            + outlook
+        )
+
     reliability = verdict["reliability"]
     reliability_notes = verdict["notes"]
     basis = item.get("digest_basis") or "headlines"
-    if verdict["bodies"] >= 2:
-        outlet_list = ", ".join(verdict["outlets"][:3])
-        if verdict["reliability"] == "low":
-            parts = [
-                f"נקראו {verdict['bodies']} מקורות ({outlet_list}), אך הם חולקים מעט מאוד "
-                "פרטים — ייתכן שאינם מדווחים על אותו אירוע."
-            ]
-        else:
-            parts = [f"{verdict['bodies']} מקורות עצמאיים ({outlet_list}) מדווחים על אותו אירוע."]
-        if verdict["shared_facts"]:
-            parts.append("נתונים שחוזרים בכולם: " + ", ".join(verdict["shared_facts"][:3]) + ".")
-        elif verdict["shared_topics"]:
-            parts.append("פרטים משותפים: " + ", ".join(verdict["shared_topics"][:3]) + ".")
-        if verdict["contradictions"]:
-            parts.append("אי־התאמה בין הדיווחים: " + verdict["contradictions"][0] + ".")
-        if status != "confirmed":
-            parts.append("חלק מהפרטים עדיין ברמת דיווח ולא אושרו רשמית.")
-        summary = " ".join(parts)
-    elif verdict["bodies"] == 1:
-        summary = (
-            f"נקרא גוף הכתבה של {verdict['outlets'][0]} בלבד. "
-            "אין מקור עצמאי שני להצלבה, ולכן הפרטים עדיין לא מאומתים."
-        )
-
-    # Surface the mechanically verified numbers as evidence
-    if verdict["shared_facts"]:
-        evidence = [f"מוצלב בין מקורות: {f}" for f in verdict["shared_facts"][:2]]
-        bullets = evidence + [b for b in bullets if b not in evidence]
 
     return {
         "title": title,
@@ -1090,6 +1331,20 @@ def gemini_distill(item: dict) -> dict | None:
             reliability = "medium" if verdict["bodies"] == 1 else "unknown"
     if verdict["contradictions"] and reliability == "high":
         reliability = "medium"
+
+    # If the model slipped into meta ("N sources report…"), replace with a story.
+    meta_summary = bool(
+        re.search(
+            r"מקורות עצמאיים|מקורות מדווחים|הוצלבו|פרטים משותפים|נקראו \d+ מקורות",
+            summary,
+        )
+    )
+    if meta_summary or (verdict["bodies"] >= 1 and len(summary) < 40):
+        story, story_bullets = build_cross_source_story(item, verdict)
+        if story:
+            summary = story
+        if story_bullets and len(story_bullets) >= len(bullets):
+            bullets = story_bullets
 
     return {
         "title": title,
