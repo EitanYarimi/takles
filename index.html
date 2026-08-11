@@ -2876,9 +2876,9 @@
     }
 
     function factKey(text) {
-      return String(text || "")
-        .toLowerCase()
-        .replace(/\W+/g, "")
+      // Keep Hebrew letters — JS \W treats them as non-word and would wipe the key.
+      return (String(text || "").toLowerCase().match(/[a-z\u0590-\u05ff0-9]+/g) || [])
+        .join("")
         .slice(0, 48);
     }
 
