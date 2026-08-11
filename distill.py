@@ -25,7 +25,7 @@ from zoneinfo import ZoneInfo
 ROOT = Path(__file__).resolve().parent
 CACHE_PATH = ROOT / "distill_cache.json"
 ARTICLE_CACHE_PATH = ROOT / "article_cache.json"
-DISTILL_VERSION = "v15-focused-story"
+DISTILL_VERSION = "v16-topic-coherence"
 SSL_CTX = ssl._create_unverified_context()
 UA = (
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
@@ -213,12 +213,13 @@ PROMPT = """אתה עורך חדשות יבש לפורטל "תכל׳ס" (ישר�
 
 החזר JSON בלבד (בלי markdown) עם השדות:
 - title: כותרת יבשה בעברית, בלי דרמה/קליקבייט/ציטוטי ספין
-- summary: 2–4 משפטים בעברית — סיפור אחד של מה שקרה.
+- summary: 2–3 משפטים בעברית — סיפור אחד על האירוע שבכותרת המקבץ בלבד.
   * פרטים שחוזרים בין מקורות: כתוב כעובדה, בלי לייחס למוציא לאור.
   * פרט שמופיע במקור יחיד: ייחס ("לפי X…").
   * אם יש סתירה בנתון: ציין את שני הערכים במשפט אחד.
+  * אסור לערב סיפורים אחרים מגוף הכתבה (בורסה, נפט, עזה, ספורט וכו') אם אינם אותו אירוע.
   * אסור: "3 מקורות מדווחים", "הוצלבו", "פרטים משותפים", דעה, או צד.
-- bullet_facts: 3–6 עובדות קצרות מגופי הכתבות (מי/מה/כמה/מתי). בלי דעה. בלי למלא במלל ריק.
+- bullet_facts: 3–5 עובדות קצרות על אותו אירוע בלבד (מי/מה/כמה/מתי). בלי דעה. בלי סיפורים צדדיים.
 - reliability: high | medium | low | unknown
   high = לפחות שני מקורות עצמאיים על אותה עובדה ליבה, בלי סתירה מהותית
   medium = יש גוף/מקורות אבל אימות חלקי או פרטים שנויים במחלוקת
@@ -841,6 +842,62 @@ def _scrub_filler(text: str) -> str:
     return t
 
 
+def _cluster_topic_tokens(item: dict) -> set[str]:
+    """Tokens that define what this cluster is about (title + source headlines)."""
+    bits = [item.get("title") or ""]
+    for s in item.get("sources") or []:
+        bits.append(s.get("headline") or "")
+    return _content_tokens(" ".join(bits))
+
+
+SIDE_STORY_RE = re.compile(
+    r"מצר הורמוז|מחירי הנפט|רצועת עזה|חמאס|בורס|דולר|ריבית|"
+    r"כדורגל|מכבי תל|הפועל |פרמייר|מניית |פיטורים|הייטק|"
+    r"15 הנקודות|מועצת השלום|רפיח|הורמוז",
+    re.I,
+)
+GENERIC_TOPIC = {"ישראל", "תוכנית", "מדינה", "מדינות", "אזור", "הסכם", "דיווח", "חדשות"}
+
+
+def _on_topic(text: str, topic_tokens: set[str], *, min_hit: int = 2) -> bool:
+    """True when a line belongs to the cluster topic, not a sidebar story."""
+    if not text or not topic_tokens:
+        return True
+    # Hard reject sidebars whose markers never appear in the cluster title/heads.
+    for m in SIDE_STORY_RE.finditer(text):
+        marker_tokens = _content_tokens(m.group(0))
+        if marker_tokens and not (marker_tokens & topic_tokens):
+            return False
+    text_tokens = _content_tokens(text)
+    hits = text_tokens & topic_tokens
+    distinctive = hits - GENERIC_TOPIC
+    if len(hits) >= min_hit and (distinctive or len(hits) >= 4):
+        return True
+    if len(hits) >= 1 and distinctive and (re.search(r"\d", text) or FACT_SIGNAL_RE.search(text)):
+        return True
+    return False
+
+
+def _filter_on_topic_lines(lines: list[str], topic_tokens: set[str]) -> list[str]:
+    return [ln for ln in lines if _on_topic(ln, topic_tokens)]
+
+
+def _filter_summary_to_topic(summary: str, topic_tokens: set[str]) -> str:
+    parts = re.split(r"(?<=[.!?…])\s+", (summary or "").strip())
+    kept = []
+    for part in parts:
+        s = part.strip()
+        if not s:
+            continue
+        if _on_topic(s, topic_tokens, min_hit=2) or (
+            len(kept) == 0 and _on_topic(s, topic_tokens, min_hit=1)
+        ):
+            kept.append(s if s[-1:] in ".!?…" else s + ".")
+        if len(kept) >= 3:
+            break
+    return " ".join(kept).strip()
+
+
 def _split_body_sentences(text: str) -> list[str]:
     """Split an article excerpt into usable factual sentences."""
     raw = re.sub(r"\s+", " ", text or "").strip()
@@ -892,7 +949,7 @@ def _rank_body_sentences(
             tokens = _content_tokens(sent)
             support = _sentence_support(sent, others)
             title_hit = len(tokens & title_tokens)
-            quoted = sent.lstrip().startswith(('"', "״", "„", "'"))
+            quoted = sent.lstrip().startswith(('"', "״", "„", "'", "'"))
             title_dup = _near_duplicate(sent, title)
             score = (
                 support * 12
@@ -900,9 +957,10 @@ def _rank_body_sentences(
                 + (4 if re.search(r"\d", sent) else 0)
                 + (3 if FACT_SIGNAL_RE.search(sent) else 0)
                 + (2 if pos < 3 else 0)  # lead paragraphs usually hold the event
-                - (6 if quoted else 0)  # prefer reported fact over opening quote
+                - (8 if quoted else 0)  # prefer reported fact over opening quote
                 - (3 if len(sent) > 180 else 0)
                 - (8 if "?" in sent and not re.search(r"\d", sent) else 0)
+                - (10 if sent.count('"') + sent.count("״") >= 2 and not FACT_SIGNAL_RE.search(sent) else 0)
             )
             ranked.append(
                 {
@@ -1022,11 +1080,18 @@ def build_cross_source_story(item: dict, verdict: dict) -> tuple[str, list[str]]
             n = (s.get("name") or "").strip()
             if n and n not in names:
                 names.append(n)
+    topic_tokens = _cluster_topic_tokens(item)
 
     if not bodies:
         return _headline_fallback_story(title, headlines, names)
 
-    picked = _pick_story_sentences(_rank_body_sentences(bodies, title), limit=4)
+    ranked = [
+        row
+        for row in _rank_body_sentences(bodies, title)
+        if _on_topic(row["text"], topic_tokens, min_hit=2)
+        or _on_topic(row["text"], topic_tokens, min_hit=1)
+    ]
+    picked = _pick_story_sentences(ranked, limit=4)
     if not picked:
         return _headline_fallback_story(title, headlines, names)
 
@@ -1066,12 +1131,13 @@ def build_cross_source_story(item: dict, verdict: dict) -> tuple[str, list[str]]
     for fact in verdict.get("shared_facts") or []:
         add_bullet(str(fact).strip())
     for row in agreed or picked:
-        add_bullet(row["text"])
+        if _on_topic(row["text"], topic_tokens):
+            add_bullet(row["text"])
     title_key = re.sub(r"\W+", "", title.lower())[:48]
     for h in _unique_lines(headlines, limit=5):
         if re.sub(r"\W+", "", h.lower())[:48] == title_key:
             continue
-        if looks_like_fact_line(h) or re.search(r"\d", h):
+        if (looks_like_fact_line(h) or re.search(r"\d", h)) and _on_topic(h, topic_tokens):
             add_bullet(h)
         if len(bullets) >= 6:
             break
@@ -1166,6 +1232,7 @@ def heuristic_distill(item: dict) -> dict:
     if verdict.get("contradictions"):
         outlook = "המקורות חלוקים בנתונים: " + verdict["contradictions"][0] + "."
 
+    topic_tokens = _cluster_topic_tokens(item)
     # Prefer short, concrete bullets (numbers / named facts) over paragraph clones.
     tight: list[str] = []
     for b in bullets:
@@ -1173,6 +1240,8 @@ def heuristic_distill(item: dict) -> dict:
         if not point or FILLER_COPY_RE.search(point):
             continue
         if len(point) > 110:
+            continue
+        if not _on_topic(point, topic_tokens):
             continue
         if any(_near_duplicate(point, existing) for existing in tight):
             continue
@@ -1186,6 +1255,7 @@ def heuristic_distill(item: dict) -> dict:
             line = str(fact).strip()
             if line and line not in tight:
                 tight.insert(0, line)
+    summary = _filter_summary_to_topic(summary, topic_tokens) or summary
 
     reliability = verdict["reliability"]
     reliability_notes = verdict["notes"]
@@ -1286,9 +1356,7 @@ def gemini_distill(item: dict) -> dict | None:
     bullets = data.get("bullet_facts") or data.get("bullets") or []
     if isinstance(bullets, str):
         bullets = [bullets]
-    bullets = [str(b).strip() for b in bullets if str(b).strip()][:5]
-    if len(bullets) < 3:
-        return None
+    bullets = [str(b).strip() for b in bullets if str(b).strip()][:6]
 
     status = data.get("status") or "reported"
     if status not in {"confirmed", "reported", "denied", "review"}:
@@ -1304,19 +1372,24 @@ def gemini_distill(item: dict) -> dict | None:
             "low": "אמינות נמוכה: מקור יחיד או סתירות/ספין.",
             "unknown": "לא ניתן לבדוק אמינות מהקלט שסופק.",
         }[reliability]
-    background = str(data.get("background") or "").strip()
-    outlook = str(data.get("outlook") or "").strip()
+    background = _scrub_filler(str(data.get("background") or "").strip())
+    outlook = _scrub_filler(str(data.get("outlook") or "").strip())
     insight = str(data.get("insight") or "").strip()
     summary = str(data.get("summary") or "").strip()
-    why_matters = str(data.get("why_matters") or data.get("whyItMatters") or "").strip()
+    why_matters = _scrub_filler(str(data.get("why_matters") or data.get("whyItMatters") or "").strip())
     title = dry_title(str(data.get("title") or item.get("title") or ""))
-    if not background or not outlook:
-        return None
     if not summary:
-        summary = background
-    why_matters = _scrub_filler(why_matters)
-    background = _scrub_filler(background) or background
-    outlook = _scrub_filler(outlook) or outlook
+        return None
+
+    topic_tokens = _cluster_topic_tokens(item)
+    summary = _filter_summary_to_topic(summary, topic_tokens)
+    bullets = _filter_on_topic_lines(bullets, topic_tokens)[:5]
+    if why_matters and not _on_topic(why_matters, topic_tokens):
+        why_matters = ""
+    if outlook and not _on_topic(outlook, topic_tokens):
+        outlook = ""
+    if background and not _on_topic(background, topic_tokens):
+        background = ""
 
     # The model may still be generous; a single body can never be "confirmed".
     verdict = cross_source_verify(item)
@@ -1327,26 +1400,44 @@ def gemini_distill(item: dict) -> dict | None:
             reliability = "medium" if verdict["bodies"] == 1 else "unknown"
     if verdict["contradictions"] and reliability == "high":
         reliability = "medium"
+    # Low body overlap → sources are probably not the same event; don't trust AI mashups.
+    weak_overlap = (
+        verdict["bodies"] >= 2 and float(verdict.get("overlap_ratio") or 0) < MIN_OVERLAP_WEAK
+    )
+    if weak_overlap and reliability in {"high", "medium"}:
+        reliability = "low"
 
-    # If the model slipped into meta ("N sources report…"), replace with a story.
     meta_summary = bool(
         re.search(
             r"מקורות עצמאיים|מקורות מדווחים|הוצלבו|פרטים משותפים|נקראו \d+ מקורות",
             summary,
         )
     )
-    if meta_summary or (verdict["bodies"] >= 1 and len(summary) < 40):
+    if (
+        meta_summary
+        or weak_overlap
+        or len(summary) < 40
+        or len(bullets) < 2
+    ):
         story, story_bullets = build_cross_source_story(item, verdict)
         if story:
             summary = story
-        if story_bullets and len(story_bullets) >= len(bullets):
-            bullets = story_bullets
+        if story_bullets:
+            bullets = _filter_on_topic_lines(story_bullets, topic_tokens)[:5]
+        # Keep the card focused when the cluster is messy
+        background = ""
+        why_matters = ""
+        if not verdict.get("contradictions"):
+            outlook = ""
+
+    if not summary or len(bullets) < 1:
+        return None
 
     return {
         "title": title,
         "summary": summary,
         "why_matters": why_matters,
-        "bullet_facts": bullets,
+        "bullet_facts": bullets[:5],
         "background": background,
         "outlook": outlook,
         "insight": insight or background,
@@ -1374,8 +1465,6 @@ def cached_distill(item: dict, cache: dict) -> dict | None:
     if (
         isinstance(hit, dict)
         and hit.get("bullet_facts")
-        and hit.get("background")
-        and hit.get("outlook")
         and hit.get("summary")
         and hit.get("reliability")
         and hit.get("reliability_notes")

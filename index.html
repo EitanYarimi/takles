@@ -2881,14 +2881,54 @@
         .slice(0, 48);
     }
 
+    function topicTokens(card) {
+      const blob = [card.title || "", card.summary || ""]
+        .concat((card.sources || []).map((s) => s.headline || ""))
+        .join(" ");
+      return new Set(
+        (blob.match(/[A-Za-z\u0590-\u05FF]{3,}/g) || [])
+          .map((w) => w.toLowerCase())
+          .filter((w) => !/^(את|של|על|עם|בין|אבל|גם|יש|אין|הוא|היא|הם|זה|זאת|כי|לא|כל|רק)$/.test(w))
+      );
+    }
+
+    function onTopicLine(line, tokens) {
+      if (!tokens.size) return true;
+      const side =
+        /מצר הורמוז|מחירי הנפט|רצועת עזה|חמאס|15 הנקודות|מועצת השלום|רפיח|הורמוז|מניית |הייטק|פיטורים/.exec(
+          line || ""
+        );
+      if (side) {
+        const markerWords = side[0].match(/[A-Za-z\u0590-\u05FF]{3,}/g) || [];
+        if (!markerWords.some((w) => tokens.has(w.toLowerCase()))) return false;
+      }
+      const words = (String(line).match(/[A-Za-z\u0590-\u05FF]{3,}/g) || []).map((w) =>
+        w.toLowerCase()
+      );
+      const generic = new Set(["ישראל", "תוכנית", "מדינה", "מדינות", "אזור", "הסכם", "דיווח"]);
+      let hits = 0;
+      let distinctive = 0;
+      for (const w of words) {
+        if (tokens.has(w)) {
+          hits += 1;
+          if (!generic.has(w)) distinctive += 1;
+        }
+      }
+      if (hits >= 2 && (distinctive > 0 || hits >= 4)) return true;
+      if (hits >= 1 && distinctive > 0 && /\d/.test(line)) return true;
+      return false;
+    }
+
     function focusedFacts(card) {
       const summaryKey = factKey(card.summary);
       const titleKey = factKey(card.title);
+      const tokens = topicTokens(card);
       const out = [];
       for (const raw of card.bullet_facts || []) {
         const line = String(raw || "").trim();
         if (!line || line.length > 120) continue;
         if (isFillerCopy(line)) continue;
+        if (!onTopicLine(line, tokens)) continue;
         const key = factKey(line);
         if (!key || key === titleKey || key === summaryKey) continue;
         if (summaryKey && summaryKey.includes(key.slice(0, 28))) continue;

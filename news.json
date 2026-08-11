@@ -1,6 +1,6 @@
 {
-  "fetchedAt": "2026-08-11T05:16:08Z",
-  "count": 58,
+  "fetchedAt": "2026-08-11T05:22:04Z",
+  "count": 53,
   "withImages": 0,
   "items": [
     {
@@ -11,17 +11,23 @@
         {
           "url": "https://news.google.com/rss/articles/CBMioAFBVV95cUxPQ3phclpfLVB2bG85cHJVeGw1OVItRFdfcVdTdjlob3p0SnZ0eWRTa1c3Ry1na0cwWFp5VFpsYXdzRkFVYlpLNGtUVGtGdU9iSGNMR3A1cTlOSUk4MmxqMkRUcThxdnB1RFBvaV9oeExmX2VfdnItU0tDNVFIczVOM0RxcUw5NFJ3LTRaTTN0c3VDU0dCYU54ZldUVl9vR2xN?oc=5",
           "headline": "הליכוד: השרים ישראל כץ, גדעון סער וחיים כץ ישוריינו ברשימת המפלגה",
-          "name": "הארץ"
+          "name": "הארץ",
+          "resolved_url": "https://www.haaretz.co.il/news/elections/2026-08-11/ty-article/0000019f-edc5-db03-a9ff-ffd7e04c0000",
+          "fetch_ok": true
         },
         {
           "url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxORWR3bVRJWE5UNVA5X1o2emNjeHNnbVVZTVlMOUY5REQzYndMMDRRVmZFbUUwdjZ0MDY2R0oxZS1lbTVRTjVBaGUxXzFTQWFEbXdHSllFMWJqcFZCRFBQOGZGQnZhVDNGNUlraUlBZ0NHSjJnN2JjbDhEcEVsYWp1allGNnBCc3RMU0ZYUzNjUnZGOGlvWDMyNHNSaGdPQmtVYkJKOTJsekJEWVE?oc=5",
           "headline": "באישון ליל, בחסות \"נימוקים ביטחוניים\", החלה השתלטות נתניהו על הליכוד",
-          "name": "TheMarker"
+          "name": "TheMarker",
+          "resolved_url": "https://www.themarker.com/news/politics/2026-08-11/ty-article/.premium/0000019f-eed3-d101-a5bf-efd367fc0000",
+          "fetch_ok": true
         },
         {
           "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE1qbHBiLVlnRWhaeXZiUi1VY00wb1Fqbk1XY0ZoNGx1YWlxRTdUU211X3pHWmF3OGhmMkx3TWhJWlBHWWVfaUJDcGphRHhaVFNYZlFZa3VnclNwaHlDTjdUZHJjTGdPVENYaHFSNdIBdEFVX3lxTE1FQjFmVFZzMGZNQkRjUW1xZllYTmdqWFVYOUgtbVE0cGlWOXlqdThkNGJxTGNiZmR1ZTFUT2tGOFJnVjdmd2Utb2hkY1g2eUtYQjZRdU1ocTBSalA1SkNUZGRjM1hYYXFjdHBXLVcyeS1GYjZJ?oc=5",
           "headline": "ההודעה הלילית של הליכוד: סער, ישראל כ\"ץ וחיים כץ ישוריינו",
-          "name": "היום"
+          "name": "היום",
+          "resolved_url": "https://www.israelhayom.co.il/news/politics/article/21171240",
+          "fetch_ok": true
         }
       ],
       "image": null,
@@ -37,50 +43,74 @@
           "name": "מקור ראשון"
         }
       ],
-      "digest_basis": "headlines",
+      "digest_basis": "fulltext",
       "distill": {
         "title": "לילית בליכוד: נתניהו הודיע שישריין את השרים ישראל כ\"ץ, חיים כץ וגדעון סער",
-        "summary": "לילית בליכוד: נתניהו הודיע שישריין את השרים ישראל כ\"ץ, חיים כץ וגדעון סער. מעבר לכותרת לא נמצאו פרטים נוספים בכותרות המקורות.",
+        "summary": "מקור בליכוד אמר כי חיים כץ וסער ישוריינו במסגרת שמונת השריונים שאושרו לנתניהו מבעוד מועד, והשריון של ישראל כץ יהפוך בפועל לתשיעי של ראש הממשלה. היום ההודעה הלילית של הליכוד: סער, ישראל כ\"ץ וחיים כץ ישוריינו מזכירות המפלגה תתבקש לאשר את הצבתם של שר החוץ, שר הביטחון ויו״ר מרכז הליכוד ברשימה.",
         "why_matters": "",
-        "bullet_facts": [],
+        "bullet_facts": [
+          "סער ישובץ במסגרת הסכם האיחוד, ישראל כ״ץ בעקבות החלטת בית הדין וחיים כץ מתוקף תפקידו",
+          "נתניהו ישריין את ישראל כץ כדי \"לאפשר לו לעסוק בביטחון ולא בפוליטיקה\"."
+        ],
         "background": "",
         "outlook": "",
         "insight": "",
         "historical_context": "",
         "status": "reported",
-        "reliability": "unknown",
-        "reliability_notes": "לא נמשכו גופי כתבות מהמקורות, ולכן לא בוצעה הצלבה — הכרטיס מבוסס כותרות בלבד.",
-        "digest_basis": "headlines",
+        "reliability": "high",
+        "reliability_notes": "הוצלבו 3 מקורות עצמאיים (הארץ, TheMarker, היום) והם מתארים את אותו אירוע. פרטים משותפים בכל הדיווחים: גדעון, הודעה, חיים. לא נמצאו סתירות מספריות בין הדיווחים.",
+        "digest_basis": "fulltext",
         "verification": {
-          "method": "none",
-          "bodies": 0,
-          "outlets": [],
+          "method": "cross-source",
+          "bodies": 3,
+          "outlets": [
+            "הארץ",
+            "TheMarker",
+            "היום"
+          ],
           "shared_facts": [],
-          "shared_topics": [],
+          "shared_topics": [
+            "גדעון",
+            "הודעה",
+            "חיים",
+            "יטחוניים"
+          ],
           "contradictions": [],
-          "overlap_ratio": 0.0
+          "overlap_ratio": 0.331
         },
         "mode": "heuristic"
       },
       "dryTitle": "לילית בליכוד: נתניהו הודיע שישריין את השרים ישראל כ\"ץ, חיים כץ וגדעון סער",
-      "summary": "לילית בליכוד: נתניהו הודיע שישריין את השרים ישראל כ\"ץ, חיים כץ וגדעון סער. מעבר לכותרת לא נמצאו פרטים נוספים בכותרות המקורות.",
+      "summary": "מקור בליכוד אמר כי חיים כץ וסער ישוריינו במסגרת שמונת השריונים שאושרו לנתניהו מבעוד מועד, והשריון של ישראל כץ יהפוך בפועל לתשיעי של ראש הממשלה. היום ההודעה הלילית של הליכוד: סער, ישראל כ\"ץ וחיים כץ ישוריינו מזכירות המפלגה תתבקש לאשר את הצבתם של שר החוץ, שר הביטחון ויו״ר מרכז הליכוד ברשימה.",
       "why_matters": "",
-      "bullet_facts": [],
+      "bullet_facts": [
+        "סער ישובץ במסגרת הסכם האיחוד, ישראל כ״ץ בעקבות החלטת בית הדין וחיים כץ מתוקף תפקידו",
+        "נתניהו ישריין את ישראל כץ כדי \"לאפשר לו לעסוק בביטחון ולא בפוליטיקה\"."
+      ],
       "background": "",
       "outlook": "",
       "insight": "",
       "historical_context": "",
       "status": "reported",
-      "reliability": "unknown",
-      "reliability_notes": "לא נמשכו גופי כתבות מהמקורות, ולכן לא בוצעה הצלבה — הכרטיס מבוסס כותרות בלבד.",
+      "reliability": "high",
+      "reliability_notes": "הוצלבו 3 מקורות עצמאיים (הארץ, TheMarker, היום) והם מתארים את אותו אירוע. פרטים משותפים בכל הדיווחים: גדעון, הודעה, חיים. לא נמצאו סתירות מספריות בין הדיווחים.",
       "verification": {
-        "method": "none",
-        "bodies": 0,
-        "outlets": [],
+        "method": "cross-source",
+        "bodies": 3,
+        "outlets": [
+          "הארץ",
+          "TheMarker",
+          "היום"
+        ],
         "shared_facts": [],
-        "shared_topics": [],
+        "shared_topics": [
+          "גדעון",
+          "הודעה",
+          "חיים",
+          "יטחוניים"
+        ],
         "contradictions": [],
-        "overlap_ratio": 0.0
+        "overlap_ratio": 0.331
       },
       "distillMode": "heuristic"
     },
@@ -319,7 +349,6 @@
         "why_matters": "",
         "bullet_facts": [
           "הם ציינו בפני בני שיחם שצריך ללכת להסכם עם ישראל כדי להפר אותו גורמים במדינה באזור ייעצו לגורמים במדינה אחרת…",
-          "לפי הדיווח, שיוחס לגורמים יודעי דבר, בהידברות בין הצדדים אמרו אותם גורמים במדינה הראשונה לבני שיחם כי צריך…",
           "פרטים חדשים על תוכנית ההונאה של שתי מדינות ערב נגד ישראל"
         ],
         "background": "",
@@ -355,7 +384,6 @@
       "why_matters": "",
       "bullet_facts": [
         "הם ציינו בפני בני שיחם שצריך ללכת להסכם עם ישראל כדי להפר אותו גורמים במדינה באזור ייעצו לגורמים במדינה אחרת…",
-        "לפי הדיווח, שיוחס לגורמים יודעי דבר, בהידברות בין הצדדים אמרו אותם גורמים במדינה הראשונה לבני שיחם כי צריך…",
         "פרטים חדשים על תוכנית ההונאה של שתי מדינות ערב נגד ישראל"
       ],
       "background": "",
@@ -425,11 +453,9 @@
       "digest_basis": "fulltext",
       "distill": {
         "title": "מלחמה כלכלית דורשת אורך נשימה, ולאיראן יש ממנו יותר משיש לטראמפ",
-        "summary": "הם משתלבים במגמה שהתפתחה בשבועות האחרונים בהנהגת איראן: הקצנת העמדות, הצבת תנאים חדשים לפתיחת מצר הורמוז, וסחיטת הנכס האסטרטגי שנפל לידיה עד הקצה. כך היה גם עם אובמה ערוצי החדשות סבורים שהציבור צמא לשמוע מה החבורה הגזענית הזו מוכרת מערך האבטחה סביב איזנקוט דליל.",
+        "summary": "אם היינו נוקטים בעמדת 'שב ואל תעשה', לאיראן היו 10 אלפים טילים בליסטיים - זה לא קיים יותר והתעשייה הזו רוסקה\". לפי רדיו צפון 104.5FM: עוד הוסיף כי \"לאיראן הייתה יכולת ייצור של בין 2,000 ל-3,000 טילים חדשים מדי בשנה.",
         "why_matters": "",
         "bullet_facts": [
-          "מיצר הורמוז חשוב לטראמפ, כדי להוריד את מחיר הנפט ושהבורסות יעלו, אבל הקלף של הורמוז לא יהיה רלוונטי בעוד 4…",
-          "כולנו יכולים להצדיע לכוחות הביטחון ולחיילי וחיילות צה\"ל שהפכו את ישראל למעצמה.",
           "טיבי מתנגד לסדר הרשימה המשותפת שנקבע בוועדה - ומערים קשיים על הקמתה",
           "כל הדרכים מובילות לטהרן: 4 חזיתות, שני מועדי בחירות וקו עוני שמקרב את הסוף"
         ],
@@ -453,7 +479,7 @@
             "איראן",
             "טראמפ",
             "ישראל",
-            "איראנית"
+            "איזנקוט"
           ],
           "contradictions": [],
           "overlap_ratio": 0.08
@@ -461,11 +487,9 @@
         "mode": "heuristic"
       },
       "dryTitle": "מלחמה כלכלית דורשת אורך נשימה, ולאיראן יש ממנו יותר משיש לטראמפ",
-      "summary": "הם משתלבים במגמה שהתפתחה בשבועות האחרונים בהנהגת איראן: הקצנת העמדות, הצבת תנאים חדשים לפתיחת מצר הורמוז, וסחיטת הנכס האסטרטגי שנפל לידיה עד הקצה. כך היה גם עם אובמה ערוצי החדשות סבורים שהציבור צמא לשמוע מה החבורה הגזענית הזו מוכרת מערך האבטחה סביב איזנקוט דליל.",
+      "summary": "אם היינו נוקטים בעמדת 'שב ואל תעשה', לאיראן היו 10 אלפים טילים בליסטיים - זה לא קיים יותר והתעשייה הזו רוסקה\". לפי רדיו צפון 104.5FM: עוד הוסיף כי \"לאיראן הייתה יכולת ייצור של בין 2,000 ל-3,000 טילים חדשים מדי בשנה.",
       "why_matters": "",
       "bullet_facts": [
-        "מיצר הורמוז חשוב לטראמפ, כדי להוריד את מחיר הנפט ושהבורסות יעלו, אבל הקלף של הורמוז לא יהיה רלוונטי בעוד 4…",
-        "כולנו יכולים להצדיע לכוחות הביטחון ולחיילי וחיילות צה\"ל שהפכו את ישראל למעצמה.",
         "טיבי מתנגד לסדר הרשימה המשותפת שנקבע בוועדה - ומערים קשיים על הקמתה",
         "כל הדרכים מובילות לטהרן: 4 חזיתות, שני מועדי בחירות וקו עוני שמקרב את הסוף"
       ],
@@ -488,7 +512,7 @@
           "איראן",
           "טראמפ",
           "ישראל",
-          "איראנית"
+          "איזנקוט"
         ],
         "contradictions": [],
         "overlap_ratio": 0.08
@@ -532,7 +556,7 @@
       "digest_basis": "headlines",
       "distill": {
         "title": "נציג ערבי בממשלה? המצטרפת החדשה לארדן: ודאי, יש מקום לכולם",
-        "summary": "נציג ערבי בממשלה? המצטרפת החדשה לארדן: ודאי, יש מקום לכולם. מעבר לכותרת לא נמצאו פרטים נוספים בכותרות המקורות.",
+        "summary": "נציג ערבי בממשלה? המצטרפת החדשה לארדן: ודאי, יש מקום לכולם.",
         "why_matters": "",
         "bullet_facts": [],
         "background": "",
@@ -555,7 +579,7 @@
         "mode": "heuristic"
       },
       "dryTitle": "נציג ערבי בממשלה? המצטרפת החדשה לארדן: ודאי, יש מקום לכולם",
-      "summary": "נציג ערבי בממשלה? המצטרפת החדשה לארדן: ודאי, יש מקום לכולם. מעבר לכותרת לא נמצאו פרטים נוספים בכותרות המקורות.",
+      "summary": "נציג ערבי בממשלה? המצטרפת החדשה לארדן: ודאי, יש מקום לכולם.",
       "why_matters": "",
       "bullet_facts": [],
       "background": "",
@@ -771,14 +795,14 @@
       "distillMode": "heuristic"
     },
     {
-      "title": "דיווח בעיתון חיזבאללה: ישראל הציעה עסקה להעברת שרידי יהודים שקבורים בלבנון",
-      "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE9qUmp3SVI2bTJUVFozaGhIODZldkhVLVBGUXM4U2JLdnBzSUxPbDJkT3FHWkFydm5neHI4WW9ybktWY2oyZ1ctT3lyRFZmcm5mUVhkWnNONEJ1Zw?oc=5",
-      "pubDate": "Mon, 10 Aug 2026 03:48:37 GMT",
+      "title": "משבר בשיחות עם לבנון: הדרישה הישראלית שמכעיסה את ביירות",
+      "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTFA5c0RwalAtVnFXSXNmNDlmb1FjNXQya2UyZ2VydkJtOHRJcnZMWEdoMWY4d1lRNU55TlVxc0l3Y1N2dnRPOFRQRzJ6ZVAyUlRzNDV5S3lpTjFGTEpORVFrbk1vWEx1ZGJVdEE0dw?oc=5",
+      "pubDate": "Mon, 10 Aug 2026 07:19:45 GMT",
       "sources": [
         {
-          "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE9qUmp3SVI2bTJUVFozaGhIODZldkhVLVBGUXM4U2JLdnBzSUxPbDJkT3FHWkFydm5neHI4WW9ybktWY2oyZ1ctT3lyRFZmcm5mUVhkWnNONEJ1Zw?oc=5",
-          "headline": "דיווח בעיתון חיזבאללה: ישראל הציעה עסקה להעברת שרידי יהודים שקבורים בלבנון",
-          "name": "ynet.co.il"
+          "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTFA5c0RwalAtVnFXSXNmNDlmb1FjNXQya2UyZ2VydkJtOHRJcnZMWEdoMWY4d1lRNU55TlVxc0l3Y1N2dnRPOFRQRzJ6ZVAyUlRzNDV5S3lpTjFGTEpORVFrbk1vWEx1ZGJVdEE0dw?oc=5",
+          "headline": "משבר בשיחות עם לבנון: הדרישה הישראלית שמכעיסה את ביירות",
+          "name": "מקור ראשון"
         },
         {
           "url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxOZWx2dWFYVzMtWHpmOHp0MnJ2Z2JmemdCME5KU3ltMVl2UUlvZ3gyNlp5YzVac0JYZ2xHQ0hwSE1jODVDSTVzTXYzZmlVdTVnU1BzenBzRGQzUENNTG5ycnY1Wk84dFgteTdXWVRyd1RQM0hndkMxVGhPX1V3NlFpUlR4dFl0M2psbi11YS0wMVRERHlYSUQ2OUdlanhiN0dEUzcteXpxdFdNbG8?oc=5",
@@ -804,8 +828,8 @@
       "image": null,
       "digest_basis": "headlines",
       "distill": {
-        "title": "דיווח בעיתון חיזבאללה: ישראל הציעה עסקה להעברת שרידי יהודים שקבורים בלבנון",
-        "summary": "דיווח בעיתון חיזבאללה: ישראל הציעה עסקה להעברת שרידי יהודים שקבורים בלבנון. מעבר לכותרת לא נמצאו פרטים נוספים בכותרות המקורות.",
+        "title": "משבר בשיחות עם לבנון: הדרישה הישראלית שמכעיסה את ביירות",
+        "summary": "משבר בשיחות עם לבנון: הדרישה הישראלית שמכעיסה את ביירות.",
         "why_matters": "",
         "bullet_facts": [],
         "background": "",
@@ -827,8 +851,8 @@
         },
         "mode": "heuristic"
       },
-      "dryTitle": "דיווח בעיתון חיזבאללה: ישראל הציעה עסקה להעברת שרידי יהודים שקבורים בלבנון",
-      "summary": "דיווח בעיתון חיזבאללה: ישראל הציעה עסקה להעברת שרידי יהודים שקבורים בלבנון. מעבר לכותרת לא נמצאו פרטים נוספים בכותרות המקורות.",
+      "dryTitle": "משבר בשיחות עם לבנון: הדרישה הישראלית שמכעיסה את ביירות",
+      "summary": "משבר בשיחות עם לבנון: הדרישה הישראלית שמכעיסה את ביירות.",
       "why_matters": "",
       "bullet_facts": [],
       "background": "",
@@ -846,859 +870,6 @@
         "shared_topics": [],
         "contradictions": [],
         "overlap_ratio": 0.0
-      },
-      "distillMode": "heuristic"
-    },
-    {
-      "title": "איראן מתחכמת: לא נגבה דמי מעבר בהורמוז - רק אגרת שירותים",
-      "link": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE1WdFAtc0FSTU1KUURTYXlqNWdCNHg4MjRKTlQyTUxBZ0RQN2JtZXZBODdKRGdnX29tV2hkN3BjM2ZKUVByY3dPR3hDb3pTR3JYTVA0?oc=5",
-      "pubDate": "Mon, 10 Aug 2026 10:41:00 GMT",
-      "sources": [
-        {
-          "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE1WdFAtc0FSTU1KUURTYXlqNWdCNHg4MjRKTlQyTUxBZ0RQN2JtZXZBODdKRGdnX29tV2hkN3BjM2ZKUVByY3dPR3hDb3pTR3JYTVA0?oc=5",
-          "headline": "איראן מתחכמת: לא נגבה דמי מעבר בהורמוז - רק אגרת שירותים",
-          "name": "הידברות"
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE54cjV1MmNZeW5SVXVIWWtEOTlRYjlwZDNIRTNwZDVBNTZHM0FKNHdnRzBCMWJBM1dWT21xYURPVk1ZQTlscW9UakF1RV93RTRSZ1VpT2tBZHI0QmM?oc=5",
-          "headline": "האיום האיראני על סעודיה אחרי ברית ההגנה, ודברי הנשיא: \"עכשיו הזמן להסכם\"",
-          "name": "ynet.co.il"
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTFA5UTV1TzhGSHQwS1MxUjJYeHhXdHU4M0g5dHZyOUN4TllCZzNvWWZOVDBtQVdkc0JDck1VZGFsRmZEWEFaZlBVR251d0FHQS1pbzZZWnk5ZmFmanVaWG1ZUXg5NWFjcVlmT1FWYg?oc=5",
-          "headline": "איראן משיבה לטראמפ: \"הוכחנו שאנחנו שחקני שחמט מקצועיים\"",
-          "name": "מקור ראשון"
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMi2gJBVV95cUxOYXozMWdfa1pVNU1oMW50VEF0WWpFUS1wRnlNSFpVVkZSdmVqNmloamQ1NGFDOUFMN1JQQjI0bU51NW91c3RGNmhzRVpzWXEzV1ZLQTc4N0x2YVpxT0d4MGlrUDNUOTRiWE9uWFU2UXV3S0s3ZEk2cEwyUkY3VW0zUkFZVzNzazFNclhzR05uWEVVSVBaT0xjTnFEdHRuNE1oS3RvbTIweVhXa1dkZ1RyLWZSazhGZlpFdkpuWXBiWGotakpYcGg3SjE0aFZxcWV3dFhLR0dPZVYyZXF1YnhRLXpETE14d3hyZ0s3UHkzSHhkdjA0N01rMkRibDZIUlJJNjhMb0JjVGQ5cVlzTE5relVjdWNZQ2VNdFUxenI3cXk1bjdOSU9TUkxiMVQwSzdUQVNTMkhyM2hIQjhyZVk3Wlp5NWNTVDZZSlNfWWZRcVV2YWk1ZVdlUV9n?oc=5",
-          "headline": "האיראנים חושפים: משחקים בטראמפ, אין הסכם",
-          "name": "סרוגים"
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE9mNkxCamhLYUJ1NV9LWm1neGZBTUtJN2RoU1R3RTAxblpLemU0Ym1xeW1wOFRDOTltOURoWHo0Tk1PZ3lkUDdEcFlCREo2MzdvcFc2Y2ZjajFHSElkUzF4TjJCblM?oc=5",
-          "headline": "איראן למדינות האזור: \"אל תהפכו את שטחכן לנקודת מוצא לתוקפנות נגדנו\"",
-          "name": "מעריב"
-        }
-      ],
-      "image": null,
-      "digest_basis": "headlines",
-      "distill": {
-        "title": "איראן מתחכמת: לא נגבה דמי מעבר בהורמוז - רק אגרת שירותים",
-        "summary": "איראן מתחכמת: לא נגבה דמי מעבר בהורמוז - רק אגרת שירותים. מעבר לכותרת לא נמצאו פרטים נוספים בכותרות המקורות.",
-        "why_matters": "",
-        "bullet_facts": [],
-        "background": "",
-        "outlook": "",
-        "insight": "",
-        "historical_context": "",
-        "status": "reported",
-        "reliability": "unknown",
-        "reliability_notes": "לא נמשכו גופי כתבות מהמקורות, ולכן לא בוצעה הצלבה — הכרטיס מבוסס כותרות בלבד.",
-        "digest_basis": "headlines",
-        "verification": {
-          "method": "none",
-          "bodies": 0,
-          "outlets": [],
-          "shared_facts": [],
-          "shared_topics": [],
-          "contradictions": [],
-          "overlap_ratio": 0.0
-        },
-        "mode": "heuristic"
-      },
-      "dryTitle": "איראן מתחכמת: לא נגבה דמי מעבר בהורמוז - רק אגרת שירותים",
-      "summary": "איראן מתחכמת: לא נגבה דמי מעבר בהורמוז - רק אגרת שירותים. מעבר לכותרת לא נמצאו פרטים נוספים בכותרות המקורות.",
-      "why_matters": "",
-      "bullet_facts": [],
-      "background": "",
-      "outlook": "",
-      "insight": "",
-      "historical_context": "",
-      "status": "reported",
-      "reliability": "unknown",
-      "reliability_notes": "לא נמשכו גופי כתבות מהמקורות, ולכן לא בוצעה הצלבה — הכרטיס מבוסס כותרות בלבד.",
-      "verification": {
-        "method": "none",
-        "bodies": 0,
-        "outlets": [],
-        "shared_facts": [],
-        "shared_topics": [],
-        "contradictions": [],
-        "overlap_ratio": 0.0
-      },
-      "distillMode": "heuristic"
-    },
-    {
-      "title": "הרמטכ״ל: \"המשא ומתן הוא תוצאה של הישגי צה\"ל, ערוכים לחזרה מיידית ללחימה",
-      "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE9CU0E4Q3puS2hLU2lHVXZnT3dJbzJxSnJ1dWlXYXhVTW9fNVMyMTJJN0p6bHdPU3BmRFRScTF6Z3dvNEtkaGJIbXJBSQ?oc=5",
-      "pubDate": "Mon, 10 Aug 2026 17:34:28 GMT",
-      "sources": [
-        {
-          "url": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE9CU0E4Q3puS2hLU2lHVXZnT3dJbzJxSnJ1dWlXYXhVTW9fNVMyMTJJN0p6bHdPU3BmRFRScTF6Z3dvNEtkaGJIbXJBSQ?oc=5",
-          "headline": "הרמטכ״ל: \"המשא ומתן הוא תוצאה של הישגי צה\"ל, ערוכים לחזרה מיידית ללחימה\"",
-          "name": "JDN"
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMiPkFVX3lxTE9uZmdHOGQ5RWh1NWc3ZXBacTVBSWg2OEtsbkxpbXoyMzM1OEhFSGg1T2JJMjduMjlsQUVSWExn?oc=5",
-          "headline": "\"עלינו לוודא כי אנחנו מביאים למיצוי הישגי המערכה ההיסטוריים - ולמקסום שלהם\"",
-          "name": "idf.il"
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFB0MGxuQ2RDUDlIVmlBZzQtVTJGaFBHSFk4MEZXTmdpVHRfUERJVFFFY0ltZzAxMzk5dVFoTlczSmdQS21BWEg3UGRNd0ZCMFhhSDEyb0J1QlhpeTJ2Wnp4YW9VYTI?oc=5",
-          "headline": "מפקד סנטקום הגיע לכינוס של פיקוד צה\"ל - הרמטכ\"ל הצהיר: \"אנחנו בכוננות מיידית\"",
-          "name": "מעריב"
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMi4gJBVV95cUxNOGV3LS0yc3ZaMnQ0THNPZGNhWDdTWFF4LTFSMUxhQUQ0MTdQenhtMnlyZS15VjhGUzc5S3IwN0xmMHBvSFhsVXdJVjluUzVBUFBvZF9FMXo2bFQ5ZjRHS1gwYnV6bTNPWmROSnpFenE0VkZyeXJ3YlBMNlBTNG5qUHhERFk1QUpGclZ1YTdwVGNpN2VSZ0lwc2JTSjhMLU1jMGJhWUdmN1g1YkpNdmdDamN6MVpWLVJKMklyRDNBc2x6c3kzNl9KRmhKSjBwRUdsdDN5aFFlcjg2dE5jWG94Sk5XWGdqVVFzUlVrZ0Zsa1lyellOQ0gwbU5NeENYaGgzVmFIb3FGUHh1Wno5clR1SHJnbzJydk9rbUdHb0xDS0JJSWF2U1hZLVBUUVB5WTR4OGtWdGJkM0N2aXJhb0thalVqWWNQemZLWndYYnRUcU1WUnQzZEl0QmF5d3IxZzU4eHc?oc=5",
-          "headline": "הרמטכ\"ל: \"כוננות מיידית לחזרה ללחימה עצימה\"",
-          "name": "סרוגים"
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMiTkFVX3lxTE5zUzllRVMzZGNJSVZyeTVsWWEzc2Q2OHNBZjQ5VzNCWDZzVkZzRFVlcHNuR0xzRjJTLXZ5WUVETXJfblZNb3VBY3RHanZwdw?oc=5",
-          "headline": "הרמטכ\"ל חושף את היעד הבא: \"זה האתגר שלנו עכשיו\"",
-          "name": "אמס"
-        }
-      ],
-      "image": null,
-      "digest_basis": "headlines",
-      "distill": {
-        "title": "הרמטכ״ל: \"המשא ומתן הוא תוצאה של הישגי צה\"ל, ערוכים לחזרה מיידית ללחימה",
-        "summary": "הרמטכ״ל: \"המשא ומתן הוא תוצאה של הישגי צה\"ל, ערוכים לחזרה מיידית ללחימה. מעבר לכותרת לא נמצאו פרטים נוספים בכותרות המקורות.",
-        "why_matters": "",
-        "bullet_facts": [],
-        "background": "",
-        "outlook": "",
-        "insight": "",
-        "historical_context": "",
-        "status": "review",
-        "reliability": "unknown",
-        "reliability_notes": "לא נמשכו גופי כתבות מהמקורות, ולכן לא בוצעה הצלבה — הכרטיס מבוסס כותרות בלבד.",
-        "digest_basis": "headlines",
-        "verification": {
-          "method": "none",
-          "bodies": 0,
-          "outlets": [],
-          "shared_facts": [],
-          "shared_topics": [],
-          "contradictions": [],
-          "overlap_ratio": 0.0
-        },
-        "mode": "heuristic"
-      },
-      "dryTitle": "הרמטכ״ל: \"המשא ומתן הוא תוצאה של הישגי צה\"ל, ערוכים לחזרה מיידית ללחימה",
-      "summary": "הרמטכ״ל: \"המשא ומתן הוא תוצאה של הישגי צה\"ל, ערוכים לחזרה מיידית ללחימה. מעבר לכותרת לא נמצאו פרטים נוספים בכותרות המקורות.",
-      "why_matters": "",
-      "bullet_facts": [],
-      "background": "",
-      "outlook": "",
-      "insight": "",
-      "historical_context": "",
-      "status": "review",
-      "reliability": "unknown",
-      "reliability_notes": "לא נמשכו גופי כתבות מהמקורות, ולכן לא בוצעה הצלבה — הכרטיס מבוסס כותרות בלבד.",
-      "verification": {
-        "method": "none",
-        "bodies": 0,
-        "outlets": [],
-        "shared_facts": [],
-        "shared_topics": [],
-        "contradictions": [],
-        "overlap_ratio": 0.0
-      },
-      "distillMode": "heuristic"
-    },
-    {
-      "title": "צבא תימן: שני חיילים תימנים נהרגו ועוד תשעה נפצעו מפגיעת רחפן נפץ חות'י בדרום המדינה",
-      "link": "https://news.google.com/rss/articles/CBMiggFBVV95cUxNalU5Y0UtVHduUDhRQ2xKdHJ5RXRZRmJPeXJIdDRETjlJbWF0eUM2VFh5bnVRY2tHSHNWN0JoOVI5VWYzTlhrOC0zU3ZpQXdDTHJ6dUtSTkd5TlA5aTZQdldDSnRGbmZKSHNxUUpkRTVaZnAxY1I0MVpTUXpLblExdll3?oc=5",
-      "pubDate": "Mon, 10 Aug 2026 11:37:12 GMT",
-      "sources": [
-        {
-          "url": "https://news.google.com/rss/articles/CBMiggFBVV95cUxNalU5Y0UtVHduUDhRQ2xKdHJ5RXRZRmJPeXJIdDRETjlJbWF0eUM2VFh5bnVRY2tHSHNWN0JoOVI5VWYzTlhrOC0zU3ZpQXdDTHJ6dUtSTkd5TlA5aTZQdldDSnRGbmZKSHNxUUpkRTVaZnAxY1I0MVpTUXpLblExdll3?oc=5",
-          "headline": "צבא תימן: שני חיילים תימנים נהרגו ועוד תשעה נפצעו מפגיעת רחפן נפץ חות'י בדרום המדינה",
-          "name": "כאן 11"
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMiggFBVV95cUxOMThFYnUwUlhwbEVUYk9SWnpkVUR0QzV3UlAzMGExOWJFVlVITFk1RTJaY1dHQ1hfWURNSG54YUM5dGU5bF9JeHNIenZudnYyWUJXTU93cHZaSjVqS1FQcXBzOFMzVnRGMW5nOEw5MmE2bnd2MXRqTTBhdkh0aTFqakNB?oc=5",
-          "headline": "דיווח: החות'ים ביצעו גל תקיפות שלילי לעבר נמל אל-מוח'א בתימן",
-          "name": "כאן 11"
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMiygJBVV95cUxQc21zUGVfZERBNFgtZDZhenEwVVNyWGdqbXhRT0lBSm8tTjdzeWdidXVyRVlVei05V05Cdjdsd29KbHhlcWlSYUtoal8xREFZUFhvRFJUcVpIZF9IV21GOUtNNjRZclRROFVUWGlGUTh3Vi1mNFQxNkMtUWx6ZkJpM0lFdXFnY0NBZF82VVpPSS0tUGpfRmRDRmJKYW84aEFnMGd5N2l4YzZ6bnRxMVdwc0RoYjJRUlhjMGlkeXZmYzZ3US1wczg4NklieF9UT1dPSmNiVjdkVmtwbWl5a0EwVmgzT2R1M0VLWEFIVkRSOWRJT0RUS0Q4RHAyWjR4OW5Hb2xSQVYxeXpVX0cxYjloWlhWclR3OU1YbGE0dkc3c05aWU5BQWFIbE1xWGNhblBBNHU2TGZ5bzk1VzFtOWtrNEwtTXVQb1ZIS0E?oc=5",
-          "headline": "סכנה: החות'ים מצאו דרך חדשה להתנקש באנשים",
-          "name": "סרוגים"
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE1IYXRaVE5vRTRSc2MxbXpaa0JTeWFZdXVzM0dtaVMyc1owQy0wNHpha29kb2w0d3dhSTVFWGtGcHFEQ3RRcHdLRlZXazV2dnFFbTM4Y2Q5UGNzZW1tMW5HZkswTmVrUEHSAW9BVV95cUxQZVBWRW5IWmpEQTdtQzZZWS1SVXhOdFNSRHNBSHRoakhWS0NCYk5ZR1I5N3lWdk9DR0lIS08xeTlGU0dXNTBaY1lwQ3JrT1lkYVAyTkVYZ2hnN2gzb0Z1OFgxXzVLcU9xbWt2VndSelU?oc=5",
-          "headline": "החות'ים תקפו בנמל מוח'א בתימן: 7 נהרגו ו-30 נפצעו",
-          "name": "היום"
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTFBScklJbUExU0NETWxudmdsNUpuRGs2SVBMaWo3Rk9XR09zbkRPakZ1aVZPajEwcGd3cGY0ZUMzOXhMMThhTlROT1c4T3BEendtVUFUR0xyUmtRdVhhbWtyZQ?oc=5",
-          "headline": "רגע לפני ההפתעה: הכטב\"מים בתימן חשבו שחנו במקום בטוח",
-          "name": "מעריב"
-        }
-      ],
-      "image": null,
-      "digest_basis": "headlines",
-      "distill": {
-        "title": "צבא תימן: שני חיילים תימנים נהרגו ועוד תשעה נפצעו מפגיעת רחפן נפץ חות'י בדרום המדינה",
-        "summary": "צבא תימן: שני חיילים תימנים נהרגו ועוד תשעה נפצעו מפגיעת רחפן נפץ חות'י בדרום המדינה. החות'ים תקפו בנמל מוח'א בתימן: 7 נהרגו ו-30 נפצעו.",
-        "why_matters": "",
-        "bullet_facts": [],
-        "background": "",
-        "outlook": "",
-        "insight": "",
-        "historical_context": "",
-        "status": "reported",
-        "reliability": "unknown",
-        "reliability_notes": "לא נמשכו גופי כתבות מהמקורות, ולכן לא בוצעה הצלבה — הכרטיס מבוסס כותרות בלבד.",
-        "digest_basis": "headlines",
-        "verification": {
-          "method": "none",
-          "bodies": 0,
-          "outlets": [],
-          "shared_facts": [],
-          "shared_topics": [],
-          "contradictions": [],
-          "overlap_ratio": 0.0
-        },
-        "mode": "heuristic"
-      },
-      "dryTitle": "צבא תימן: שני חיילים תימנים נהרגו ועוד תשעה נפצעו מפגיעת רחפן נפץ חות'י בדרום המדינה",
-      "summary": "צבא תימן: שני חיילים תימנים נהרגו ועוד תשעה נפצעו מפגיעת רחפן נפץ חות'י בדרום המדינה. החות'ים תקפו בנמל מוח'א בתימן: 7 נהרגו ו-30 נפצעו.",
-      "why_matters": "",
-      "bullet_facts": [],
-      "background": "",
-      "outlook": "",
-      "insight": "",
-      "historical_context": "",
-      "status": "reported",
-      "reliability": "unknown",
-      "reliability_notes": "לא נמשכו גופי כתבות מהמקורות, ולכן לא בוצעה הצלבה — הכרטיס מבוסס כותרות בלבד.",
-      "verification": {
-        "method": "none",
-        "bodies": 0,
-        "outlets": [],
-        "shared_facts": [],
-        "shared_topics": [],
-        "contradictions": [],
-        "overlap_ratio": 0.0
-      },
-      "distillMode": "heuristic"
-    },
-    {
-      "title": "טלטלה באיראן: המנהיג העליון משנה את צמרת הפיקוד",
-      "link": "https://news.google.com/rss/articles/CBMiQ0FVX3lxTFBGQk5yb3hqSVlkREF6MWg5VmZKTTM1WFdOWDI0aU9MZDV2SzRTeFBvSmNzTmE0N3VoaldDWDQ1ajE1Tzg?oc=5",
-      "pubDate": "Mon, 10 Aug 2026 17:49:40 GMT",
-      "sources": [
-        {
-          "url": "https://news.google.com/rss/articles/CBMiQ0FVX3lxTFBGQk5yb3hqSVlkREF6MWg5VmZKTTM1WFdOWDI0aU9MZDV2SzRTeFBvSmNzTmE0N3VoaldDWDQ1ajE1Tzg?oc=5",
-          "headline": "טלטלה באיראן: המנהיג העליון משנה את צמרת הפיקוד",
-          "name": "המחדש"
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxOQnZiTWNZTHl2SHN3eEtBU3g5bmZjbEMyMmVJMkVUblR2enpFbGJCYzFTVWl0NXV3U0FBTVlva0tWX3FWbU9vZENNalQxQmR3Z0JnRjJxbllOZzJmanJseDNGYW9xRUhuMGl5WlNIbGdkRTJVNnhQM2Y0WG1IVWVVSmVtWEd3YWRwLWFTX3FjLWE2cUcwQ2MwY1ZhaFl1Ni1XTUdSczBfZjUzdFYtb01HYkZkVThoY3M?oc=5",
-          "headline": "מפקד משמרות המהפכה לשעבר מונה למזכיר המועצה לביטחון לאומי של איראן",
-          "name": "הארץ"
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE1ab2RfRnE1dGZWRmVrNHMxUGRFUG5yRnh0T1Z0RjBJM3RXbnVYN2UtQk1wMmx2NEZXWTRDak9jTjU5X2R5cWtPcGRNLXZTd0pjUlZ0RVUzYnh0YXIyOXpqcWhmOUVfOThR?oc=5",
-          "headline": "\"כולם רוצים להיות מלך\": המינוי שעשוי להחריף את המתיחות באיראן",
-          "name": "גלובס"
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMifEFVX3lxTE00SjZmV004RjE0TnRsSmpCMEZid0FuekNCOW5BYUJONF8xSFZHVU9GZ2hBUzNCc0l6bmRSU2VpdjYxWDdTM2RpbndQWkNwLVhBUWhNeEU2TkVubS1OZERkTzEwRGczMGw4bjNGX1o3ODI4aUhHUjJuamNWME8?oc=5",
-          "headline": "השינויים בצמרת האיראנית - והניסיון של המשטר להוכיח שמוג'תבא חי",
-          "name": "mako"
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE9PQXNZY216aUJETk54SXdwOWpiZWZ6MEdVNzRwWGIwQ3Y5SnlwSGtWTDZ1YjRVa1QyVmhzclBoRVBNVVFqb1BjMnlhSE5UZnlsWVA1X0lRNHRkNTFNTC0wbXlKUWt5NURjMEVqd3BBTlJXTWZUMExzTTNiUl9CQ2fSAYcBQVVfeXFMTnZWY1RlblIweG1Cc3VNSld2MGhXdGdxZERWUmhHY3MzQXBQOFlnMDM3dldKWUR6VUZEMUtfUDh4bTNnaFhPMTdSQ0swVWROSkk1Z1ZqcW1EYTRGMXVwNTFOYXhLckFiSWUzV2lJUWdaak5xaEpQemRZeFBUYW5XM1JadHA2VlhV?oc=5",
-          "headline": "נכשל במניעת חיסולים ויפקד על הבסיג': שורת המינויים של מוג'תבא",
-          "name": "היום"
-        }
-      ],
-      "image": null,
-      "digest_basis": "headlines",
-      "distill": {
-        "title": "טלטלה באיראן: המנהיג העליון משנה את צמרת הפיקוד",
-        "summary": "טלטלה באיראן: המנהיג העליון משנה את צמרת הפיקוד. נכשל במניעת חיסולים ויפקד על הבסיג': שורת המינויים של מוג'תבא.",
-        "why_matters": "",
-        "bullet_facts": [],
-        "background": "",
-        "outlook": "",
-        "insight": "",
-        "historical_context": "",
-        "status": "reported",
-        "reliability": "unknown",
-        "reliability_notes": "לא נמשכו גופי כתבות מהמקורות, ולכן לא בוצעה הצלבה — הכרטיס מבוסס כותרות בלבד.",
-        "digest_basis": "headlines",
-        "verification": {
-          "method": "none",
-          "bodies": 0,
-          "outlets": [],
-          "shared_facts": [],
-          "shared_topics": [],
-          "contradictions": [],
-          "overlap_ratio": 0.0
-        },
-        "mode": "heuristic"
-      },
-      "dryTitle": "טלטלה באיראן: המנהיג העליון משנה את צמרת הפיקוד",
-      "summary": "טלטלה באיראן: המנהיג העליון משנה את צמרת הפיקוד. נכשל במניעת חיסולים ויפקד על הבסיג': שורת המינויים של מוג'תבא.",
-      "why_matters": "",
-      "bullet_facts": [],
-      "background": "",
-      "outlook": "",
-      "insight": "",
-      "historical_context": "",
-      "status": "reported",
-      "reliability": "unknown",
-      "reliability_notes": "לא נמשכו גופי כתבות מהמקורות, ולכן לא בוצעה הצלבה — הכרטיס מבוסס כותרות בלבד.",
-      "verification": {
-        "method": "none",
-        "bodies": 0,
-        "outlets": [],
-        "shared_facts": [],
-        "shared_topics": [],
-        "contradictions": [],
-        "overlap_ratio": 0.0
-      },
-      "distillMode": "heuristic"
-    },
-    {
-      "title": "עקביות? מאנדיי קונה מניות שלה וטוענת שהיא מפטרת בשביל עוד כסף למו\"פ",
-      "link": "https://news.google.com/rss/articles/CBMipgFBVV95cUxPclpxTklMd3dtbm1fUWxzdkZjUkZBYzdnS1VSNXJicDBZWW1aVUpOSmJZZVE3MGNkOU1kc3RxVjFYb25sd0h1Vm1fR0swdDNCMlpjT200Z3d4WVlnN2c2a0txcURlbXEzTjRvcnBvVFoyOXNiYWpJM0hYM2kwQ3Z0WlFNSzcxcVZseUlybnFlS3BDeUFqckpLM3lWU2RTN0g0OGcwaDJB?oc=5",
-      "pubDate": "Tue, 11 Aug 2026 03:06:00 GMT",
-      "sources": [
-        {
-          "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxPclpxTklMd3dtbm1fUWxzdkZjUkZBYzdnS1VSNXJicDBZWW1aVUpOSmJZZVE3MGNkOU1kc3RxVjFYb25sd0h1Vm1fR0swdDNCMlpjT200Z3d4WVlnN2c2a0txcURlbXEzTjRvcnBvVFoyOXNiYWpJM0hYM2kwQ3Z0WlFNSzcxcVZseUlybnFlS3BDeUFqckpLM3lWU2RTN0g0OGcwaDJB?oc=5",
-          "headline": "עקביות? מאנדיי קונה מניות שלה וטוענת שהיא מפטרת בשביל עוד כסף למו\"פ",
-          "name": "TheMarker",
-          "resolved_url": "https://www.themarker.com/markets/2026-08-11/ty-article/.highlight/0000019f-ec09-d569-a5ff-fc6d64920000",
-          "fetch_ok": true
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE53WUlBellWWW9hUm5TN1FEeWREbG1yWHMzdnFCTmtYLVgzUzVEdnRBRm5GMTUtcVpDcnlBUjVRdThFNWZkbDRtQW95N21oQVE2VUxPNFlvR0FVTUZnYS1SbG9kVHlNZFU0?oc=5",
-          "headline": "מאנדיי סיפקה תחזית מאכזבת. וכמה יעלו פיטורי הענק?",
-          "name": "גלובס",
-          "resolved_url": "https://www.globes.co.il/news/article.aspx?did=1001551847",
-          "fetch_ok": true
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMiY0FVX3lxTE83STdXZ0ZxbjRsMUtXamdxN3lCYjNPTXlQQU5JaDBFeklGSkJsSDdRdVA4dmx6S2FVVS1ocEtZbmlMSTZCZkh0bXNHWHVHN1d3YktRRjRvWU5kNktCOGpRaWtCWQ?oc=5",
-          "headline": "מאנדיי עקפה את התחזית, אבל צופה האטה בצמיחה והמניה צונחת בטרום",
-          "name": "Calcalist",
-          "resolved_url": "https://www.calcalist.co.il/market/article/b1hrx4pigx"
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMiY0FVX3lxTE1HU0pndWhpOVdMWFo5aDgtaWw2cWdDMWhGNHQ3dGRUN3pSY3Zyb0xOSWpLQ01TTUZNYV95Y0ROQnB5aGZMQlZMN3ZkUkM0UURiZHZ4S0ZxdHFxbHhsN3E5NU9vNA?oc=5",
-          "headline": "Monday.com יורדת למרות תוצאות טובות בשל תחזית פיננסית חלשה מאת Investing.com",
-          "name": "Investing.com"
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE1zSS16c1FSX0FvZW5KNGh0Zng4cDRVRlFMYVZhdnlMbE1ORklPSnh5V2k3Y3hrMkNLblFmWlZ3SWNaX3pHcU1ZZFNMSzdUY3lFcXB5OVgxQkVsSVdSZ0VpRUtseXB2ZjQwcHJGcUU2ZUs?oc=5",
-          "headline": "מניית מאנדיי נופלת; החברה צומחת ב-22% אבל מאכזבת בתחזית להמשך",
-          "name": "ביזפורטל"
-        }
-      ],
-      "image": null,
-      "digest_basis": "fulltext",
-      "distill": {
-        "title": "עקביות? מאנדיי קונה מניות שלה וטוענת שהיא מפטרת בשביל עוד כסף למו\"פ",
-        "summary": "מאנדיי דיווחה על הכנסות של 365 מיליון דולר, לעומת צפי לכ־356 מיליון דולר. רק לטובת הוצאות הפיטורים היא הפרישה 20 מיליון דולר בדו\"חות הרבעוניים שלה. המקורות חלוקים בנתון: TheMarker: 17 מיליארד / גלובס: 1.5 מיליארד.",
-        "why_matters": "",
-        "bullet_facts": [
-          "20 %",
-          "הדוחות מתפרסמים פרק זמן קצר לאחר שמאנדיי הודיעה כי תפטר כ־20% מעובדיה בעולם, אשר מהווים כ־620 עובדים .",
-          "מנגד, החברה צופה קיזוז של כ־15 מיליון דולר, בשל ביטול תגמולים מבוססי מניות לעובדים שיעזבו.",
-          "מניית מאנדיי נופלת; החברה צומחת ב-22% אבל מאכזבת בתחזית להמשך"
-        ],
-        "background": "",
-        "outlook": "המקורות חלוקים בנתונים: TheMarker: 17 מיליארד / גלובס: 1.5 מיליארד.",
-        "insight": "",
-        "historical_context": "",
-        "status": "reported",
-        "reliability": "medium",
-        "reliability_notes": "הוצלבו 2 מקורות (TheMarker, גלובס), אך יש אי־התאמה בנתונים: TheMarker: 17 מיליארד / גלובס: 1.5 מיליארד; TheMarker: 100 מיליון / גלובס: 15 מיליון. ליבת האירוע חוזרת בכל המקורות.",
-        "digest_basis": "fulltext",
-        "verification": {
-          "method": "cross-source",
-          "bodies": 2,
-          "outlets": [
-            "TheMarker",
-            "גלובס"
-          ],
-          "shared_facts": [
-            "20 %"
-          ],
-          "shared_topics": [
-            "אנדיי",
-            "ניות",
-            "פיטורי",
-            "שהיא"
-          ],
-          "contradictions": [
-            "TheMarker: 17 מיליארד / גלובס: 1.5 מיליארד",
-            "TheMarker: 100 מיליון / גלובס: 15 מיליון"
-          ],
-          "overlap_ratio": 0.141
-        },
-        "mode": "heuristic"
-      },
-      "dryTitle": "עקביות? מאנדיי קונה מניות שלה וטוענת שהיא מפטרת בשביל עוד כסף למו\"פ",
-      "summary": "מאנדיי דיווחה על הכנסות של 365 מיליון דולר, לעומת צפי לכ־356 מיליון דולר. רק לטובת הוצאות הפיטורים היא הפרישה 20 מיליון דולר בדו\"חות הרבעוניים שלה. המקורות חלוקים בנתון: TheMarker: 17 מיליארד / גלובס: 1.5 מיליארד.",
-      "why_matters": "",
-      "bullet_facts": [
-        "20 %",
-        "הדוחות מתפרסמים פרק זמן קצר לאחר שמאנדיי הודיעה כי תפטר כ־20% מעובדיה בעולם, אשר מהווים כ־620 עובדים .",
-        "מנגד, החברה צופה קיזוז של כ־15 מיליון דולר, בשל ביטול תגמולים מבוססי מניות לעובדים שיעזבו.",
-        "מניית מאנדיי נופלת; החברה צומחת ב-22% אבל מאכזבת בתחזית להמשך"
-      ],
-      "background": "",
-      "outlook": "המקורות חלוקים בנתונים: TheMarker: 17 מיליארד / גלובס: 1.5 מיליארד.",
-      "insight": "",
-      "historical_context": "",
-      "status": "reported",
-      "reliability": "medium",
-      "reliability_notes": "הוצלבו 2 מקורות (TheMarker, גלובס), אך יש אי־התאמה בנתונים: TheMarker: 17 מיליארד / גלובס: 1.5 מיליארד; TheMarker: 100 מיליון / גלובס: 15 מיליון. ליבת האירוע חוזרת בכל המקורות.",
-      "verification": {
-        "method": "cross-source",
-        "bodies": 2,
-        "outlets": [
-          "TheMarker",
-          "גלובס"
-        ],
-        "shared_facts": [
-          "20 %"
-        ],
-        "shared_topics": [
-          "אנדיי",
-          "ניות",
-          "פיטורי",
-          "שהיא"
-        ],
-        "contradictions": [
-          "TheMarker: 17 מיליארד / גלובס: 1.5 מיליארד",
-          "TheMarker: 100 מיליון / גלובס: 15 מיליון"
-        ],
-        "overlap_ratio": 0.141
-      },
-      "distillMode": "heuristic"
-    },
-    {
-      "title": "גל פיטורים? הנתונים שמוכיחים מה באמת קורה בהייטק הישראלי",
-      "link": "https://news.google.com/rss/articles/CBMifEFVX3lxTE1lSEpOMUQ0NkxWdEFzX25yR3V3Wm9uM3VQWmpJb3VBSzJ5dkhYeFdvTjduckZ5ek01VDRwb25Nc1NicXVFaDB0ekhzeGtaeldMRUZoZmVWczFKenh6MzhZeGFZb2V0aDFxNV9lZDVsR2c0ZXF5bEotYzNnOTg?oc=5",
-      "pubDate": "Tue, 11 Aug 2026 03:00:00 GMT",
-      "sources": [
-        {
-          "url": "https://news.google.com/rss/articles/CBMifEFVX3lxTE1lSEpOMUQ0NkxWdEFzX25yR3V3Wm9uM3VQWmpJb3VBSzJ5dkhYeFdvTjduckZ5ek01VDRwb25Nc1NicXVFaDB0ekhzeGtaeldMRUZoZmVWczFKenh6MzhZeGFZb2V0aDFxNV9lZDVsR2c0ZXF5bEotYzNnOTg?oc=5",
-          "headline": "גל פיטורים? הנתונים שמוכיחים מה באמת קורה בהייטק הישראלי",
-          "name": "mako",
-          "resolved_url": "https://www.mako.co.il/news-money/2026_q3/Article-94773895fddef91027.htm",
-          "fetch_ok": true
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE00dDJXQjIzRXB5cVhkc3hTTW9zQ3N5ckx6QnNkRG9reXhVakJhUzFTSWdCTmF5azI1QjFlcUNxcGg5M1VOcWdUZjV6am8xejU4UUZDRGRrVU45Uk1EZEpTcUd3MENzVWVvZk9N?oc=5",
-          "headline": "ההייטק לא מתכווץ (בינתיים), אבל מבנה כוח האדם משתנה",
-          "name": "Calcalist",
-          "resolved_url": "https://www.calcalist.co.il/calcalistech/article/hjodntpizg"
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxQOHJ3UzlSLThIdWJRLUQ4SHNCN2pRbjAzZHBXSzF0RUp3VmttcWRaWUZrV3RsMmdkZlVUTkVlRXlRX29MR3pxYkJycnRDVDBaZ0liaVZ0eDcxeVhJWEVlOWpLR05sT2NQR09kT0tqeDBVby1CcDVacnZ2TlpjRDAwRF90ZGhXS2xZd0JleFgxcHRWTXlCNzRCNG5BN1duSklLZTJTUWdsSGxvQQ?oc=5",
-          "headline": "תפנית שאי אפשר להתעלם ממנה: השיקולים של חברות ההייטק שמתכננות פיטורים",
-          "name": "TheMarker",
-          "resolved_url": "https://www.themarker.com/technation/2026-08-11/ty-article/.highlight/0000019f-ec62-d569-a5ff-fc665a9d0000",
-          "fetch_ok": true
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMiywJBVV95cUxQYW1QSzYtS24tcWVCeTQ5SldaWGNYT1IxRW1HVG9waVYwOTdqYnVCcjZQZzJVdmN5eFJxZzZRNXp2bjNpZ1E2dWpLNTZvV0xMSW1OeWN4WHM5MTVGcF9aY09Zbkd3X3A2YUpHSGdSRzh0ZXBJOTctYmF3Yzk1T29fb2xxQ0JlZVFUUU04RGstSmdEQmFocllldGo3N2syNzhLY0ZOM21ZNUZjM1ZJalZUR3RxMnY3dnF4MzVtRDB3YmJtMGREYll5NVVrNWZDd0U2eHdQczV1MmdIWENaZEh0YndWdGcxaXZzNEtlVnZNU1dLazVEbW5ZZDBIMjFtcVZNLXAyejJFcm5OWGwwTWx3TXEtRnhDSGxDcldhRDdab2tpQUY1bkQ5VXJqeXFtU2Jsb2tPUXZIeXgtNzFEVFRXR2s2Zmh3TlByU01B?oc=5",
-          "headline": "'הרבה יותר עבודה מבעבר': המחקר שמטיל ספק בהבטחת ה-AI הגדולה",
-          "name": "סרוגים"
-        }
-      ],
-      "image": null,
-      "opinion_sources": [
-        {
-          "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE9kbWVaWmphWHl3aTVwUS1nTjNaWEttdnA3OHpzNGd6VW9MUmdKcG9qSHBweVlOeHkyQ3ZEM0JiTkVBZGgwOTdSYnpjRy04QVBlcThsNEN3U1JoNmpkSzRTVnJxdklCUjNL?oc=5",
-          "headline": "פוטרתם מההייטק? זה מה שכדאי לכם לעשות עכשיו",
-          "name": "גלובס"
-        }
-      ],
-      "digest_basis": "fulltext",
-      "distill": {
-        "title": "גל פיטורים? הנתונים שמוכיחים מה באמת קורה בהייטק הישראלי",
-        "summary": "סקר חדש מראה כי ענף ההייטק הישראלי שומר על חוסן - למרות הדיווחים. מתחת לפני השטח מסתתר פיצול חד ומשמעותי בין תחומי הפעילות: חברות התוכנה: ספגו את גל ההתייעלות הכבד ביותר, עם שיעור פיטורים של 6.6% - יותר מפי שניים מהממוצע בענף.",
-        "why_matters": "",
-        "bullet_facts": [
-          "7 %",
-          "רק 7% מהחברות ציינו את הבינה המלאכותית כסיבה המרכזית לפיטורים.",
-          "מצד אחד הבינה המלאכותית היא עוד לא המניע העיקרי לגלי פיטורים רוחביים, אך נראה שהחברות לומדות לעשות יותר עם…",
-          "'הרבה יותר עבודה מבעבר': המחקר שמטיל ספק בהבטחת ה-AI הגדולה"
-        ],
-        "background": "",
-        "outlook": "",
-        "insight": "",
-        "historical_context": "",
-        "status": "reported",
-        "reliability": "medium",
-        "reliability_notes": "הוצלבו 2 מקורות (mako, TheMarker) עם חפיפה חלקית בפרטים (הייטק, חברות, ישראלי). ליבת הדיווח משותפת, אך אין מספיק פרטים זהים כדי לאשר את מלוא הנתונים.",
-        "digest_basis": "fulltext",
-        "verification": {
-          "method": "cross-source",
-          "bodies": 2,
-          "outlets": [
-            "mako",
-            "TheMarker"
-          ],
-          "shared_facts": [
-            "7 %"
-          ],
-          "shared_topics": [
-            "הייטק",
-            "חברות",
-            "ישראלי",
-            "פיטורים"
-          ],
-          "contradictions": [],
-          "overlap_ratio": 0.16
-        },
-        "mode": "heuristic"
-      },
-      "dryTitle": "גל פיטורים? הנתונים שמוכיחים מה באמת קורה בהייטק הישראלי",
-      "summary": "סקר חדש מראה כי ענף ההייטק הישראלי שומר על חוסן - למרות הדיווחים. מתחת לפני השטח מסתתר פיצול חד ומשמעותי בין תחומי הפעילות: חברות התוכנה: ספגו את גל ההתייעלות הכבד ביותר, עם שיעור פיטורים של 6.6% - יותר מפי שניים מהממוצע בענף.",
-      "why_matters": "",
-      "bullet_facts": [
-        "7 %",
-        "רק 7% מהחברות ציינו את הבינה המלאכותית כסיבה המרכזית לפיטורים.",
-        "מצד אחד הבינה המלאכותית היא עוד לא המניע העיקרי לגלי פיטורים רוחביים, אך נראה שהחברות לומדות לעשות יותר עם…",
-        "'הרבה יותר עבודה מבעבר': המחקר שמטיל ספק בהבטחת ה-AI הגדולה"
-      ],
-      "background": "",
-      "outlook": "",
-      "insight": "",
-      "historical_context": "",
-      "status": "reported",
-      "reliability": "medium",
-      "reliability_notes": "הוצלבו 2 מקורות (mako, TheMarker) עם חפיפה חלקית בפרטים (הייטק, חברות, ישראלי). ליבת הדיווח משותפת, אך אין מספיק פרטים זהים כדי לאשר את מלוא הנתונים.",
-      "verification": {
-        "method": "cross-source",
-        "bodies": 2,
-        "outlets": [
-          "mako",
-          "TheMarker"
-        ],
-        "shared_facts": [
-          "7 %"
-        ],
-        "shared_topics": [
-          "הייטק",
-          "חברות",
-          "ישראלי",
-          "פיטורים"
-        ],
-        "contradictions": [],
-        "overlap_ratio": 0.16
-      },
-      "distillMode": "heuristic"
-    },
-    {
-      "title": "היום בבורסה: קמטק תעלה, טאואר תרד, דוח לאלביט",
-      "link": "https://news.google.com/rss/articles/CBMicEFVX3lxTE0xYU9UWGU0VmF3UGVKNkw3bHEyRzhzZEtRd2ZidE0yWWZYOFpLOGUzQ3ZXakdGNmVMSFoweTlZbzhNdWdITFphSkpvam9hUW1jZ0VXZFUyLUY1ZEctQXJkcTZVME8yR0pGY3FnZ290X2Q?oc=5",
-      "pubDate": "Tue, 11 Aug 2026 04:47:00 GMT",
-      "sources": [
-        {
-          "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE0xYU9UWGU0VmF3UGVKNkw3bHEyRzhzZEtRd2ZidE0yWWZYOFpLOGUzQ3ZXakdGNmVMSFoweTlZbzhNdWdITFphSkpvam9hUW1jZ0VXZFUyLUY1ZEctQXJkcTZVME8yR0pGY3FnZ290X2Q?oc=5",
-          "headline": "היום בבורסה: קמטק תעלה, טאואר תרד, דוח לאלביט",
-          "name": "ביזפורטל",
-          "resolved_url": "https://www.bizportal.co.il/capitalmarket/news/article/20038470",
-          "fetch_ok": true
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMiYkFVX3lxTFBoNUZSb2NKTXByckxlenI1V21jS0pOeFlmYk5QUHNjQjRTTmNaVkwwSUhtR0gxVmplOFFlSU13ZzhoVGtWQjFQY3hFQjlhNnFrY3dhTnh3WkJoNy1iZ3AxNkVR?oc=5",
-          "headline": "הבורסה בת\"א ננעלה בירידות; מדד הבנייה איבד 3%, נקסט ויז'ן נפלה ב-6.7%",
-          "name": "Calcalist",
-          "resolved_url": "https://www.calcalist.co.il/market/article/t1uwxpzvx"
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE9vazVRbHp3R0dQeXVkYjRyNndiR0NJMENJMGRTaGlYTGxOVGZBSjhZT2dsbU9BdTRjczR5bGdnZWk5aERidDBHSUxqTmpBMV9Qcmw5bnpONXNHdTJabjU5b3cwLXo3VWtE?oc=5",
-          "headline": "ת\"א ננעלה בירידות; מדד הבנייה נפל ב-3%, הבנקים ב-2%",
-          "name": "גלובס",
-          "resolved_url": "https://www.globes.co.il/news/article.aspx?did=1001551794",
-          "fetch_ok": true
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMib0FVX3lxTE9kVDIzTDdlVWVqaWVTYkljMFJMUXNrRjlzNmQ4UXpTQ3BNQWV4WTNFNElVcGszUHVrR0xYUktkejhlaGRVVmlHZHJ1M0FsUjBCbzM0UEJ2R3ZTN0FUYW5iRC0tS0M3bXI3eF9HUGs5aw?oc=5",
-          "headline": "מדדי המניות בישראל ירדו בנעילת המסחר; מדד תל אביב 35 השיל 0.30% מאת Investing.com",
-          "name": "Investing.com"
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxPcFo5VUtwSnpkamZ3cElVYmk0cEJPbWk0TzR4dE9SMWd0TWNrOU5lQ3JmMnFFY1MxUVp6UkozSVNHT3dhQnR4Q3NGSWFEN09PdWJFbXp6SElOY1UwS0UtLXRxUlJRNE02MkxmbTZ0RThSN29qYkMxdFVyX3RGbWZic25WM0VFX1J0cHItbC1sSlhyMDBWUTZhUEVqTGJqZw?oc=5",
-          "headline": "הבורסה ננעלה בירידות: מדד ת\"א בנייה איבד 3%; טאואר עלתה ב–9.5%",
-          "name": "TheMarker"
-        }
-      ],
-      "image": null,
-      "digest_basis": "fulltext",
-      "distill": {
-        "title": "היום בבורסה: קמטק תעלה, טאואר תרד, דוח לאלביט",
-        "summary": "בין 125 המניות הגדולות בבורסה בלטו לטובה שלוש דואליות - טאואר שזינקה בכ-9%, נייס ופאלו אלטו. תל אביב תפתח את היום כנראה בירידות, אבל זה הימור יותר מהערכה - הדואליות יכבידו בכ-0.3% על המדדים, אבל תהיה השפעה גם של הדוחות שיפורסמו על הבוקר, לרבות של אלביט. המקורות חלוקים בנתון: ביזפורטל: 3.5 מיליארד / גלובס: 15 מיליארד.",
-        "why_matters": "",
-        "bullet_facts": [
-          "0.3 %",
-          "מדד ת\"א בטחוניות 0% מדד ת\"א 35 0% מדד ת\"א 90 0% מדד ת\"א-ביטוח 0% היום בבורסה ונקסט ויז'ן מעלייה של 8% לירידה…",
-          "מובילה אותו מניית חברת הנדל\"ן הכשרה התחדשות צונחת במסחר ומשלימה נפילה של מעל 40% בשני ימי המסחר האחרונים,…",
-          "הבורסה בת\"א ננעלה בירידות; מדד הבנייה איבד 3%, נקסט ויז'ן נפלה ב-6.7%",
-          "מדדי המניות בישראל ירדו בנעילת המסחר; מדד תל אביב 35 השיל 0.30% מאת Investing.com"
-        ],
-        "background": "",
-        "outlook": "המקורות חלוקים בנתונים: ביזפורטל: 3.5 מיליארד / גלובס: 15 מיליארד.",
-        "insight": "",
-        "historical_context": "",
-        "status": "reported",
-        "reliability": "medium",
-        "reliability_notes": "הוצלבו 2 מקורות (ביזפורטל, גלובס), אך יש אי־התאמה בנתונים: ביזפורטל: 3.5 מיליארד / גלובס: 15 מיליארד. ליבת האירוע חוזרת בכל המקורות.",
-        "digest_basis": "fulltext",
-        "verification": {
-          "method": "cross-source",
-          "bodies": 2,
-          "outlets": [
-            "ביזפורטל",
-            "גלובס"
-          ],
-          "shared_facts": [
-            "0.3 %"
-          ],
-          "shared_topics": [
-            "בורסה",
-            "בנקים",
-            "טאואר",
-            "ירדו"
-          ],
-          "contradictions": [
-            "ביזפורטל: 3.5 מיליארד / גלובס: 15 מיליארד"
-          ],
-          "overlap_ratio": 0.209
-        },
-        "mode": "heuristic"
-      },
-      "dryTitle": "היום בבורסה: קמטק תעלה, טאואר תרד, דוח לאלביט",
-      "summary": "בין 125 המניות הגדולות בבורסה בלטו לטובה שלוש דואליות - טאואר שזינקה בכ-9%, נייס ופאלו אלטו. תל אביב תפתח את היום כנראה בירידות, אבל זה הימור יותר מהערכה - הדואליות יכבידו בכ-0.3% על המדדים, אבל תהיה השפעה גם של הדוחות שיפורסמו על הבוקר, לרבות של אלביט. המקורות חלוקים בנתון: ביזפורטל: 3.5 מיליארד / גלובס: 15 מיליארד.",
-      "why_matters": "",
-      "bullet_facts": [
-        "0.3 %",
-        "מדד ת\"א בטחוניות 0% מדד ת\"א 35 0% מדד ת\"א 90 0% מדד ת\"א-ביטוח 0% היום בבורסה ונקסט ויז'ן מעלייה של 8% לירידה…",
-        "מובילה אותו מניית חברת הנדל\"ן הכשרה התחדשות צונחת במסחר ומשלימה נפילה של מעל 40% בשני ימי המסחר האחרונים,…",
-        "הבורסה בת\"א ננעלה בירידות; מדד הבנייה איבד 3%, נקסט ויז'ן נפלה ב-6.7%",
-        "מדדי המניות בישראל ירדו בנעילת המסחר; מדד תל אביב 35 השיל 0.30% מאת Investing.com"
-      ],
-      "background": "",
-      "outlook": "המקורות חלוקים בנתונים: ביזפורטל: 3.5 מיליארד / גלובס: 15 מיליארד.",
-      "insight": "",
-      "historical_context": "",
-      "status": "reported",
-      "reliability": "medium",
-      "reliability_notes": "הוצלבו 2 מקורות (ביזפורטל, גלובס), אך יש אי־התאמה בנתונים: ביזפורטל: 3.5 מיליארד / גלובס: 15 מיליארד. ליבת האירוע חוזרת בכל המקורות.",
-      "verification": {
-        "method": "cross-source",
-        "bodies": 2,
-        "outlets": [
-          "ביזפורטל",
-          "גלובס"
-        ],
-        "shared_facts": [
-          "0.3 %"
-        ],
-        "shared_topics": [
-          "בורסה",
-          "בנקים",
-          "טאואר",
-          "ירדו"
-        ],
-        "contradictions": [
-          "ביזפורטל: 3.5 מיליארד / גלובס: 15 מיליארד"
-        ],
-        "overlap_ratio": 0.209
-      },
-      "distillMode": "heuristic"
-    },
-    {
-      "title": "השווקים בשיא לקראת מבחן האינפלציה בארה\"ב: כל מה שמחכה למשקיעים השבוע בעולם",
-      "link": "https://news.google.com/rss/articles/CBMiUEFVX3lxTE5WYUNUQVNYNm43bGd1Q0FHRXhfOUE3THJNVGpjejdScEJkak4wNzZGVE1vOFZINXNSYVhpaFFmVG9kZVNGdHBOOTBiTUxUU195?oc=5",
-      "pubDate": "Mon, 10 Aug 2026 12:41:10 GMT",
-      "sources": [
-        {
-          "url": "https://news.google.com/rss/articles/CBMiUEFVX3lxTE5WYUNUQVNYNm43bGd1Q0FHRXhfOUE3THJNVGpjejdScEJkak4wNzZGVE1vOFZINXNSYVhpaFFmVG9kZVNGdHBOOTBiTUxUU195?oc=5",
-          "headline": "השווקים בשיא לקראת מבחן האינפלציה בארה\"ב: כל מה שמחכה למשקיעים השבוע בעולם",
-          "name": "פאנדר"
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTFBFdmJuR3RMSnpmTFFYSjdRVmZlYm5qQ2pTZnJNS3dydDFaMEdHcXpTbWtoWEpvRVJvSkZOTkQ3dUxld0gwWmczRjlMUkl0UHBvNzRONnBCY0dTNlVuYXpZVHE5ZnZKNmFF?oc=5",
-          "headline": "וול סטריט ננעלה במגמה שלילית מתונה, השבבים לחצו; זינוק חד במחירי הנפט",
-          "name": "גלובס"
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMiYkFVX3lxTE1GREgtNjliRm1KcWFGUGxWNE9NQjhhRUNaWE9uckZJNUFEeXRYcmdKVENyYWNWRmhNcVdYR2h6ck9mNEhoc2xIVDZRN1lNQzkybUhUWXRlZjduS2NOUDhRMWpR?oc=5",
-          "headline": "וול סטריט ננעלה בירידות שערים קלות: מאנדיי מחקה 5%, הנפט זינק ב-5%",
-          "name": "Calcalist"
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE1Zd3FOcVQxY3JrZ0Jyb2ozYzdTVjU0OEdUSFF4ZEZKM0VmSlQxbVZjYjFTeTJRdWFDWnBrVGRoUFhtS21zVU42U0JRUFZubmJuNGxQaTRDWVNLUXRpaG1zMUxPbnVkaVlR?oc=5",
-          "headline": "חמישה דברים לעקוב אחריהם בשווקים בשבוע הקרוב מאת Investing.com",
-          "name": "Investing.com"
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE1YS1EzUkRyYy1VOHQxaDltMTQ1Y2xtQTBWNnlqLXVxRGhFaW52RHdDdVB0ZkVYcWZhWG95WWlERzdZa24tdl9ldXdPbEFucndjbjRHMjVIS1BwQVVvdWl0aWJ3czAteW5BMWhzR2NNbDY?oc=5",
-          "headline": "נעילה שלילית בוול-סטריט; פאלו אלטו קפצה ב-6%, מאנדיי איבדה 4%",
-          "name": "ביזפורטל"
-        }
-      ],
-      "image": null,
-      "digest_basis": "headlines",
-      "distill": {
-        "title": "השווקים בשיא לקראת מבחן האינפלציה בארה\"ב: כל מה שמחכה למשקיעים השבוע בעולם",
-        "summary": "השווקים בשיא לקראת מבחן האינפלציה בארה\"ב: כל מה שמחכה למשקיעים השבוע בעולם. וול סטריט ננעלה בירידות שערים קלות: מאנדיי מחקה 5%, הנפט זינק ב-5%. נעילה שלילית בוול-סטריט; פאלו אלטו קפצה ב-6%, מאנדיי איבדה 4%.",
-        "why_matters": "",
-        "bullet_facts": [],
-        "background": "",
-        "outlook": "",
-        "insight": "",
-        "historical_context": "",
-        "status": "reported",
-        "reliability": "unknown",
-        "reliability_notes": "לא נמשכו גופי כתבות מהמקורות, ולכן לא בוצעה הצלבה — הכרטיס מבוסס כותרות בלבד.",
-        "digest_basis": "headlines",
-        "verification": {
-          "method": "none",
-          "bodies": 0,
-          "outlets": [],
-          "shared_facts": [],
-          "shared_topics": [],
-          "contradictions": [],
-          "overlap_ratio": 0.0
-        },
-        "mode": "heuristic"
-      },
-      "dryTitle": "השווקים בשיא לקראת מבחן האינפלציה בארה\"ב: כל מה שמחכה למשקיעים השבוע בעולם",
-      "summary": "השווקים בשיא לקראת מבחן האינפלציה בארה\"ב: כל מה שמחכה למשקיעים השבוע בעולם. וול סטריט ננעלה בירידות שערים קלות: מאנדיי מחקה 5%, הנפט זינק ב-5%. נעילה שלילית בוול-סטריט; פאלו אלטו קפצה ב-6%, מאנדיי איבדה 4%.",
-      "why_matters": "",
-      "bullet_facts": [],
-      "background": "",
-      "outlook": "",
-      "insight": "",
-      "historical_context": "",
-      "status": "reported",
-      "reliability": "unknown",
-      "reliability_notes": "לא נמשכו גופי כתבות מהמקורות, ולכן לא בוצעה הצלבה — הכרטיס מבוסס כותרות בלבד.",
-      "verification": {
-        "method": "none",
-        "bodies": 0,
-        "outlets": [],
-        "shared_facts": [],
-        "shared_topics": [],
-        "contradictions": [],
-        "overlap_ratio": 0.0
-      },
-      "distillMode": "heuristic"
-    },
-    {
-      "title": "טראמפ דורש פיצויים מאיראן בעוד מדרגי הנפט עולים מאת Investing.com",
-      "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTE0wMG5qekZpRVBzanY1eFBNbS1mZWdyTTR6QlU5RlRDVXNYaU5aR1VobFhodV8zbENZNXdnZDAwcVdOTnQ5QXA4R1lsTF8xazVvRGh1TGQ3Tlh3SUFiREF3dVhqbXJZcV9QZkNKem5CWnZ5UWQ2?oc=5",
-      "pubDate": "Mon, 10 Aug 2026 21:05:25 GMT",
-      "sources": [
-        {
-          "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE0wMG5qekZpRVBzanY1eFBNbS1mZWdyTTR6QlU5RlRDVXNYaU5aR1VobFhodV8zbENZNXdnZDAwcVdOTnQ5QXA4R1lsTF8xazVvRGh1TGQ3Tlh3SUFiREF3dVhqbXJZcV9QZkNKem5CWnZ5UWQ2?oc=5",
-          "headline": "טראמפ דורש פיצויים מאיראן בעוד מדרגי הנפט עולים מאת Investing.com",
-          "name": "Investing.com",
-          "resolved_url": "https://il.investing.com/news/commodities-news/article-93CH-934241"
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxNcUpoTkxDa1g2RnczZGpLZ0lzLUJFZlpHMWFqZ0d5WDRoVkZzcDZtNWJVbjNSaG1UTDg0X2VWS05zQ2ZhWTc5OUwxeEJmRmRMS1Zmemc1b2R2UjdNMm1hTTlzX1NDM3lqX3dRMnlkZDUyY1dpZ1ZxQVNLdFczaFFrTzdXRVJpZVRoMHBUR1RGR2ZoLWlRVkdxWG04c0pVa1hyWG9DT3dOMkFyTm1ETklScER2R2FsTW8?oc=5",
-          "headline": "טראמפ: נדרוש מאיראן פיצויים על כל האנשים שהרגה בסכסוכים ובהפגנות",
-          "name": "הארץ",
-          "resolved_url": "https://www.haaretz.co.il/news/world/middle-east/2026-08-10/ty-article/.premium/0000019f-ec8c-d310-a3df-ec8f919b0000",
-          "fetch_ok": true
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFBVZ1BNdzZuTHUyZnFXOUNlZDJRMjVXX1BBTkxrRV9ObEp2czZ0UlF3dnp1YmgwYXlGaEsyRkFTdTBhQ0k2OHR0OXgxM0hJS3FnU3I2LXRmSU03WUpVblpUeW9QMVg?oc=5",
-          "headline": "איראן ביקשה פיצויים על המלחמה - טראמפ פתח חשבון משלו",
-          "name": "מעריב",
-          "resolved_url": "https://www.maariv.co.il/breaking-news/article-1354582",
-          "fetch_ok": true
-        }
-      ],
-      "image": null,
-      "opinion_sources": [
-        {
-          "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE5jM1lJbEJ2c09aYWtEcjdYMUlpUXdsbkpfZVJzTFQtcXNQMzhzUDhoUTVIX2c0bzNPNDEzejRlNVhIODBqM2tnUThKY1dKQ3JhRGxRaFY1WmF3bnc?oc=5",
-          "headline": "טראמפ: \"איראן רוצה פיצוי על הנזק. רעיון מעניין - אדרוש ממנה תשלום במו\"מ!\"",
-          "name": "ynet.co.il"
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMifEFVX3lxTE50NFJOU3JKN052a2NSbHhJWXJEYjFRdGxrN0lOem93VEs5SjFiVXFWOVFoUlZsWnJ0Y185b2VsSF9EX2x6TkxmNFh1LVdfR01uTWsxRVFoYURub25RYnZZcnZQQ0N4Zy1WbUw2bW9WaVVXTW5vaVlpOF9VR1E?oc=5",
-          "headline": "טראמפ בפוסט זועם: \"דורש מאיראן פיצויים על כל האנשים שהרגה ופצעה!\"",
-          "name": "mako"
-        }
-      ],
-      "digest_basis": "fulltext",
-      "distill": {
-        "title": "טראמפ דורש פיצויים מאיראן בעוד מדרגי הנפט עולים מאת Investing.com",
-        "summary": "לטענתו, איראן לא הזכירה את בקשתה לפיצויים במהלך המו\"מ נשיא ארצות הברית דונלד טראמפ כתב הערב (שני) כי הורה לנציגי מדינתו לדרוש מאיראן פיצויים על כל האנשים שהרגה בסכסוכים ובהפגנות. איראן ביקשה פיצויים על המלחמה - טראמפ פתח חשבון משלו איראן ביקשה פיצויים על המלחמה - טראמפ פתח חשבון משלו דונלד טראמפ.",
-        "why_matters": "",
-        "bullet_facts": [],
-        "background": "",
-        "outlook": "",
-        "insight": "",
-        "historical_context": "",
-        "status": "reported",
-        "reliability": "low",
-        "reliability_notes": "נקראו 2 מקורות (הארץ, מעריב) אך הם חולקים מעט מאוד פרטים — ככל הנראה מדובר בהיבטים שונים ולא באותו אירוע, ולכן אין כאן אימות מוצלב.",
-        "digest_basis": "fulltext",
-        "verification": {
-          "method": "cross-source",
-          "bodies": 2,
-          "outlets": [
-            "הארץ",
-            "מעריב"
-          ],
-          "shared_facts": [],
-          "shared_topics": [
-            "איראן",
-            "טראמפ",
-            "פיצויים",
-            "ישראל"
-          ],
-          "contradictions": [],
-          "overlap_ratio": 0.075
-        },
-        "mode": "heuristic"
-      },
-      "dryTitle": "טראמפ דורש פיצויים מאיראן בעוד מדרגי הנפט עולים מאת Investing.com",
-      "summary": "לטענתו, איראן לא הזכירה את בקשתה לפיצויים במהלך המו\"מ נשיא ארצות הברית דונלד טראמפ כתב הערב (שני) כי הורה לנציגי מדינתו לדרוש מאיראן פיצויים על כל האנשים שהרגה בסכסוכים ובהפגנות. איראן ביקשה פיצויים על המלחמה - טראמפ פתח חשבון משלו איראן ביקשה פיצויים על המלחמה - טראמפ פתח חשבון משלו דונלד טראמפ.",
-      "why_matters": "",
-      "bullet_facts": [],
-      "background": "",
-      "outlook": "",
-      "insight": "",
-      "historical_context": "",
-      "status": "reported",
-      "reliability": "low",
-      "reliability_notes": "נקראו 2 מקורות (הארץ, מעריב) אך הם חולקים מעט מאוד פרטים — ככל הנראה מדובר בהיבטים שונים ולא באותו אירוע, ולכן אין כאן אימות מוצלב.",
-      "verification": {
-        "method": "cross-source",
-        "bodies": 2,
-        "outlets": [
-          "הארץ",
-          "מעריב"
-        ],
-        "shared_facts": [],
-        "shared_topics": [
-          "איראן",
-          "טראמפ",
-          "פיצויים",
-          "ישראל"
-        ],
-        "contradictions": [],
-        "overlap_ratio": 0.075
       },
       "distillMode": "heuristic"
     },
@@ -1737,7 +908,7 @@
       "digest_basis": "headlines",
       "distill": {
         "title": "בכירים באיראן מזהירים: ארה\"ב וישראל מתכוננות לעוד מתקפה",
-        "summary": "בכירים באיראן מזהירים: ארה\"ב וישראל מתכוננות לעוד מתקפה. מעבר לכותרת לא נמצאו פרטים נוספים בכותרות המקורות.",
+        "summary": "בכירים באיראן מזהירים: ארה\"ב וישראל מתכוננות לעוד מתקפה.",
         "why_matters": "",
         "bullet_facts": [],
         "background": "",
@@ -1760,7 +931,7 @@
         "mode": "heuristic"
       },
       "dryTitle": "בכירים באיראן מזהירים: ארה\"ב וישראל מתכוננות לעוד מתקפה",
-      "summary": "בכירים באיראן מזהירים: ארה\"ב וישראל מתכוננות לעוד מתקפה. מעבר לכותרת לא נמצאו פרטים נוספים בכותרות המקורות.",
+      "summary": "בכירים באיראן מזהירים: ארה\"ב וישראל מתכוננות לעוד מתקפה.",
       "why_matters": "",
       "bullet_facts": [],
       "background": "",
@@ -1816,7 +987,7 @@
       "digest_basis": "headlines",
       "distill": {
         "title": "הרמטכ\"ל למפקדים: \"ערוכים לחזרה מהירה ללחימה עצימה",
-        "summary": "הרמטכ\"ל למפקדים: \"ערוכים לחזרה מהירה ללחימה עצימה. מעבר לכותרת לא נמצאו פרטים נוספים בכותרות המקורות.",
+        "summary": "הרמטכ\"ל למפקדים: \"ערוכים לחזרה מהירה ללחימה עצימה.",
         "why_matters": "",
         "bullet_facts": [],
         "background": "",
@@ -1839,7 +1010,7 @@
         "mode": "heuristic"
       },
       "dryTitle": "הרמטכ\"ל למפקדים: \"ערוכים לחזרה מהירה ללחימה עצימה",
-      "summary": "הרמטכ\"ל למפקדים: \"ערוכים לחזרה מהירה ללחימה עצימה. מעבר לכותרת לא נמצאו פרטים נוספים בכותרות המקורות.",
+      "summary": "הרמטכ\"ל למפקדים: \"ערוכים לחזרה מהירה ללחימה עצימה.",
       "why_matters": "",
       "bullet_facts": [],
       "background": "",
@@ -2021,6 +1192,533 @@
       "distillMode": "heuristic"
     },
     {
+      "title": "עקביות? מאנדיי קונה מניות שלה וטוענת שהיא מפטרת בשביל עוד כסף למו\"פ",
+      "link": "https://news.google.com/rss/articles/CBMipgFBVV95cUxPclpxTklMd3dtbm1fUWxzdkZjUkZBYzdnS1VSNXJicDBZWW1aVUpOSmJZZVE3MGNkOU1kc3RxVjFYb25sd0h1Vm1fR0swdDNCMlpjT200Z3d4WVlnN2c2a0txcURlbXEzTjRvcnBvVFoyOXNiYWpJM0hYM2kwQ3Z0WlFNSzcxcVZseUlybnFlS3BDeUFqckpLM3lWU2RTN0g0OGcwaDJB?oc=5",
+      "pubDate": "Tue, 11 Aug 2026 03:06:00 GMT",
+      "sources": [
+        {
+          "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxPclpxTklMd3dtbm1fUWxzdkZjUkZBYzdnS1VSNXJicDBZWW1aVUpOSmJZZVE3MGNkOU1kc3RxVjFYb25sd0h1Vm1fR0swdDNCMlpjT200Z3d4WVlnN2c2a0txcURlbXEzTjRvcnBvVFoyOXNiYWpJM0hYM2kwQ3Z0WlFNSzcxcVZseUlybnFlS3BDeUFqckpLM3lWU2RTN0g0OGcwaDJB?oc=5",
+          "headline": "עקביות? מאנדיי קונה מניות שלה וטוענת שהיא מפטרת בשביל עוד כסף למו\"פ",
+          "name": "TheMarker",
+          "resolved_url": "https://www.themarker.com/markets/2026-08-11/ty-article/.highlight/0000019f-ec09-d569-a5ff-fc6d64920000",
+          "fetch_ok": true
+        },
+        {
+          "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE53WUlBellWWW9hUm5TN1FEeWREbG1yWHMzdnFCTmtYLVgzUzVEdnRBRm5GMTUtcVpDcnlBUjVRdThFNWZkbDRtQW95N21oQVE2VUxPNFlvR0FVTUZnYS1SbG9kVHlNZFU0?oc=5",
+          "headline": "מאנדיי סיפקה תחזית מאכזבת. וכמה יעלו פיטורי הענק?",
+          "name": "גלובס",
+          "resolved_url": "https://www.globes.co.il/news/article.aspx?did=1001551847",
+          "fetch_ok": true
+        },
+        {
+          "url": "https://news.google.com/rss/articles/CBMiY0FVX3lxTE83STdXZ0ZxbjRsMUtXamdxN3lCYjNPTXlQQU5JaDBFeklGSkJsSDdRdVA4dmx6S2FVVS1ocEtZbmlMSTZCZkh0bXNHWHVHN1d3YktRRjRvWU5kNktCOGpRaWtCWQ?oc=5",
+          "headline": "מאנדיי עקפה את התחזית, אבל צופה האטה בצמיחה והמניה צונחת בטרום",
+          "name": "Calcalist",
+          "resolved_url": "https://www.calcalist.co.il/market/article/b1hrx4pigx"
+        },
+        {
+          "url": "https://news.google.com/rss/articles/CBMiY0FVX3lxTE1HU0pndWhpOVdMWFo5aDgtaWw2cWdDMWhGNHQ3dGRUN3pSY3Zyb0xOSWpLQ01TTUZNYV95Y0ROQnB5aGZMQlZMN3ZkUkM0UURiZHZ4S0ZxdHFxbHhsN3E5NU9vNA?oc=5",
+          "headline": "Monday.com יורדת למרות תוצאות טובות בשל תחזית פיננסית חלשה מאת Investing.com",
+          "name": "Investing.com"
+        },
+        {
+          "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE1zSS16c1FSX0FvZW5KNGh0Zng4cDRVRlFMYVZhdnlMbE1ORklPSnh5V2k3Y3hrMkNLblFmWlZ3SWNaX3pHcU1ZZFNMSzdUY3lFcXB5OVgxQkVsSVdSZ0VpRUtseXB2ZjQwcHJGcUU2ZUs?oc=5",
+          "headline": "מניית מאנדיי נופלת; החברה צומחת ב-22% אבל מאכזבת בתחזית להמשך",
+          "name": "ביזפורטל"
+        }
+      ],
+      "image": null,
+      "digest_basis": "fulltext",
+      "distill": {
+        "title": "עקביות? מאנדיי קונה מניות שלה וטוענת שהיא מפטרת בשביל עוד כסף למו\"פ",
+        "summary": "המייסדים והמנכ\"לים המשותפים של מאנדיי, רועי מן וערן זינמן, אמרו כי החברה פועלת להפוך למהירה יותר, עם פחות שכבות ניהול וסדרי עדיפויות ברורים יותר.",
+        "why_matters": "",
+        "bullet_facts": [
+          "20 %",
+          "מניית מאנדיי נופלת; החברה צומחת ב-22% אבל מאכזבת בתחזית להמשך"
+        ],
+        "background": "",
+        "outlook": "המקורות חלוקים בנתונים: TheMarker: 17 מיליארד / גלובס: 1.5 מיליארד.",
+        "insight": "",
+        "historical_context": "",
+        "status": "reported",
+        "reliability": "medium",
+        "reliability_notes": "הוצלבו 2 מקורות (TheMarker, גלובס), אך יש אי־התאמה בנתונים: TheMarker: 17 מיליארד / גלובס: 1.5 מיליארד; TheMarker: 100 מיליון / גלובס: 15 מיליון. ליבת האירוע חוזרת בכל המקורות.",
+        "digest_basis": "fulltext",
+        "verification": {
+          "method": "cross-source",
+          "bodies": 2,
+          "outlets": [
+            "TheMarker",
+            "גלובס"
+          ],
+          "shared_facts": [
+            "20 %"
+          ],
+          "shared_topics": [
+            "אנדיי",
+            "ניות",
+            "פיטורי",
+            "שהיא"
+          ],
+          "contradictions": [
+            "TheMarker: 17 מיליארד / גלובס: 1.5 מיליארד",
+            "TheMarker: 100 מיליון / גלובס: 15 מיליון"
+          ],
+          "overlap_ratio": 0.141
+        },
+        "mode": "heuristic"
+      },
+      "dryTitle": "עקביות? מאנדיי קונה מניות שלה וטוענת שהיא מפטרת בשביל עוד כסף למו\"פ",
+      "summary": "המייסדים והמנכ\"לים המשותפים של מאנדיי, רועי מן וערן זינמן, אמרו כי החברה פועלת להפוך למהירה יותר, עם פחות שכבות ניהול וסדרי עדיפויות ברורים יותר.",
+      "why_matters": "",
+      "bullet_facts": [
+        "20 %",
+        "מניית מאנדיי נופלת; החברה צומחת ב-22% אבל מאכזבת בתחזית להמשך"
+      ],
+      "background": "",
+      "outlook": "המקורות חלוקים בנתונים: TheMarker: 17 מיליארד / גלובס: 1.5 מיליארד.",
+      "insight": "",
+      "historical_context": "",
+      "status": "reported",
+      "reliability": "medium",
+      "reliability_notes": "הוצלבו 2 מקורות (TheMarker, גלובס), אך יש אי־התאמה בנתונים: TheMarker: 17 מיליארד / גלובס: 1.5 מיליארד; TheMarker: 100 מיליון / גלובס: 15 מיליון. ליבת האירוע חוזרת בכל המקורות.",
+      "verification": {
+        "method": "cross-source",
+        "bodies": 2,
+        "outlets": [
+          "TheMarker",
+          "גלובס"
+        ],
+        "shared_facts": [
+          "20 %"
+        ],
+        "shared_topics": [
+          "אנדיי",
+          "ניות",
+          "פיטורי",
+          "שהיא"
+        ],
+        "contradictions": [
+          "TheMarker: 17 מיליארד / גלובס: 1.5 מיליארד",
+          "TheMarker: 100 מיליון / גלובס: 15 מיליון"
+        ],
+        "overlap_ratio": 0.141
+      },
+      "distillMode": "heuristic"
+    },
+    {
+      "title": "גל פיטורים? הנתונים שמוכיחים מה באמת קורה בהייטק הישראלי",
+      "link": "https://news.google.com/rss/articles/CBMifEFVX3lxTE1lSEpOMUQ0NkxWdEFzX25yR3V3Wm9uM3VQWmpJb3VBSzJ5dkhYeFdvTjduckZ5ek01VDRwb25Nc1NicXVFaDB0ekhzeGtaeldMRUZoZmVWczFKenh6MzhZeGFZb2V0aDFxNV9lZDVsR2c0ZXF5bEotYzNnOTg?oc=5",
+      "pubDate": "Tue, 11 Aug 2026 03:00:00 GMT",
+      "sources": [
+        {
+          "url": "https://news.google.com/rss/articles/CBMifEFVX3lxTE1lSEpOMUQ0NkxWdEFzX25yR3V3Wm9uM3VQWmpJb3VBSzJ5dkhYeFdvTjduckZ5ek01VDRwb25Nc1NicXVFaDB0ekhzeGtaeldMRUZoZmVWczFKenh6MzhZeGFZb2V0aDFxNV9lZDVsR2c0ZXF5bEotYzNnOTg?oc=5",
+          "headline": "גל פיטורים? הנתונים שמוכיחים מה באמת קורה בהייטק הישראלי",
+          "name": "mako",
+          "resolved_url": "https://www.mako.co.il/news-money/2026_q3/Article-94773895fddef91027.htm",
+          "fetch_ok": true
+        },
+        {
+          "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE00dDJXQjIzRXB5cVhkc3hTTW9zQ3N5ckx6QnNkRG9reXhVakJhUzFTSWdCTmF5azI1QjFlcUNxcGg5M1VOcWdUZjV6am8xejU4UUZDRGRrVU45Uk1EZEpTcUd3MENzVWVvZk9N?oc=5",
+          "headline": "ההייטק לא מתכווץ (בינתיים), אבל מבנה כוח האדם משתנה",
+          "name": "Calcalist",
+          "resolved_url": "https://www.calcalist.co.il/calcalistech/article/hjodntpizg"
+        },
+        {
+          "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxQOHJ3UzlSLThIdWJRLUQ4SHNCN2pRbjAzZHBXSzF0RUp3VmttcWRaWUZrV3RsMmdkZlVUTkVlRXlRX29MR3pxYkJycnRDVDBaZ0liaVZ0eDcxeVhJWEVlOWpLR05sT2NQR09kT0tqeDBVby1CcDVacnZ2TlpjRDAwRF90ZGhXS2xZd0JleFgxcHRWTXlCNzRCNG5BN1duSklLZTJTUWdsSGxvQQ?oc=5",
+          "headline": "תפנית שאי אפשר להתעלם ממנה: השיקולים של חברות ההייטק שמתכננות פיטורים",
+          "name": "TheMarker",
+          "resolved_url": "https://www.themarker.com/technation/2026-08-11/ty-article/.highlight/0000019f-ec62-d569-a5ff-fc665a9d0000",
+          "fetch_ok": true
+        },
+        {
+          "url": "https://news.google.com/rss/articles/CBMiywJBVV95cUxQYW1QSzYtS24tcWVCeTQ5SldaWGNYT1IxRW1HVG9waVYwOTdqYnVCcjZQZzJVdmN5eFJxZzZRNXp2bjNpZ1E2dWpLNTZvV0xMSW1OeWN4WHM5MTVGcF9aY09Zbkd3X3A2YUpHSGdSRzh0ZXBJOTctYmF3Yzk1T29fb2xxQ0JlZVFUUU04RGstSmdEQmFocllldGo3N2syNzhLY0ZOM21ZNUZjM1ZJalZUR3RxMnY3dnF4MzVtRDB3YmJtMGREYll5NVVrNWZDd0U2eHdQczV1MmdIWENaZEh0YndWdGcxaXZzNEtlVnZNU1dLazVEbW5ZZDBIMjFtcVZNLXAyejJFcm5OWGwwTWx3TXEtRnhDSGxDcldhRDdab2tpQUY1bkQ5VXJqeXFtU2Jsb2tPUXZIeXgtNzFEVFRXR2s2Zmh3TlByU01B?oc=5",
+          "headline": "'הרבה יותר עבודה מבעבר': המחקר שמטיל ספק בהבטחת ה-AI הגדולה",
+          "name": "סרוגים"
+        }
+      ],
+      "image": null,
+      "opinion_sources": [
+        {
+          "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE9kbWVaWmphWHl3aTVwUS1nTjNaWEttdnA3OHpzNGd6VW9MUmdKcG9qSHBweVlOeHkyQ3ZEM0JiTkVBZGgwOTdSYnpjRy04QVBlcThsNEN3U1JoNmpkSzRTVnJxdklCUjNL?oc=5",
+          "headline": "פוטרתם מההייטק? זה מה שכדאי לכם לעשות עכשיו",
+          "name": "גלובס"
+        }
+      ],
+      "digest_basis": "fulltext",
+      "distill": {
+        "title": "גל פיטורים? הנתונים שמוכיחים מה באמת קורה בהייטק הישראלי",
+        "summary": "מתחת לפני השטח מסתתר פיצול חד ומשמעותי בין תחומי הפעילות: חברות התוכנה: ספגו את גל ההתייעלות הכבד ביותר, עם שיעור פיטורים של 6.6% - יותר מפי שניים מהממוצע בענף. רק 7% מהחברות ציינו את הבינה המלאכותית כסיבה המרכזית לפיטורים.",
+        "why_matters": "",
+        "bullet_facts": [
+          "7 %",
+          "'הרבה יותר עבודה מבעבר': המחקר שמטיל ספק בהבטחת ה-AI הגדולה"
+        ],
+        "background": "",
+        "outlook": "",
+        "insight": "",
+        "historical_context": "",
+        "status": "reported",
+        "reliability": "medium",
+        "reliability_notes": "הוצלבו 2 מקורות (mako, TheMarker) עם חפיפה חלקית בפרטים (הייטק, חברות, ישראלי). ליבת הדיווח משותפת, אך אין מספיק פרטים זהים כדי לאשר את מלוא הנתונים.",
+        "digest_basis": "fulltext",
+        "verification": {
+          "method": "cross-source",
+          "bodies": 2,
+          "outlets": [
+            "mako",
+            "TheMarker"
+          ],
+          "shared_facts": [
+            "7 %"
+          ],
+          "shared_topics": [
+            "הייטק",
+            "חברות",
+            "ישראלי",
+            "פיטורים"
+          ],
+          "contradictions": [],
+          "overlap_ratio": 0.16
+        },
+        "mode": "heuristic"
+      },
+      "dryTitle": "גל פיטורים? הנתונים שמוכיחים מה באמת קורה בהייטק הישראלי",
+      "summary": "מתחת לפני השטח מסתתר פיצול חד ומשמעותי בין תחומי הפעילות: חברות התוכנה: ספגו את גל ההתייעלות הכבד ביותר, עם שיעור פיטורים של 6.6% - יותר מפי שניים מהממוצע בענף. רק 7% מהחברות ציינו את הבינה המלאכותית כסיבה המרכזית לפיטורים.",
+      "why_matters": "",
+      "bullet_facts": [
+        "7 %",
+        "'הרבה יותר עבודה מבעבר': המחקר שמטיל ספק בהבטחת ה-AI הגדולה"
+      ],
+      "background": "",
+      "outlook": "",
+      "insight": "",
+      "historical_context": "",
+      "status": "reported",
+      "reliability": "medium",
+      "reliability_notes": "הוצלבו 2 מקורות (mako, TheMarker) עם חפיפה חלקית בפרטים (הייטק, חברות, ישראלי). ליבת הדיווח משותפת, אך אין מספיק פרטים זהים כדי לאשר את מלוא הנתונים.",
+      "verification": {
+        "method": "cross-source",
+        "bodies": 2,
+        "outlets": [
+          "mako",
+          "TheMarker"
+        ],
+        "shared_facts": [
+          "7 %"
+        ],
+        "shared_topics": [
+          "הייטק",
+          "חברות",
+          "ישראלי",
+          "פיטורים"
+        ],
+        "contradictions": [],
+        "overlap_ratio": 0.16
+      },
+      "distillMode": "heuristic"
+    },
+    {
+      "title": "היום בבורסה: קמטק תעלה, טאואר תרד, דוח לאלביט",
+      "link": "https://news.google.com/rss/articles/CBMicEFVX3lxTE0xYU9UWGU0VmF3UGVKNkw3bHEyRzhzZEtRd2ZidE0yWWZYOFpLOGUzQ3ZXakdGNmVMSFoweTlZbzhNdWdITFphSkpvam9hUW1jZ0VXZFUyLUY1ZEctQXJkcTZVME8yR0pGY3FnZ290X2Q?oc=5",
+      "pubDate": "Tue, 11 Aug 2026 04:47:00 GMT",
+      "sources": [
+        {
+          "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE0xYU9UWGU0VmF3UGVKNkw3bHEyRzhzZEtRd2ZidE0yWWZYOFpLOGUzQ3ZXakdGNmVMSFoweTlZbzhNdWdITFphSkpvam9hUW1jZ0VXZFUyLUY1ZEctQXJkcTZVME8yR0pGY3FnZ290X2Q?oc=5",
+          "headline": "היום בבורסה: קמטק תעלה, טאואר תרד, דוח לאלביט",
+          "name": "ביזפורטל",
+          "resolved_url": "https://www.bizportal.co.il/capitalmarket/news/article/20038470",
+          "fetch_ok": true
+        },
+        {
+          "url": "https://news.google.com/rss/articles/CBMiYkFVX3lxTFBoNUZSb2NKTXByckxlenI1V21jS0pOeFlmYk5QUHNjQjRTTmNaVkwwSUhtR0gxVmplOFFlSU13ZzhoVGtWQjFQY3hFQjlhNnFrY3dhTnh3WkJoNy1iZ3AxNkVR?oc=5",
+          "headline": "הבורסה בת\"א ננעלה בירידות; מדד הבנייה איבד 3%, נקסט ויז'ן נפלה ב-6.7%",
+          "name": "Calcalist",
+          "resolved_url": "https://www.calcalist.co.il/market/article/t1uwxpzvx"
+        },
+        {
+          "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE9vazVRbHp3R0dQeXVkYjRyNndiR0NJMENJMGRTaGlYTGxOVGZBSjhZT2dsbU9BdTRjczR5bGdnZWk5aERidDBHSUxqTmpBMV9Qcmw5bnpONXNHdTJabjU5b3cwLXo3VWtE?oc=5",
+          "headline": "ת\"א ננעלה בירידות; מדד הבנייה נפל ב-3%, הבנקים ב-2%",
+          "name": "גלובס",
+          "resolved_url": "https://www.globes.co.il/news/article.aspx?did=1001551794",
+          "fetch_ok": true
+        },
+        {
+          "url": "https://news.google.com/rss/articles/CBMib0FVX3lxTE9kVDIzTDdlVWVqaWVTYkljMFJMUXNrRjlzNmQ4UXpTQ3BNQWV4WTNFNElVcGszUHVrR0xYUktkejhlaGRVVmlHZHJ1M0FsUjBCbzM0UEJ2R3ZTN0FUYW5iRC0tS0M3bXI3eF9HUGs5aw?oc=5",
+          "headline": "מדדי המניות בישראל ירדו בנעילת המסחר; מדד תל אביב 35 השיל 0.30% מאת Investing.com",
+          "name": "Investing.com"
+        },
+        {
+          "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxPcFo5VUtwSnpkamZ3cElVYmk0cEJPbWk0TzR4dE9SMWd0TWNrOU5lQ3JmMnFFY1MxUVp6UkozSVNHT3dhQnR4Q3NGSWFEN09PdWJFbXp6SElOY1UwS0UtLXRxUlJRNE02MkxmbTZ0RThSN29qYkMxdFVyX3RGbWZic25WM0VFX1J0cHItbC1sSlhyMDBWUTZhUEVqTGJqZw?oc=5",
+          "headline": "הבורסה ננעלה בירידות: מדד ת\"א בנייה איבד 3%; טאואר עלתה ב–9.5%",
+          "name": "TheMarker"
+        }
+      ],
+      "image": null,
+      "digest_basis": "fulltext",
+      "distill": {
+        "title": "היום בבורסה: קמטק תעלה, טאואר תרד, דוח לאלביט",
+        "summary": "תל אביב תפתח את היום כנראה בירידות, אבל זה הימור יותר מהערכה - הדואליות יכבידו בכ-0.3% על המדדים, אבל תהיה השפעה גם של הדוחות שיפורסמו על הבוקר, לרבות של אלביט. בלטו היום בירידות מדד הבנייה שנפל ב-3% ומדדי הפיננסים - הבנקים ירדו ב-2% לראות הדוחות שיפרסמו השבוע, ומניות הביטוח ירדו ב-1.5%.",
+        "why_matters": "",
+        "bullet_facts": [
+          "0.3 %",
+          "המניה קרסה 38% ביומיים ״נקסט ויז'ן לא על המדף; אם נקבל הצעה ממש טובה - נשקול אותה״",
+          "מדד הבנייה בולט בירידה כעת (3.5%).",
+          "מדדי המניות בישראל ירדו בנעילת המסחר; מדד תל אביב 35 השיל 0.30% מאת Investing.com"
+        ],
+        "background": "",
+        "outlook": "המקורות חלוקים בנתונים: ביזפורטל: 3.5 מיליארד / גלובס: 15 מיליארד.",
+        "insight": "",
+        "historical_context": "",
+        "status": "reported",
+        "reliability": "medium",
+        "reliability_notes": "הוצלבו 2 מקורות (ביזפורטל, גלובס), אך יש אי־התאמה בנתונים: ביזפורטל: 3.5 מיליארד / גלובס: 15 מיליארד. ליבת האירוע חוזרת בכל המקורות.",
+        "digest_basis": "fulltext",
+        "verification": {
+          "method": "cross-source",
+          "bodies": 2,
+          "outlets": [
+            "ביזפורטל",
+            "גלובס"
+          ],
+          "shared_facts": [
+            "0.3 %"
+          ],
+          "shared_topics": [
+            "בורסה",
+            "בנקים",
+            "טאואר",
+            "ירדו"
+          ],
+          "contradictions": [
+            "ביזפורטל: 3.5 מיליארד / גלובס: 15 מיליארד"
+          ],
+          "overlap_ratio": 0.209
+        },
+        "mode": "heuristic"
+      },
+      "dryTitle": "היום בבורסה: קמטק תעלה, טאואר תרד, דוח לאלביט",
+      "summary": "תל אביב תפתח את היום כנראה בירידות, אבל זה הימור יותר מהערכה - הדואליות יכבידו בכ-0.3% על המדדים, אבל תהיה השפעה גם של הדוחות שיפורסמו על הבוקר, לרבות של אלביט. בלטו היום בירידות מדד הבנייה שנפל ב-3% ומדדי הפיננסים - הבנקים ירדו ב-2% לראות הדוחות שיפרסמו השבוע, ומניות הביטוח ירדו ב-1.5%.",
+      "why_matters": "",
+      "bullet_facts": [
+        "0.3 %",
+        "המניה קרסה 38% ביומיים ״נקסט ויז'ן לא על המדף; אם נקבל הצעה ממש טובה - נשקול אותה״",
+        "מדד הבנייה בולט בירידה כעת (3.5%).",
+        "מדדי המניות בישראל ירדו בנעילת המסחר; מדד תל אביב 35 השיל 0.30% מאת Investing.com"
+      ],
+      "background": "",
+      "outlook": "המקורות חלוקים בנתונים: ביזפורטל: 3.5 מיליארד / גלובס: 15 מיליארד.",
+      "insight": "",
+      "historical_context": "",
+      "status": "reported",
+      "reliability": "medium",
+      "reliability_notes": "הוצלבו 2 מקורות (ביזפורטל, גלובס), אך יש אי־התאמה בנתונים: ביזפורטל: 3.5 מיליארד / גלובס: 15 מיליארד. ליבת האירוע חוזרת בכל המקורות.",
+      "verification": {
+        "method": "cross-source",
+        "bodies": 2,
+        "outlets": [
+          "ביזפורטל",
+          "גלובס"
+        ],
+        "shared_facts": [
+          "0.3 %"
+        ],
+        "shared_topics": [
+          "בורסה",
+          "בנקים",
+          "טאואר",
+          "ירדו"
+        ],
+        "contradictions": [
+          "ביזפורטל: 3.5 מיליארד / גלובס: 15 מיליארד"
+        ],
+        "overlap_ratio": 0.209
+      },
+      "distillMode": "heuristic"
+    },
+    {
+      "title": "אחרי הזינוק השבועי: מניות השבבים צוללות בניו יורק",
+      "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1qN25XS3pXamZjZjFEcHlkNjc4VWxlSHc1TDVmNW5LeW96T0NqekdGZUt1aWV5dlZyTzNKeENwcnFpaTBCb3NUbG1nWDBxeHVxcDhKZXBLUnZzZ0lSSlhF?oc=5",
+      "pubDate": "Mon, 10 Aug 2026 20:31:17 GMT",
+      "sources": [
+        {
+          "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1qN25XS3pXamZjZjFEcHlkNjc4VWxlSHc1TDVmNW5LeW96T0NqekdGZUt1aWV5dlZyTzNKeENwcnFpaTBCb3NUbG1nWDBxeHVxcDhKZXBLUnZzZ0lSSlhF?oc=5",
+          "headline": "אחרי הזינוק השבועי: מניות השבבים צוללות בניו יורק",
+          "name": "ice (אייס)"
+        },
+        {
+          "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTFBFdmJuR3RMSnpmTFFYSjdRVmZlYm5qQ2pTZnJNS3dydDFaMEdHcXpTbWtoWEpvRVJvSkZOTkQ3dUxld0gwWmczRjlMUkl0UHBvNzRONnBCY0dTNlVuYXpZVHE5ZnZKNmFF?oc=5",
+          "headline": "וול סטריט ננעלה במגמה שלילית מתונה, השבבים לחצו; זינוק חד במחירי הנפט",
+          "name": "גלובס"
+        },
+        {
+          "url": "https://news.google.com/rss/articles/CBMiYkFVX3lxTE1GREgtNjliRm1KcWFGUGxWNE9NQjhhRUNaWE9uckZJNUFEeXRYcmdKVENyYWNWRmhNcVdYR2h6ck9mNEhoc2xIVDZRN1lNQzkybUhUWXRlZjduS2NOUDhRMWpR?oc=5",
+          "headline": "וול סטריט ננעלה בירידות שערים קלות: מאנדיי מחקה 5%, הנפט זינק ב-5%",
+          "name": "Calcalist"
+        },
+        {
+          "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE1Zd3FOcVQxY3JrZ0Jyb2ozYzdTVjU0OEdUSFF4ZEZKM0VmSlQxbVZjYjFTeTJRdWFDWnBrVGRoUFhtS21zVU42U0JRUFZubmJuNGxQaTRDWVNLUXRpaG1zMUxPbnVkaVlR?oc=5",
+          "headline": "חמישה דברים לעקוב אחריהם בשווקים בשבוע הקרוב מאת Investing.com",
+          "name": "Investing.com"
+        },
+        {
+          "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE1YS1EzUkRyYy1VOHQxaDltMTQ1Y2xtQTBWNnlqLXVxRGhFaW52RHdDdVB0ZkVYcWZhWG95WWlERzdZa24tdl9ldXdPbEFucndjbjRHMjVIS1BwQVVvdWl0aWJ3czAteW5BMWhzR2NNbDY?oc=5",
+          "headline": "נעילה שלילית בוול-סטריט; פאלו אלטו קפצה ב-6%, מאנדיי איבדה 4%",
+          "name": "ביזפורטל"
+        }
+      ],
+      "image": null,
+      "digest_basis": "headlines",
+      "distill": {
+        "title": "אחרי הזינוק השבועי: מניות השבבים צוללות בניו יורק",
+        "summary": "אחרי הזינוק השבועי: מניות השבבים צוללות בניו יורק. וול סטריט ננעלה בירידות שערים קלות: מאנדיי מחקה 5%, הנפט זינק ב-5%. נעילה שלילית בוול-סטריט; פאלו אלטו קפצה ב-6%, מאנדיי איבדה 4%.",
+        "why_matters": "",
+        "bullet_facts": [],
+        "background": "",
+        "outlook": "",
+        "insight": "",
+        "historical_context": "",
+        "status": "reported",
+        "reliability": "unknown",
+        "reliability_notes": "לא נמשכו גופי כתבות מהמקורות, ולכן לא בוצעה הצלבה — הכרטיס מבוסס כותרות בלבד.",
+        "digest_basis": "headlines",
+        "verification": {
+          "method": "none",
+          "bodies": 0,
+          "outlets": [],
+          "shared_facts": [],
+          "shared_topics": [],
+          "contradictions": [],
+          "overlap_ratio": 0.0
+        },
+        "mode": "heuristic"
+      },
+      "dryTitle": "אחרי הזינוק השבועי: מניות השבבים צוללות בניו יורק",
+      "summary": "אחרי הזינוק השבועי: מניות השבבים צוללות בניו יורק. וול סטריט ננעלה בירידות שערים קלות: מאנדיי מחקה 5%, הנפט זינק ב-5%. נעילה שלילית בוול-סטריט; פאלו אלטו קפצה ב-6%, מאנדיי איבדה 4%.",
+      "why_matters": "",
+      "bullet_facts": [],
+      "background": "",
+      "outlook": "",
+      "insight": "",
+      "historical_context": "",
+      "status": "reported",
+      "reliability": "unknown",
+      "reliability_notes": "לא נמשכו גופי כתבות מהמקורות, ולכן לא בוצעה הצלבה — הכרטיס מבוסס כותרות בלבד.",
+      "verification": {
+        "method": "none",
+        "bodies": 0,
+        "outlets": [],
+        "shared_facts": [],
+        "shared_topics": [],
+        "contradictions": [],
+        "overlap_ratio": 0.0
+      },
+      "distillMode": "heuristic"
+    },
+    {
+      "title": "טראמפ דורש פיצויים מאיראן בעוד מדרגי הנפט עולים מאת Investing.com",
+      "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTE0wMG5qekZpRVBzanY1eFBNbS1mZWdyTTR6QlU5RlRDVXNYaU5aR1VobFhodV8zbENZNXdnZDAwcVdOTnQ5QXA4R1lsTF8xazVvRGh1TGQ3Tlh3SUFiREF3dVhqbXJZcV9QZkNKem5CWnZ5UWQ2?oc=5",
+      "pubDate": "Mon, 10 Aug 2026 21:05:25 GMT",
+      "sources": [
+        {
+          "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE0wMG5qekZpRVBzanY1eFBNbS1mZWdyTTR6QlU5RlRDVXNYaU5aR1VobFhodV8zbENZNXdnZDAwcVdOTnQ5QXA4R1lsTF8xazVvRGh1TGQ3Tlh3SUFiREF3dVhqbXJZcV9QZkNKem5CWnZ5UWQ2?oc=5",
+          "headline": "טראמפ דורש פיצויים מאיראן בעוד מדרגי הנפט עולים מאת Investing.com",
+          "name": "Investing.com",
+          "resolved_url": "https://il.investing.com/news/commodities-news/article-93CH-934241"
+        },
+        {
+          "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxNcUpoTkxDa1g2RnczZGpLZ0lzLUJFZlpHMWFqZ0d5WDRoVkZzcDZtNWJVbjNSaG1UTDg0X2VWS05zQ2ZhWTc5OUwxeEJmRmRMS1Zmemc1b2R2UjdNMm1hTTlzX1NDM3lqX3dRMnlkZDUyY1dpZ1ZxQVNLdFczaFFrTzdXRVJpZVRoMHBUR1RGR2ZoLWlRVkdxWG04c0pVa1hyWG9DT3dOMkFyTm1ETklScER2R2FsTW8?oc=5",
+          "headline": "טראמפ: נדרוש מאיראן פיצויים על כל האנשים שהרגה בסכסוכים ובהפגנות",
+          "name": "הארץ",
+          "resolved_url": "https://www.haaretz.co.il/news/world/middle-east/2026-08-10/ty-article/.premium/0000019f-ec8c-d310-a3df-ec8f919b0000",
+          "fetch_ok": true
+        },
+        {
+          "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFBVZ1BNdzZuTHUyZnFXOUNlZDJRMjVXX1BBTkxrRV9ObEp2czZ0UlF3dnp1YmgwYXlGaEsyRkFTdTBhQ0k2OHR0OXgxM0hJS3FnU3I2LXRmSU03WUpVblpUeW9QMVg?oc=5",
+          "headline": "איראן ביקשה פיצויים על המלחמה - טראמפ פתח חשבון משלו",
+          "name": "מעריב",
+          "resolved_url": "https://www.maariv.co.il/breaking-news/article-1354582",
+          "fetch_ok": true
+        }
+      ],
+      "image": null,
+      "opinion_sources": [
+        {
+          "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE5jM1lJbEJ2c09aYWtEcjdYMUlpUXdsbkpfZVJzTFQtcXNQMzhzUDhoUTVIX2c0bzNPNDEzejRlNVhIODBqM2tnUThKY1dKQ3JhRGxRaFY1WmF3bnc?oc=5",
+          "headline": "טראמפ: \"איראן רוצה פיצוי על הנזק. רעיון מעניין - אדרוש ממנה תשלום במו\"מ!\"",
+          "name": "ynet.co.il"
+        },
+        {
+          "url": "https://news.google.com/rss/articles/CBMifEFVX3lxTE50NFJOU3JKN052a2NSbHhJWXJEYjFRdGxrN0lOem93VEs5SjFiVXFWOVFoUlZsWnJ0Y185b2VsSF9EX2x6TkxmNFh1LVdfR01uTWsxRVFoYURub25RYnZZcnZQQ0N4Zy1WbUw2bW9WaVVXTW5vaVlpOF9VR1E?oc=5",
+          "headline": "טראמפ בפוסט זועם: \"דורש מאיראן פיצויים על כל האנשים שהרגה ופצעה!\"",
+          "name": "mako"
+        }
+      ],
+      "digest_basis": "fulltext",
+      "distill": {
+        "title": "טראמפ דורש פיצויים מאיראן בעוד מדרגי הנפט עולים מאת Investing.com",
+        "summary": "לטענתו, איראן לא הזכירה את בקשתה לפיצויים במהלך המו\"מ נשיא ארצות הברית דונלד טראמפ כתב הערב (שני) כי הורה לנציגי מדינתו לדרוש מאיראן פיצויים על כל האנשים שהרגה בסכסוכים ובהפגנות. איראן ביקשה פיצויים על המלחמה - טראמפ פתח חשבון משלו איראן ביקשה פיצויים על המלחמה - טראמפ פתח חשבון משלו דונלד טראמפ.",
+        "why_matters": "",
+        "bullet_facts": [],
+        "background": "",
+        "outlook": "",
+        "insight": "",
+        "historical_context": "",
+        "status": "reported",
+        "reliability": "low",
+        "reliability_notes": "נקראו 2 מקורות (הארץ, מעריב) אך הם חולקים מעט מאוד פרטים — ככל הנראה מדובר בהיבטים שונים ולא באותו אירוע, ולכן אין כאן אימות מוצלב.",
+        "digest_basis": "fulltext",
+        "verification": {
+          "method": "cross-source",
+          "bodies": 2,
+          "outlets": [
+            "הארץ",
+            "מעריב"
+          ],
+          "shared_facts": [],
+          "shared_topics": [
+            "איראן",
+            "טראמפ",
+            "פיצויים",
+            "דונלד"
+          ],
+          "contradictions": [],
+          "overlap_ratio": 0.075
+        },
+        "mode": "heuristic"
+      },
+      "dryTitle": "טראמפ דורש פיצויים מאיראן בעוד מדרגי הנפט עולים מאת Investing.com",
+      "summary": "לטענתו, איראן לא הזכירה את בקשתה לפיצויים במהלך המו\"מ נשיא ארצות הברית דונלד טראמפ כתב הערב (שני) כי הורה לנציגי מדינתו לדרוש מאיראן פיצויים על כל האנשים שהרגה בסכסוכים ובהפגנות. איראן ביקשה פיצויים על המלחמה - טראמפ פתח חשבון משלו איראן ביקשה פיצויים על המלחמה - טראמפ פתח חשבון משלו דונלד טראמפ.",
+      "why_matters": "",
+      "bullet_facts": [],
+      "background": "",
+      "outlook": "",
+      "insight": "",
+      "historical_context": "",
+      "status": "reported",
+      "reliability": "low",
+      "reliability_notes": "נקראו 2 מקורות (הארץ, מעריב) אך הם חולקים מעט מאוד פרטים — ככל הנראה מדובר בהיבטים שונים ולא באותו אירוע, ולכן אין כאן אימות מוצלב.",
+      "verification": {
+        "method": "cross-source",
+        "bodies": 2,
+        "outlets": [
+          "הארץ",
+          "מעריב"
+        ],
+        "shared_facts": [],
+        "shared_topics": [
+          "איראן",
+          "טראמפ",
+          "פיצויים",
+          "דונלד"
+        ],
+        "contradictions": [],
+        "overlap_ratio": 0.075
+      },
+      "distillMode": "heuristic"
+    },
+    {
       "title": "באיראן טוענים: חמינאי הכריז על מפקד חדש למשמרות המהפכה",
       "link": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE1keEs4UjdLajhuRVAyWWdadU9GQ29YeTU1Y1NENE9HWFJQTUlfb2xOZDYxNFVpcG10d21KUzl1TE4xZjc4aVVmNnBnNVhKWjd3aWhz?oc=5",
       "pubDate": "Mon, 10 Aug 2026 17:20:00 GMT",
@@ -2116,11 +1814,10 @@
       "digest_basis": "fulltext",
       "distill": {
         "title": "ארה\"ב הגיעה להבנות עם ישראל, סוריה וסבא\"א על נטרול אתר גרעין חשאי",
-        "summary": "שלושה אזרחים ישראלים הגיעו לאזור החרמון וחצו את הגבול לשטח סוריה - כוח השיב אותם לישראל. לפי גלובס: כוח השיב אותם לישראל והם עוכבו הועברו להמשך טיפול משטרת ישראל.",
+        "summary": "שלושה אזרחים ישראלים הגיעו לאזור החרמון וחצו את הגבול לשטח סוריה - כוח השיב אותם לישראל.",
         "why_matters": "",
         "bullet_facts": [
-          "גם אחרי הורדת הריבית: באיזה בנק תקבלו פיקדון שנותן 6% בשנה",
-          "לצפייה בכתבות וניהול הנושאים, יש ללחוץ על כפתור בסרגל העליון הדוחות נראו כמו הצלחה מסחררת, ואז המניה…"
+          "ארה\"ב הגיעה להבנות עם ישראל, סוריה וסבא\"א על נטרול אתר גרעין חשאי"
         ],
         "background": "",
         "outlook": "",
@@ -2144,11 +1841,10 @@
         "mode": "heuristic"
       },
       "dryTitle": "ארה\"ב הגיעה להבנות עם ישראל, סוריה וסבא\"א על נטרול אתר גרעין חשאי",
-      "summary": "שלושה אזרחים ישראלים הגיעו לאזור החרמון וחצו את הגבול לשטח סוריה - כוח השיב אותם לישראל. לפי גלובס: כוח השיב אותם לישראל והם עוכבו הועברו להמשך טיפול משטרת ישראל.",
+      "summary": "שלושה אזרחים ישראלים הגיעו לאזור החרמון וחצו את הגבול לשטח סוריה - כוח השיב אותם לישראל.",
       "why_matters": "",
       "bullet_facts": [
-        "גם אחרי הורדת הריבית: באיזה בנק תקבלו פיקדון שנותן 6% בשנה",
-        "לצפייה בכתבות וניהול הנושאים, יש ללחוץ על כפתור בסרגל העליון הדוחות נראו כמו הצלחה מסחררת, ואז המניה…"
+        "ארה\"ב הגיעה להבנות עם ישראל, סוריה וסבא\"א על נטרול אתר גרעין חשאי"
       ],
       "background": "",
       "outlook": "",
@@ -2185,7 +1881,7 @@
       "digest_basis": "headlines",
       "distill": {
         "title": "גמר ראשון למשלחת הישראלית באליפות אירופה בשחייה",
-        "summary": "גמר ראשון למשלחת הישראלית באליפות אירופה בשחייה. הדיווח נשען על מקור יחיד (ynet.co.il) בלי גוף כתבה להצלבה.",
+        "summary": "גמר ראשון למשלחת הישראלית באליפות אירופה בשחייה.",
         "why_matters": "",
         "bullet_facts": [],
         "background": "",
@@ -2208,7 +1904,7 @@
         "mode": "heuristic"
       },
       "dryTitle": "גמר ראשון למשלחת הישראלית באליפות אירופה בשחייה",
-      "summary": "גמר ראשון למשלחת הישראלית באליפות אירופה בשחייה. הדיווח נשען על מקור יחיד (ynet.co.il) בלי גוף כתבה להצלבה.",
+      "summary": "גמר ראשון למשלחת הישראלית באליפות אירופה בשחייה.",
       "why_matters": "",
       "bullet_facts": [],
       "background": "",
@@ -2248,9 +1944,7 @@
         "title": "נשיא ארה\"ב הוברח במטוס אחר בצאתו מטורקיה",
         "summary": "הנשיא עלה לעיני המצלמות לאייר פורס 1, המטוס הנשיאותי, אך ירד ממנו בחשאי באמצעות משאית קייטרינג והועבר למטוס צבאי קטן יותר. לפי davar1.co.il: אייר פורס 1 המריא בלעדיו, כשעליו עיתונאים ואנשי הבית הלבן, ושימש למעשה כמטוס פיתיון, כשגם בכירים רבים בממשל האמריקאי אינם יודעים על מיקומו של טראמפ.",
         "why_matters": "",
-        "bullet_facts": [
-          "על פי הפרסום, תרגיל ההטעיה בוצע לאחר גורמי הביטחון קיבלו התרעה אמינה שקשורה לאיראן."
-        ],
+        "bullet_facts": [],
         "background": "",
         "outlook": "",
         "insight": "",
@@ -2275,9 +1969,7 @@
       "dryTitle": "נשיא ארה\"ב הוברח במטוס אחר בצאתו מטורקיה",
       "summary": "הנשיא עלה לעיני המצלמות לאייר פורס 1, המטוס הנשיאותי, אך ירד ממנו בחשאי באמצעות משאית קייטרינג והועבר למטוס צבאי קטן יותר. לפי davar1.co.il: אייר פורס 1 המריא בלעדיו, כשעליו עיתונאים ואנשי הבית הלבן, ושימש למעשה כמטוס פיתיון, כשגם בכירים רבים בממשל האמריקאי אינם יודעים על מיקומו של טראמפ.",
       "why_matters": "",
-      "bullet_facts": [
-        "על פי הפרסום, תרגיל ההטעיה בוצע לאחר גורמי הביטחון קיבלו התרעה אמינה שקשורה לאיראן."
-      ],
+      "bullet_facts": [],
       "background": "",
       "outlook": "",
       "insight": "",
@@ -2313,7 +2005,7 @@
       "digest_basis": "headlines",
       "distill": {
         "title": "לא רק איראן: המחסור במיירטים משמעותי גם מול רוסיה, סין וצפון קוריאה",
-        "summary": "לא רק איראן: המחסור במיירטים משמעותי גם מול רוסיה, סין וצפון קוריאה. הדיווח נשען על מקור יחיד (הארץ) בלי גוף כתבה להצלבה.",
+        "summary": "לא רק איראן: המחסור במיירטים משמעותי גם מול רוסיה, סין וצפון קוריאה.",
         "why_matters": "",
         "bullet_facts": [],
         "background": "",
@@ -2336,7 +2028,7 @@
         "mode": "heuristic"
       },
       "dryTitle": "לא רק איראן: המחסור במיירטים משמעותי גם מול רוסיה, סין וצפון קוריאה",
-      "summary": "לא רק איראן: המחסור במיירטים משמעותי גם מול רוסיה, סין וצפון קוריאה. הדיווח נשען על מקור יחיד (הארץ) בלי גוף כתבה להצלבה.",
+      "summary": "לא רק איראן: המחסור במיירטים משמעותי גם מול רוסיה, סין וצפון קוריאה.",
       "why_matters": "",
       "bullet_facts": [],
       "background": "",
@@ -2372,7 +2064,7 @@
       "digest_basis": "headlines",
       "distill": {
         "title": "ממערב רוסיה לגדוד שקד: הרגע בו החליט הילד שגדל בסנט-פטרסבורג - להפוך לקצין רפואה בגבעתי",
-        "summary": "ממערב רוסיה לגדוד שקד: הרגע בו החליט הילד שגדל בסנט-פטרסבורג - להפוך לקצין רפואה בגבעתי. הדיווח נשען על מקור יחיד (idf.il) בלי גוף כתבה להצלבה.",
+        "summary": "ממערב רוסיה לגדוד שקד: הרגע בו החליט הילד שגדל בסנט-פטרסבורג - להפוך לקצין רפואה בגבעתי.",
         "why_matters": "",
         "bullet_facts": [],
         "background": "",
@@ -2395,7 +2087,7 @@
         "mode": "heuristic"
       },
       "dryTitle": "ממערב רוסיה לגדוד שקד: הרגע בו החליט הילד שגדל בסנט-פטרסבורג - להפוך לקצין רפואה בגבעתי",
-      "summary": "ממערב רוסיה לגדוד שקד: הרגע בו החליט הילד שגדל בסנט-פטרסבורג - להפוך לקצין רפואה בגבעתי. הדיווח נשען על מקור יחיד (idf.il) בלי גוף כתבה להצלבה.",
+      "summary": "ממערב רוסיה לגדוד שקד: הרגע בו החליט הילד שגדל בסנט-פטרסבורג - להפוך לקצין רפואה בגבעתי.",
       "why_matters": "",
       "bullet_facts": [],
       "background": "",
@@ -2431,7 +2123,7 @@
       "digest_basis": "headlines",
       "distill": {
         "title": "המלחמה מרוקנת את מלאי הנפט האסטרטגי של ארה\"ב - בשפל מ-1983",
-        "summary": "המלחמה מרוקנת את מלאי הנפט האסטרטגי של ארה\"ב - בשפל מ-1983. הדיווח נשען על מקור יחיד (Calcalist) בלי גוף כתבה להצלבה.",
+        "summary": "המלחמה מרוקנת את מלאי הנפט האסטרטגי של ארה\"ב - בשפל מ-1983.",
         "why_matters": "",
         "bullet_facts": [],
         "background": "",
@@ -2454,7 +2146,7 @@
         "mode": "heuristic"
       },
       "dryTitle": "המלחמה מרוקנת את מלאי הנפט האסטרטגי של ארה\"ב - בשפל מ-1983",
-      "summary": "המלחמה מרוקנת את מלאי הנפט האסטרטגי של ארה\"ב - בשפל מ-1983. הדיווח נשען על מקור יחיד (Calcalist) בלי גוף כתבה להצלבה.",
+      "summary": "המלחמה מרוקנת את מלאי הנפט האסטרטגי של ארה\"ב - בשפל מ-1983.",
       "why_matters": "",
       "bullet_facts": [],
       "background": "",
@@ -2494,10 +2186,7 @@
         "title": "השר הבכיר: \"נתקוף את איראן גם אם יש הסכם עם ארה\"ב",
         "summary": "השר התייחס ללחץ הכלכלי המופעל על איראן ולמצבו הפנימי של המשטר, שלדבריו מקשים על הנהגת המדינה. לפי סרוגים: הוא דחה את הניסיונות להציג חלופות פוליטיות בהרשמה אני מסכימ/ה לתנאי השימוש באתר, וכן לקבלת דיוורים והצעות מאתר סרוגים אני מקוה שה\"פה הבכיר\" יודע לעמוד מול טורקיה, פקיסטן וארה\"ב.",
         "why_matters": "",
-        "bullet_facts": [
-          "לדבריו, ישראל מחויבת בראש ובראשונה לביטחונה ואינה יכולה להסתמך רק על ההסכמות שיושגו בין איראן לארצות הברית.",
-          "בהמשך נשאל כהן על המגעים הנוגעים לעתידה של רצועת עזה ועל הדיווחים בדבר תחילתן של עבודות שיקום."
-        ],
+        "bullet_facts": [],
         "background": "",
         "outlook": "",
         "insight": "",
@@ -2522,10 +2211,7 @@
       "dryTitle": "השר הבכיר: \"נתקוף את איראן גם אם יש הסכם עם ארה\"ב",
       "summary": "השר התייחס ללחץ הכלכלי המופעל על איראן ולמצבו הפנימי של המשטר, שלדבריו מקשים על הנהגת המדינה. לפי סרוגים: הוא דחה את הניסיונות להציג חלופות פוליטיות בהרשמה אני מסכימ/ה לתנאי השימוש באתר, וכן לקבלת דיוורים והצעות מאתר סרוגים אני מקוה שה\"פה הבכיר\" יודע לעמוד מול טורקיה, פקיסטן וארה\"ב.",
       "why_matters": "",
-      "bullet_facts": [
-        "לדבריו, ישראל מחויבת בראש ובראשונה לביטחונה ואינה יכולה להסתמך רק על ההסכמות שיושגו בין איראן לארצות הברית.",
-        "בהמשך נשאל כהן על המגעים הנוגעים לעתידה של רצועת עזה ועל הדיווחים בדבר תחילתן של עבודות שיקום."
-      ],
+      "bullet_facts": [],
       "background": "",
       "outlook": "",
       "insight": "",
@@ -2539,6 +2225,65 @@
         "outlets": [
           "סרוגים"
         ],
+        "shared_facts": [],
+        "shared_topics": [],
+        "contradictions": [],
+        "overlap_ratio": 0.0
+      },
+      "distillMode": "heuristic"
+    },
+    {
+      "title": "סין נטעה 78 מיליארד עצים. עכשיו הם משנים את מזג האוויר",
+      "link": "https://news.google.com/rss/articles/CBMikAFBVV95cUxQZEZKeGhLWHNDdmhMSlJfaG5XdmhUTGdfT3hzNGpmTEdsSHJpLTZiODR4ZnRoUVZQMC1KbXhSLWdQS2Y0SWphUXJBU29wc3hLZE94b1dmZTYxY25tZkZfZDhTUEJCd09DTDlzTU9wUi1kNUk1TUl5ZENKRWM5dkFHN1dUOWNfeG9UNmhEWjU2eG0?oc=5",
+      "pubDate": "Mon, 10 Aug 2026 07:19:00 GMT",
+      "sources": [
+        {
+          "url": "https://news.google.com/rss/articles/CBMikAFBVV95cUxQZEZKeGhLWHNDdmhMSlJfaG5XdmhUTGdfT3hzNGpmTEdsSHJpLTZiODR4ZnRoUVZQMC1KbXhSLWdQS2Y0SWphUXJBU29wc3hLZE94b1dmZTYxY25tZkZfZDhTUEJCd09DTDlzTU9wUi1kNUk1TUl5ZENKRWM5dkFHN1dUOWNfeG9UNmhEWjU2eG0?oc=5",
+          "headline": "סין נטעה 78 מיליארד עצים. עכשיו הם משנים את מזג האוויר",
+          "name": "mako"
+        }
+      ],
+      "image": null,
+      "digest_basis": "headlines",
+      "distill": {
+        "title": "סין נטעה 78 מיליארד עצים. עכשיו הם משנים את מזג האוויר",
+        "summary": "סין נטעה 78 מיליארד עצים. עכשיו הם משנים את מזג האוויר.",
+        "why_matters": "",
+        "bullet_facts": [],
+        "background": "",
+        "outlook": "",
+        "insight": "",
+        "historical_context": "",
+        "status": "reported",
+        "reliability": "unknown",
+        "reliability_notes": "לא נמשכו גופי כתבות מהמקורות, ולכן לא בוצעה הצלבה — הכרטיס מבוסס כותרות בלבד.",
+        "digest_basis": "headlines",
+        "verification": {
+          "method": "none",
+          "bodies": 0,
+          "outlets": [],
+          "shared_facts": [],
+          "shared_topics": [],
+          "contradictions": [],
+          "overlap_ratio": 0.0
+        },
+        "mode": "heuristic"
+      },
+      "dryTitle": "סין נטעה 78 מיליארד עצים. עכשיו הם משנים את מזג האוויר",
+      "summary": "סין נטעה 78 מיליארד עצים. עכשיו הם משנים את מזג האוויר.",
+      "why_matters": "",
+      "bullet_facts": [],
+      "background": "",
+      "outlook": "",
+      "insight": "",
+      "historical_context": "",
+      "status": "reported",
+      "reliability": "unknown",
+      "reliability_notes": "לא נמשכו גופי כתבות מהמקורות, ולכן לא בוצעה הצלבה — הכרטיס מבוסס כותרות בלבד.",
+      "verification": {
+        "method": "none",
+        "bodies": 0,
+        "outlets": [],
         "shared_facts": [],
         "shared_topics": [],
         "contradictions": [],
@@ -2566,8 +2311,7 @@
         "summary": "ניתוח מכון וושינגטון שפורסם ב־27 ביולי קבע כי רוסיה איבדה את מעמדה ההגמוני בסוריה, אך הסתגלותה למציאות החדשה הייתה מהירה. לפי מעריב: כך דווח על ידי המינהל הנשיאותי של רוסיה ב-28 בינואר 2026.",
         "why_matters": "",
         "bullet_facts": [
-          "כבר לאחר הפלישה הרוסית לאוקראינה ב־2022 ניכרו סימנים לצמצום מסוים של הכוח ולהעברת חיילים וקשב לזירה…",
-          "נוסף על כך, הממשלה הסורית החדשה ירשה חוב של כ־1.2 מיליארד דולר לרוסיה."
+          "רוסיה מבקשת להישאר אחד מכמה שחקנים המתחרים על השפעה בסוריה, אך היא אינה עוד הפטרון הצבאי והמדיני הדומיננטי…"
         ],
         "background": "",
         "outlook": "",
@@ -2594,8 +2338,7 @@
       "summary": "ניתוח מכון וושינגטון שפורסם ב־27 ביולי קבע כי רוסיה איבדה את מעמדה ההגמוני בסוריה, אך הסתגלותה למציאות החדשה הייתה מהירה. לפי מעריב: כך דווח על ידי המינהל הנשיאותי של רוסיה ב-28 בינואר 2026.",
       "why_matters": "",
       "bullet_facts": [
-        "כבר לאחר הפלישה הרוסית לאוקראינה ב־2022 ניכרו סימנים לצמצום מסוים של הכוח ולהעברת חיילים וקשב לזירה…",
-        "נוסף על כך, הממשלה הסורית החדשה ירשה חוב של כ־1.2 מיליארד דולר לרוסיה."
+        "רוסיה מבקשת להישאר אחד מכמה שחקנים המתחרים על השפעה בסוריה, אך היא אינה עוד הפטרון הצבאי והמדיני הדומיננטי…"
       ],
       "background": "",
       "outlook": "",
@@ -2681,144 +2424,6 @@
         "outlets": [
           "היום"
         ],
-        "shared_facts": [],
-        "shared_topics": [],
-        "contradictions": [],
-        "overlap_ratio": 0.0
-      },
-      "distillMode": "heuristic"
-    },
-    {
-      "title": "סין נטעה 78 מיליארד עצים. עכשיו הם משנים את מזג האוויר",
-      "link": "https://news.google.com/rss/articles/CBMikAFBVV95cUxQZEZKeGhLWHNDdmhMSlJfaG5XdmhUTGdfT3hzNGpmTEdsSHJpLTZiODR4ZnRoUVZQMC1KbXhSLWdQS2Y0SWphUXJBU29wc3hLZE94b1dmZTYxY25tZkZfZDhTUEJCd09DTDlzTU9wUi1kNUk1TUl5ZENKRWM5dkFHN1dUOWNfeG9UNmhEWjU2eG0?oc=5",
-      "pubDate": "Mon, 10 Aug 2026 07:19:00 GMT",
-      "sources": [
-        {
-          "url": "https://news.google.com/rss/articles/CBMikAFBVV95cUxQZEZKeGhLWHNDdmhMSlJfaG5XdmhUTGdfT3hzNGpmTEdsSHJpLTZiODR4ZnRoUVZQMC1KbXhSLWdQS2Y0SWphUXJBU29wc3hLZE94b1dmZTYxY25tZkZfZDhTUEJCd09DTDlzTU9wUi1kNUk1TUl5ZENKRWM5dkFHN1dUOWNfeG9UNmhEWjU2eG0?oc=5",
-          "headline": "סין נטעה 78 מיליארד עצים. עכשיו הם משנים את מזג האוויר",
-          "name": "mako"
-        }
-      ],
-      "image": null,
-      "digest_basis": "headlines",
-      "distill": {
-        "title": "סין נטעה 78 מיליארד עצים. עכשיו הם משנים את מזג האוויר",
-        "summary": "סין נטעה 78 מיליארד עצים. עכשיו הם משנים את מזג האוויר. הדיווח נשען על מקור יחיד (mako) בלי גוף כתבה להצלבה.",
-        "why_matters": "",
-        "bullet_facts": [],
-        "background": "",
-        "outlook": "",
-        "insight": "",
-        "historical_context": "",
-        "status": "reported",
-        "reliability": "unknown",
-        "reliability_notes": "לא נמשכו גופי כתבות מהמקורות, ולכן לא בוצעה הצלבה — הכרטיס מבוסס כותרות בלבד.",
-        "digest_basis": "headlines",
-        "verification": {
-          "method": "none",
-          "bodies": 0,
-          "outlets": [],
-          "shared_facts": [],
-          "shared_topics": [],
-          "contradictions": [],
-          "overlap_ratio": 0.0
-        },
-        "mode": "heuristic"
-      },
-      "dryTitle": "סין נטעה 78 מיליארד עצים. עכשיו הם משנים את מזג האוויר",
-      "summary": "סין נטעה 78 מיליארד עצים. עכשיו הם משנים את מזג האוויר. הדיווח נשען על מקור יחיד (mako) בלי גוף כתבה להצלבה.",
-      "why_matters": "",
-      "bullet_facts": [],
-      "background": "",
-      "outlook": "",
-      "insight": "",
-      "historical_context": "",
-      "status": "reported",
-      "reliability": "unknown",
-      "reliability_notes": "לא נמשכו גופי כתבות מהמקורות, ולכן לא בוצעה הצלבה — הכרטיס מבוסס כותרות בלבד.",
-      "verification": {
-        "method": "none",
-        "bodies": 0,
-        "outlets": [],
-        "shared_facts": [],
-        "shared_topics": [],
-        "contradictions": [],
-        "overlap_ratio": 0.0
-      },
-      "distillMode": "heuristic"
-    },
-    {
-      "title": "משבר בשיחות עם לבנון: הדרישה הישראלית שמכעיסה את ביירות",
-      "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTFA5c0RwalAtVnFXSXNmNDlmb1FjNXQya2UyZ2VydkJtOHRJcnZMWEdoMWY4d1lRNU55TlVxc0l3Y1N2dnRPOFRQRzJ6ZVAyUlRzNDV5S3lpTjFGTEpORVFrbk1vWEx1ZGJVdEE0dw?oc=5",
-      "pubDate": "Mon, 10 Aug 2026 07:19:45 GMT",
-      "sources": [
-        {
-          "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTFA5c0RwalAtVnFXSXNmNDlmb1FjNXQya2UyZ2VydkJtOHRJcnZMWEdoMWY4d1lRNU55TlVxc0l3Y1N2dnRPOFRQRzJ6ZVAyUlRzNDV5S3lpTjFGTEpORVFrbk1vWEx1ZGJVdEE0dw?oc=5",
-          "headline": "משבר בשיחות עם לבנון: הדרישה הישראלית שמכעיסה את ביירות",
-          "name": "מקור ראשון"
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxOZWx2dWFYVzMtWHpmOHp0MnJ2Z2JmemdCME5KU3ltMVl2UUlvZ3gyNlp5YzVac0JYZ2xHQ0hwSE1jODVDSTVzTXYzZmlVdTVnU1BzenBzRGQzUENNTG5ycnY1Wk84dFgteTdXWVRyd1RQM0hndkMxVGhPX1V3NlFpUlR4dFl0M2psbi11YS0wMVRERHlYSUQ2OUdlanhiN0dEUzcteXpxdFdNbG8?oc=5",
-          "headline": "מקור דיפלומטי לבנוני: השיחות עם ישראל לא צפויות להתחדש בחודש הקרוב",
-          "name": "הארץ"
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTFBZR0paSzhCVTktcXNDalc1UmxwTXVteGt5dTFvNDJaMURrcHBJNEVCcWxrdU1ZQk9fTkNYYXRmZGZJR0ptU2Z4VlBvUXg2VUJpTGR0YWxhck14TEYyd3E5NG1wTUJpOEYxTWkzSzV3?oc=5",
-          "headline": "באיראן טוענים: מונה מפקד חדש למשמרות המהפכה",
-          "name": "כאן 11"
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE11N0k1V3lMUHhKZ3VGcVQxR1c2QW1nbnBhZVdVa0RHVnI5QXpEVlZHVW1Eb0YxTUZoY21PSVpTdnlOWjdWY2JraGVvWWdDeVU3YkFtM1EzQ3lrdw?oc=5",
-          "headline": "השיחות עם לבנון: \"ישראל העלתה העברת שרידי יהודים לארץ\"",
-          "name": "ynet.co.il"
-        },
-        {
-          "url": "https://news.google.com/rss/articles/CBMiygJBVV95cUxQa3JmLURoOEgzXzdTbXRzVVAzTGZvZzJCQmFZY3U0cWhKVTFHV3ZvVE45MzkxVVFnbHdraTR0X2xha0YxbEFwbzlCQWdLYnEyM2hUdU9rLVJkTTl6Nk9JTEJtRUdqUDRHSEM1bHJRdmVTRENFUmpQazFpNENGa2UxUkpKY0ZlMmU5M04tNjB2VldjTVdDYnVaekR6UTZtODI2RFhQdE5fMnZlNTl0SzhsZ1N4bEowdnhUekVxMXFFYUsxU2hmcHhEdzQta01vcFM5bGlFVFJPQWpvRUVZU29uS2dhMENIcFhSbU9sUEFFXzdTRWtIQkxrcy11OFlZOVhWTjJMVkRXZ2VaWlVZanFBdU84U2s5eGN4bElrTWhOT3dkMncxTERvVV9hdXg3TDlMQ1VSems2VVpVUzRzTkNleVM3MkUtQ3UtNVE?oc=5",
-          "headline": "\"חילופי אסירים אזרחיים\": ההצעה החדשה של ישראל ללבנון",
-          "name": "סרוגים"
-        }
-      ],
-      "image": null,
-      "digest_basis": "headlines",
-      "distill": {
-        "title": "משבר בשיחות עם לבנון: הדרישה הישראלית שמכעיסה את ביירות",
-        "summary": "משבר בשיחות עם לבנון: הדרישה הישראלית שמכעיסה את ביירות. מעבר לכותרת לא נמצאו פרטים נוספים בכותרות המקורות.",
-        "why_matters": "",
-        "bullet_facts": [],
-        "background": "",
-        "outlook": "",
-        "insight": "",
-        "historical_context": "",
-        "status": "reported",
-        "reliability": "unknown",
-        "reliability_notes": "לא נמשכו גופי כתבות מהמקורות, ולכן לא בוצעה הצלבה — הכרטיס מבוסס כותרות בלבד.",
-        "digest_basis": "headlines",
-        "verification": {
-          "method": "none",
-          "bodies": 0,
-          "outlets": [],
-          "shared_facts": [],
-          "shared_topics": [],
-          "contradictions": [],
-          "overlap_ratio": 0.0
-        },
-        "mode": "heuristic"
-      },
-      "dryTitle": "משבר בשיחות עם לבנון: הדרישה הישראלית שמכעיסה את ביירות",
-      "summary": "משבר בשיחות עם לבנון: הדרישה הישראלית שמכעיסה את ביירות. מעבר לכותרת לא נמצאו פרטים נוספים בכותרות המקורות.",
-      "why_matters": "",
-      "bullet_facts": [],
-      "background": "",
-      "outlook": "",
-      "insight": "",
-      "historical_context": "",
-      "status": "reported",
-      "reliability": "unknown",
-      "reliability_notes": "לא נמשכו גופי כתבות מהמקורות, ולכן לא בוצעה הצלבה — הכרטיס מבוסס כותרות בלבד.",
-      "verification": {
-        "method": "none",
-        "bodies": 0,
-        "outlets": [],
         "shared_facts": [],
         "shared_topics": [],
         "contradictions": [],
@@ -3071,28 +2676,35 @@
         {
           "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE5wRnNPZW1Ga0hwNkM2NVhaZGtGLUpkN0lsenk0NDVNUnAzcXpRWnlpT3Y4NFRRQnQ1QTJtc1pxVVlxbXBqSlJEY0ZQMWZObnlMeWp4bHg0am1ZX3M?oc=5",
           "headline": "דיווח: לאחר מבצע דיפלומטי חשאי - ארה\"ב וסבא\"א יוציאו חומר גרעיני מסוריה",
-          "name": "ynet.co.il"
+          "name": "ynet.co.il",
+          "resolved_url": "https://www.ynet.co.il/news/article/rj00nyiwlzg",
+          "fetch_ok": true
         }
       ],
       "image": null,
-      "digest_basis": "headlines",
+      "digest_basis": "fulltext",
       "distill": {
         "title": "לאחר מבצע דיפלומטי חשאי - ארה\"ב וסבא\"א יוציאו חומר גרעיני מסוריה",
-        "summary": "לאחר מבצע דיפלומטי חשאי - ארה\"ב וסבא\"א יוציאו חומר גרעיני מסוריה. הדיווח נשען על מקור יחיד (ynet.co.il) בלי גוף כתבה להצלבה.",
+        "summary": "לפי הדיווח, וושינגטון וסבא\"א פעלו כדי להגיע להסכם דיפלומטי שיבטיח את אבטחת החומר הגרעיני וימנע הסלמה שתערב את ישראל, סוריה ואולי אפילו את טורקיה סביב האתר הרגיש. לפי ynet.co.il: וושינגטון, דמשק וירושלים הגיעו להסכם על הוצאת החומר באופן שמוסכם על כל הצדדים הסוכנות הבינלאומית לאנרגיה אטומית (סבא\"א) תוציא בקרוב חומר גרעיני שמאוחסן באתר חשאי בסוריה, לאחר שממשל טראמפ הגיע להבנות עם סוריה וישראל.",
         "why_matters": "",
-        "bullet_facts": [],
+        "bullet_facts": [
+          "גורמים ישראלים אמרו כי ישראל אף איימה להפציץ את האתר פעם נוספת אם החומר הגרעיני לא יפונה, או אם יהיו סימנים…",
+          "כאשר ממשל טראמפ העלה את הנושא מול הממשלה הסורית, גורמים סורים טענו כי לא ידעו שבאתר מאוחסן חומר גרעיני, כך…"
+        ],
         "background": "",
         "outlook": "",
         "insight": "",
         "historical_context": "",
         "status": "reported",
-        "reliability": "unknown",
-        "reliability_notes": "לא נמשכו גופי כתבות מהמקורות, ולכן לא בוצעה הצלבה — הכרטיס מבוסס כותרות בלבד.",
-        "digest_basis": "headlines",
+        "reliability": "low",
+        "reliability_notes": "נקרא גוף כתבה ממקור יחיד (ynet.co.il) — אין מקור עצמאי שני להצלבה, ולכן אי אפשר לאשר את הפרטים.",
+        "digest_basis": "fulltext",
         "verification": {
           "method": "none",
-          "bodies": 0,
-          "outlets": [],
+          "bodies": 1,
+          "outlets": [
+            "ynet.co.il"
+          ],
           "shared_facts": [],
           "shared_topics": [],
           "contradictions": [],
@@ -3101,20 +2713,25 @@
         "mode": "heuristic"
       },
       "dryTitle": "לאחר מבצע דיפלומטי חשאי - ארה\"ב וסבא\"א יוציאו חומר גרעיני מסוריה",
-      "summary": "לאחר מבצע דיפלומטי חשאי - ארה\"ב וסבא\"א יוציאו חומר גרעיני מסוריה. הדיווח נשען על מקור יחיד (ynet.co.il) בלי גוף כתבה להצלבה.",
+      "summary": "לפי הדיווח, וושינגטון וסבא\"א פעלו כדי להגיע להסכם דיפלומטי שיבטיח את אבטחת החומר הגרעיני וימנע הסלמה שתערב את ישראל, סוריה ואולי אפילו את טורקיה סביב האתר הרגיש. לפי ynet.co.il: וושינגטון, דמשק וירושלים הגיעו להסכם על הוצאת החומר באופן שמוסכם על כל הצדדים הסוכנות הבינלאומית לאנרגיה אטומית (סבא\"א) תוציא בקרוב חומר גרעיני שמאוחסן באתר חשאי בסוריה, לאחר שממשל טראמפ הגיע להבנות עם סוריה וישראל.",
       "why_matters": "",
-      "bullet_facts": [],
+      "bullet_facts": [
+        "גורמים ישראלים אמרו כי ישראל אף איימה להפציץ את האתר פעם נוספת אם החומר הגרעיני לא יפונה, או אם יהיו סימנים…",
+        "כאשר ממשל טראמפ העלה את הנושא מול הממשלה הסורית, גורמים סורים טענו כי לא ידעו שבאתר מאוחסן חומר גרעיני, כך…"
+      ],
       "background": "",
       "outlook": "",
       "insight": "",
       "historical_context": "",
       "status": "reported",
-      "reliability": "unknown",
-      "reliability_notes": "לא נמשכו גופי כתבות מהמקורות, ולכן לא בוצעה הצלבה — הכרטיס מבוסס כותרות בלבד.",
+      "reliability": "low",
+      "reliability_notes": "נקרא גוף כתבה ממקור יחיד (ynet.co.il) — אין מקור עצמאי שני להצלבה, ולכן אי אפשר לאשר את הפרטים.",
       "verification": {
         "method": "none",
-        "bodies": 0,
-        "outlets": [],
+        "bodies": 1,
+        "outlets": [
+          "ynet.co.il"
+        ],
         "shared_facts": [],
         "shared_topics": [],
         "contradictions": [],
@@ -3236,7 +2853,7 @@
       "digest_basis": "headlines",
       "distill": {
         "title": "שריון ראשון של נתניהו בליכוד: אורן דוברונסקי",
-        "summary": "שריון ראשון של נתניהו בליכוד: אורן דוברונסקי. מעבר לכותרת לא נמצאו פרטים נוספים בכותרות המקורות.",
+        "summary": "שריון ראשון של נתניהו בליכוד: אורן דוברונסקי.",
         "why_matters": "",
         "bullet_facts": [],
         "background": "",
@@ -3259,7 +2876,7 @@
         "mode": "heuristic"
       },
       "dryTitle": "שריון ראשון של נתניהו בליכוד: אורן דוברונסקי",
-      "summary": "שריון ראשון של נתניהו בליכוד: אורן דוברונסקי. מעבר לכותרת לא נמצאו פרטים נוספים בכותרות המקורות.",
+      "summary": "שריון ראשון של נתניהו בליכוד: אורן דוברונסקי.",
       "why_matters": "",
       "bullet_facts": [],
       "background": "",
@@ -3377,12 +2994,9 @@
       "digest_basis": "fulltext",
       "distill": {
         "title": "מנהל ההשקעות שממליץ על שני סקטורים",
-        "summary": "דן בינשטוק (38) עובד בפעילים ניהול תיקי השקעות (השייכת לבנק הפועלים), כבר 13 שנים וכיום הוא מנהל דסק לקוחות חו\"ל, אך שוק ההון זורם בדמו מאז שהוא זוכר את עצמו. לפי גלובס: זאת לדבריו, למרות הקו הניצי שמשדר יו\"ר הפד החדש קווין וורש, ובראשם המדיניות החדשה של הפסקת המסרים לשוק על מהלכי הפד העתידיים, כמו גם הצהרותיו של וורש על כך שהמטרה היא יעד אינפלציה של 2%, \"ואין בכוונתנו להתפשר\" לשון וורש.",
+        "summary": "דן בינשטוק (38) עובד בפעילים ניהול תיקי השקעות (השייכת לבנק הפועלים), כבר 13 שנים וכיום הוא מנהל דסק לקוחות חו\"ל, אך שוק ההון זורם בדמו מאז שהוא זוכר את עצמו. לפי גלובס: באשר לארה\"ב, בינשטוק מעריך שהשוק עוד יכול להמשיך לעלות, גם אחרי קרוב ל־4 שנים חזקות בשוקים עם תשואה דו־ספרתית בכל אחת מהן.",
         "why_matters": "",
-        "bullet_facts": [
-          "באשר לארה\"ב, בינשטוק מעריך שהשוק עוד יכול להמשיך לעלות, גם אחרי קרוב ל־4 שנים חזקות בשוקים עם תשואה…",
-          "לחיזוק הדברים הוא מציין כי הצמיחה של ישראל לפי בנק ישראל תעמוד השנה על 4% ותאיץ בשנה הבאה ל־5.5%."
-        ],
+        "bullet_facts": [],
         "background": "",
         "outlook": "",
         "insight": "",
@@ -3405,84 +3019,9 @@
         "mode": "heuristic"
       },
       "dryTitle": "מנהל ההשקעות שממליץ על שני סקטורים",
-      "summary": "דן בינשטוק (38) עובד בפעילים ניהול תיקי השקעות (השייכת לבנק הפועלים), כבר 13 שנים וכיום הוא מנהל דסק לקוחות חו\"ל, אך שוק ההון זורם בדמו מאז שהוא זוכר את עצמו. לפי גלובס: זאת לדבריו, למרות הקו הניצי שמשדר יו\"ר הפד החדש קווין וורש, ובראשם המדיניות החדשה של הפסקת המסרים לשוק על מהלכי הפד העתידיים, כמו גם הצהרותיו של וורש על כך שהמטרה היא יעד אינפלציה של 2%, \"ואין בכוונתנו להתפשר\" לשון וורש.",
+      "summary": "דן בינשטוק (38) עובד בפעילים ניהול תיקי השקעות (השייכת לבנק הפועלים), כבר 13 שנים וכיום הוא מנהל דסק לקוחות חו\"ל, אך שוק ההון זורם בדמו מאז שהוא זוכר את עצמו. לפי גלובס: באשר לארה\"ב, בינשטוק מעריך שהשוק עוד יכול להמשיך לעלות, גם אחרי קרוב ל־4 שנים חזקות בשוקים עם תשואה דו־ספרתית בכל אחת מהן.",
       "why_matters": "",
-      "bullet_facts": [
-        "באשר לארה\"ב, בינשטוק מעריך שהשוק עוד יכול להמשיך לעלות, גם אחרי קרוב ל־4 שנים חזקות בשוקים עם תשואה…",
-        "לחיזוק הדברים הוא מציין כי הצמיחה של ישראל לפי בנק ישראל תעמוד השנה על 4% ותאיץ בשנה הבאה ל־5.5%."
-      ],
-      "background": "",
-      "outlook": "",
-      "insight": "",
-      "historical_context": "",
-      "status": "reported",
-      "reliability": "low",
-      "reliability_notes": "נקרא גוף כתבה ממקור יחיד (גלובס) — אין מקור עצמאי שני להצלבה, ולכן אי אפשר לאשר את הפרטים.",
-      "verification": {
-        "method": "none",
-        "bodies": 1,
-        "outlets": [
-          "גלובס"
-        ],
-        "shared_facts": [],
-        "shared_topics": [],
-        "contradictions": [],
-        "overlap_ratio": 0.0
-      },
-      "distillMode": "heuristic"
-    },
-    {
-      "title": "המיליארדר שרצה להנגיש השקעות להמונים, ואז בייג'ינג בלמה אותו",
-      "link": "https://news.google.com/rss/articles/CBMiaEFVX3lxTFB3cnlFWWdFdG1KdVRRUXE4OEhzN2JhM2wzMDAyVDBpMWZLTlo0alZYZ1hFbnFuM005bnpib1RkcUluRnpBZTlyalJXczcweDNRdS1pSFFvR3hGT3hsMmtjTzl3Q1RMcV9N?oc=5",
-      "pubDate": "Tue, 11 Aug 2026 03:08:46 GMT",
-      "sources": [
-        {
-          "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTFB3cnlFWWdFdG1KdVRRUXE4OEhzN2JhM2wzMDAyVDBpMWZLTlo0alZYZ1hFbnFuM005bnpib1RkcUluRnpBZTlyalJXczcweDNRdS1pSFFvR3hGT3hsMmtjTzl3Q1RMcV9N?oc=5",
-          "headline": "המיליארדר שרצה להנגיש השקעות להמונים, ואז בייג'ינג בלמה אותו",
-          "name": "גלובס",
-          "resolved_url": "https://www.globes.co.il/news/article.aspx?did=1001551869",
-          "fetch_ok": true
-        }
-      ],
-      "image": null,
-      "topicHint": "economy",
-      "digest_basis": "fulltext",
-      "distill": {
-        "title": "המיליארדר שרצה להנגיש השקעות להמונים, ואז בייג'ינג בלמה אותו",
-        "summary": "המיליארדר הסיני הקים את חברת הברוקראז' שלו בשנת 2012 במטרה פשוטה: להנגיש את ההשקעה במניות להמונים באסיה. לפי גלובס: משקיעים פרטיים מימנו את החשבונות באמצעות מכסה שנתית של 50 אלף דולר, שהרשויות מתירות להעביר לחו\"ל לצורכי תיירות או נסיעות עסקים, לפי דיווחים בתקשורת הממשלתית בסין.",
-        "why_matters": "",
-        "bullet_facts": [
-          "החברה מסרה למשקיעים כי נכון ל־31 במרץ, רק 17% מנכסי לקוחותיה הוחזקו בחשבונות של לקוחות מסין היבשתית, ואלה…",
-          "הירידה במחיר המניה מחקה מאות מיליוני דולרים מהונו של לי, שמוערך כיום בכ־5.7 מיליארד דולר, לפי פורבס."
-        ],
-        "background": "",
-        "outlook": "",
-        "insight": "",
-        "historical_context": "",
-        "status": "reported",
-        "reliability": "low",
-        "reliability_notes": "נקרא גוף כתבה ממקור יחיד (גלובס) — אין מקור עצמאי שני להצלבה, ולכן אי אפשר לאשר את הפרטים.",
-        "digest_basis": "fulltext",
-        "verification": {
-          "method": "none",
-          "bodies": 1,
-          "outlets": [
-            "גלובס"
-          ],
-          "shared_facts": [],
-          "shared_topics": [],
-          "contradictions": [],
-          "overlap_ratio": 0.0
-        },
-        "mode": "heuristic"
-      },
-      "dryTitle": "המיליארדר שרצה להנגיש השקעות להמונים, ואז בייג'ינג בלמה אותו",
-      "summary": "המיליארדר הסיני הקים את חברת הברוקראז' שלו בשנת 2012 במטרה פשוטה: להנגיש את ההשקעה במניות להמונים באסיה. לפי גלובס: משקיעים פרטיים מימנו את החשבונות באמצעות מכסה שנתית של 50 אלף דולר, שהרשויות מתירות להעביר לחו\"ל לצורכי תיירות או נסיעות עסקים, לפי דיווחים בתקשורת הממשלתית בסין.",
-      "why_matters": "",
-      "bullet_facts": [
-        "החברה מסרה למשקיעים כי נכון ל־31 במרץ, רק 17% מנכסי לקוחותיה הוחזקו בחשבונות של לקוחות מסין היבשתית, ואלה…",
-        "הירידה במחיר המניה מחקה מאות מיליוני דולרים מהונו של לי, שמוערך כיום בכ־5.7 מיליארד דולר, לפי פורבס."
-      ],
+      "bullet_facts": [],
       "background": "",
       "outlook": "",
       "insight": "",
@@ -3582,6 +3121,76 @@
         "method": "none",
         "bodies": 0,
         "outlets": [],
+        "shared_facts": [],
+        "shared_topics": [],
+        "contradictions": [],
+        "overlap_ratio": 0.0
+      },
+      "distillMode": "heuristic"
+    },
+    {
+      "title": "המיליארדר שרצה להנגיש השקעות להמונים, ואז בייג'ינג בלמה אותו",
+      "link": "https://news.google.com/rss/articles/CBMiaEFVX3lxTFB3cnlFWWdFdG1KdVRRUXE4OEhzN2JhM2wzMDAyVDBpMWZLTlo0alZYZ1hFbnFuM005bnpib1RkcUluRnpBZTlyalJXczcweDNRdS1pSFFvR3hGT3hsMmtjTzl3Q1RMcV9N?oc=5",
+      "pubDate": "Tue, 11 Aug 2026 03:08:46 GMT",
+      "sources": [
+        {
+          "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTFB3cnlFWWdFdG1KdVRRUXE4OEhzN2JhM2wzMDAyVDBpMWZLTlo0alZYZ1hFbnFuM005bnpib1RkcUluRnpBZTlyalJXczcweDNRdS1pSFFvR3hGT3hsMmtjTzl3Q1RMcV9N?oc=5",
+          "headline": "המיליארדר שרצה להנגיש השקעות להמונים, ואז בייג'ינג בלמה אותו",
+          "name": "גלובס",
+          "resolved_url": "https://www.globes.co.il/news/article.aspx?did=1001551869",
+          "fetch_ok": true
+        }
+      ],
+      "image": null,
+      "topicHint": "economy",
+      "digest_basis": "fulltext",
+      "distill": {
+        "title": "המיליארדר שרצה להנגיש השקעות להמונים, ואז בייג'ינג בלמה אותו",
+        "summary": "המיליארדר הסיני הקים את חברת הברוקראז' שלו בשנת 2012 במטרה פשוטה: להנגיש את ההשקעה במניות להמונים באסיה. לפי גלובס: במאי רשות ניירות הערך הסינית קבעה כי אסור להשתמש בכספים אלה למימון השקעות בחו\"ל, וקנסה את פוטו ושתי חברות ברוקראז' נוספות.",
+        "why_matters": "",
+        "bullet_facts": [
+          "הצעדים הרגולטוריים נגד פוטו ומתחרותיה הם רק חלק ממאמציה של בייג'ינג לעצב מחדש את המציאות הפיננסית עבור עשירי…"
+        ],
+        "background": "",
+        "outlook": "",
+        "insight": "",
+        "historical_context": "",
+        "status": "reported",
+        "reliability": "low",
+        "reliability_notes": "נקרא גוף כתבה ממקור יחיד (גלובס) — אין מקור עצמאי שני להצלבה, ולכן אי אפשר לאשר את הפרטים.",
+        "digest_basis": "fulltext",
+        "verification": {
+          "method": "none",
+          "bodies": 1,
+          "outlets": [
+            "גלובס"
+          ],
+          "shared_facts": [],
+          "shared_topics": [],
+          "contradictions": [],
+          "overlap_ratio": 0.0
+        },
+        "mode": "heuristic"
+      },
+      "dryTitle": "המיליארדר שרצה להנגיש השקעות להמונים, ואז בייג'ינג בלמה אותו",
+      "summary": "המיליארדר הסיני הקים את חברת הברוקראז' שלו בשנת 2012 במטרה פשוטה: להנגיש את ההשקעה במניות להמונים באסיה. לפי גלובס: במאי רשות ניירות הערך הסינית קבעה כי אסור להשתמש בכספים אלה למימון השקעות בחו\"ל, וקנסה את פוטו ושתי חברות ברוקראז' נוספות.",
+      "why_matters": "",
+      "bullet_facts": [
+        "הצעדים הרגולטוריים נגד פוטו ומתחרותיה הם רק חלק ממאמציה של בייג'ינג לעצב מחדש את המציאות הפיננסית עבור עשירי…"
+      ],
+      "background": "",
+      "outlook": "",
+      "insight": "",
+      "historical_context": "",
+      "status": "reported",
+      "reliability": "low",
+      "reliability_notes": "נקרא גוף כתבה ממקור יחיד (גלובס) — אין מקור עצמאי שני להצלבה, ולכן אי אפשר לאשר את הפרטים.",
+      "verification": {
+        "method": "none",
+        "bodies": 1,
+        "outlets": [
+          "גלובס"
+        ],
         "shared_facts": [],
         "shared_topics": [],
         "contradictions": [],
@@ -3798,7 +3407,6 @@
         "summary": "הקבוצה של דז'אן סטנקוביץ' תגיע לגומלין אחרי שנוצחה 1:0 במשחק הראשון מול הפועל באר שבע, ותצטרך להפוך את התוצאה בבלגרד כדי להמשיך במאבק על מקום בשלב הבתים של ליגת האלופות. היום לקראת הפועל באר שבע: הכוכב האדום בלגרד באזהרות לאוהדים בסרביה נערכים להגעה של אוהדים ישראלים למשחק בליגת האלופות: \"חצי כניסה לאצטדיון תיחסם\".",
         "why_matters": "",
         "bullet_facts": [
-          "אחת ההנחיות המרכזיות נוגעת לתנועה בסביבת האצטדיון: המעבר מהצד המערבי של האצטדיון ליציע הדרומי, וגם בכיוון…",
           "הדרומיים כבר נחתו בבירה הסרבית, ולפי הערכות ילוו אותם כ-300 אוהדים ישראלים, כמות גדולה יותר מזו שהייתה במשחק…"
         ],
         "background": "",
@@ -3832,7 +3440,6 @@
       "summary": "הקבוצה של דז'אן סטנקוביץ' תגיע לגומלין אחרי שנוצחה 1:0 במשחק הראשון מול הפועל באר שבע, ותצטרך להפוך את התוצאה בבלגרד כדי להמשיך במאבק על מקום בשלב הבתים של ליגת האלופות. היום לקראת הפועל באר שבע: הכוכב האדום בלגרד באזהרות לאוהדים בסרביה נערכים להגעה של אוהדים ישראלים למשחק בליגת האלופות: \"חצי כניסה לאצטדיון תיחסם\".",
       "why_matters": "",
       "bullet_facts": [
-        "אחת ההנחיות המרכזיות נוגעת לתנועה בסביבת האצטדיון: המעבר מהצד המערבי של האצטדיון ליציע הדרומי, וגם בכיוון…",
         "הדרומיים כבר נחתו בבירה הסרבית, ולפי הערכות ילוו אותם כ-300 אוהדים ישראלים, כמות גדולה יותר מזו שהייתה במשחק…"
       ],
       "background": "",
@@ -3907,7 +3514,6 @@
         "why_matters": "",
         "bullet_facts": [
           "ווסטהאם השנה בצ'מיונשיפ, אבל מעריכים שעד מרץ הם יבטיחו עלייה, יש ציפיות מאוד גדולות ממנור",
-          "ווסטהאם מועדון גדול שהראה יכולת להתאושש מירידת ליגה בעבר, ובתור שחקן שמגיע אליו באופן קבוע סולומון מקבל מעין…",
           "רשמי: מנור סולומון חתם בווסטהאם מאנגליה"
         ],
         "background": "",
@@ -3943,7 +3549,6 @@
       "why_matters": "",
       "bullet_facts": [
         "ווסטהאם השנה בצ'מיונשיפ, אבל מעריכים שעד מרץ הם יבטיחו עלייה, יש ציפיות מאוד גדולות ממנור",
-        "ווסטהאם מועדון גדול שהראה יכולת להתאושש מירידת ליגה בעבר, ובתור שחקן שמגיע אליו באופן קבוע סולומון מקבל מעין…",
         "רשמי: מנור סולומון חתם בווסטהאם מאנגליה"
       ],
       "background": "",
@@ -4089,7 +3694,7 @@
       "digest_basis": "headlines",
       "distill": {
         "title": "העסקה הגדולה ביותר בכדורגל הישראלי: ענאן חלאילי חתם בקריסטל פאלאס",
-        "summary": "העסקה הגדולה ביותר בכדורגל הישראלי: ענאן חלאילי חתם בקריסטל פאלאס. מעל הציפיות: ההכנסה של חיפה מעסקת חלאילי. עמדה לצידנו ב-7 באוקטובר, ועכשיו קונה את הישראלי הכי יקר: סיפורה של קריסטל פאלאס.",
+        "summary": "מעל הציפיות: ההכנסה של חיפה מעסקת חלאילי. עמדה לצידנו ב-7 באוקטובר, ועכשיו קונה את הישראלי הכי יקר: סיפורה של קריסטל פאלאס.",
         "why_matters": "",
         "bullet_facts": [],
         "background": "",
@@ -4112,7 +3717,7 @@
         "mode": "heuristic"
       },
       "dryTitle": "העסקה הגדולה ביותר בכדורגל הישראלי: ענאן חלאילי חתם בקריסטל פאלאס",
-      "summary": "העסקה הגדולה ביותר בכדורגל הישראלי: ענאן חלאילי חתם בקריסטל פאלאס. מעל הציפיות: ההכנסה של חיפה מעסקת חלאילי. עמדה לצידנו ב-7 באוקטובר, ועכשיו קונה את הישראלי הכי יקר: סיפורה של קריסטל פאלאס.",
+      "summary": "מעל הציפיות: ההכנסה של חיפה מעסקת חלאילי. עמדה לצידנו ב-7 באוקטובר, ועכשיו קונה את הישראלי הכי יקר: סיפורה של קריסטל פאלאס.",
       "why_matters": "",
       "bullet_facts": [],
       "background": "",
@@ -4175,11 +3780,11 @@
       "digest_basis": "fulltext",
       "distill": {
         "title": "ההצעה המפתיעה של פנאתינייקוס ליוקיץ' - והתקווה",
-        "summary": "יאנאקופולוס לא מתכוון להרים ידיים וכבר מכוון ל-2027/28 ניקולה יוקיץ' אמנם הצהיר כי הוא מתכנן להישאר בדנבר נאגטס עד תום הקריירה, אבל לבעלים של פנאתינייקוס, דימיטריס ינאקופולוס, זה לא כל כך משנה. דנבר דחתה את ההצעה, אך בעלי פנאתינייקוס מאמין שיוכל לשכנע את הסרבי לוותר על אופציית השחקן שלו, בגובה 63.8 מיליון דולר, לעונת 2027/28, ולחתום בקבוצתו.",
+        "summary": "יאנאקופולוס לא מתכוון להרים ידיים וכבר מכוון ל-2027/28 ניקולה יוקיץ' אמנם הצהיר כי הוא מתכנן להישאר בדנבר נאגטס עד תום הקריירה, אבל לבעלים של פנאתינייקוס, דימיטריס ינאקופולוס, זה לא כל כך משנה. אחרי המחמאות לעופר ינאי בחלק הראשון, הפעם הוא הכריז כי בכוונתו להחתים בקיץ הבא את ניקולה יוקיץ', אלוף ה-NBA ושלוש פעמים ה-MVP של הליגה.",
         "why_matters": "",
         "bullet_facts": [
-          "אחרי המחמאות לעופר ינאי בחלק הראשון, הפעם הוא הכריז כי בכוונתו להחתים בקיץ הבא את ניקולה יוקיץ', אלוף ה-NBA…",
-          "בעלי פנאתינייקוס מנצח על קיץ בדרך לציפיות ענק מהקבוצה לקראת עונת 2026/2027, ובחלק השני של הראיון ב-Euro…"
+          "בעלי פנאתינייקוס מנצח על קיץ בדרך לציפיות ענק מהקבוצה לקראת עונת 2026/2027, ובחלק השני של הראיון ב-Euro…",
+          "בעלי פנאתינייקוס דימיטריס ינאקופולוס / GettyImages, Nikola Krstic/MB Media עוד לפני ההכרזה לגבי יוקיץ',…"
         ],
         "background": "",
         "outlook": "",
@@ -4210,11 +3815,11 @@
         "mode": "heuristic"
       },
       "dryTitle": "ההצעה המפתיעה של פנאתינייקוס ליוקיץ' - והתקווה",
-      "summary": "יאנאקופולוס לא מתכוון להרים ידיים וכבר מכוון ל-2027/28 ניקולה יוקיץ' אמנם הצהיר כי הוא מתכנן להישאר בדנבר נאגטס עד תום הקריירה, אבל לבעלים של פנאתינייקוס, דימיטריס ינאקופולוס, זה לא כל כך משנה. דנבר דחתה את ההצעה, אך בעלי פנאתינייקוס מאמין שיוכל לשכנע את הסרבי לוותר על אופציית השחקן שלו, בגובה 63.8 מיליון דולר, לעונת 2027/28, ולחתום בקבוצתו.",
+      "summary": "יאנאקופולוס לא מתכוון להרים ידיים וכבר מכוון ל-2027/28 ניקולה יוקיץ' אמנם הצהיר כי הוא מתכנן להישאר בדנבר נאגטס עד תום הקריירה, אבל לבעלים של פנאתינייקוס, דימיטריס ינאקופולוס, זה לא כל כך משנה. אחרי המחמאות לעופר ינאי בחלק הראשון, הפעם הוא הכריז כי בכוונתו להחתים בקיץ הבא את ניקולה יוקיץ', אלוף ה-NBA ושלוש פעמים ה-MVP של הליגה.",
       "why_matters": "",
       "bullet_facts": [
-        "אחרי המחמאות לעופר ינאי בחלק הראשון, הפעם הוא הכריז כי בכוונתו להחתים בקיץ הבא את ניקולה יוקיץ', אלוף ה-NBA…",
-        "בעלי פנאתינייקוס מנצח על קיץ בדרך לציפיות ענק מהקבוצה לקראת עונת 2026/2027, ובחלק השני של הראיון ב-Euro…"
+        "בעלי פנאתינייקוס מנצח על קיץ בדרך לציפיות ענק מהקבוצה לקראת עונת 2026/2027, ובחלק השני של הראיון ב-Euro…",
+        "בעלי פנאתינייקוס דימיטריס ינאקופולוס / GettyImages, Nikola Krstic/MB Media עוד לפני ההכרזה לגבי יוקיץ',…"
       ],
       "background": "",
       "outlook": "",
@@ -4361,7 +3966,7 @@
       "digest_basis": "headlines",
       "distill": {
         "title": "היסטוריה בכדורגל הרחובותי: מרמורק ושעריים מתאחדות תחת \"עירוני רחובות",
-        "summary": "היסטוריה בכדורגל הרחובותי: מרמורק ושעריים מתאחדות תחת \"עירוני רחובות. שעריים ומרמורק בליגה ג': זו הקבוצה הבכירה ברחובות | ב-ynet.",
+        "summary": "שעריים ומרמורק בליגה ג': זו הקבוצה הבכירה ברחובות | ב-ynet.",
         "why_matters": "",
         "bullet_facts": [],
         "background": "",
@@ -4384,7 +3989,7 @@
         "mode": "heuristic"
       },
       "dryTitle": "היסטוריה בכדורגל הרחובותי: מרמורק ושעריים מתאחדות תחת \"עירוני רחובות",
-      "summary": "היסטוריה בכדורגל הרחובותי: מרמורק ושעריים מתאחדות תחת \"עירוני רחובות. שעריים ומרמורק בליגה ג': זו הקבוצה הבכירה ברחובות | ב-ynet.",
+      "summary": "שעריים ומרמורק בליגה ג': זו הקבוצה הבכירה ברחובות | ב-ynet.",
       "why_matters": "",
       "bullet_facts": [],
       "background": "",
@@ -4421,7 +4026,7 @@
       "digest_basis": "headlines",
       "distill": {
         "title": "לא לכל אחד: רשת מלונות היוקרה הישראלית משיקה הפלגות יוקרה",
-        "summary": "לא לכל אחד: רשת מלונות היוקרה הישראלית משיקה הפלגות יוקרה. הדיווח נשען על מקור יחיד (mako) בלי גוף כתבה להצלבה.",
+        "summary": "לא לכל אחד: רשת מלונות היוקרה הישראלית משיקה הפלגות יוקרה.",
         "why_matters": "",
         "bullet_facts": [],
         "background": "",
@@ -4444,7 +4049,7 @@
         "mode": "heuristic"
       },
       "dryTitle": "לא לכל אחד: רשת מלונות היוקרה הישראלית משיקה הפלגות יוקרה",
-      "summary": "לא לכל אחד: רשת מלונות היוקרה הישראלית משיקה הפלגות יוקרה. הדיווח נשען על מקור יחיד (mako) בלי גוף כתבה להצלבה.",
+      "summary": "לא לכל אחד: רשת מלונות היוקרה הישראלית משיקה הפלגות יוקרה.",
       "why_matters": "",
       "bullet_facts": [],
       "background": "",
@@ -4481,7 +4086,7 @@
       "digest_basis": "headlines",
       "distill": {
         "title": "הדדליין מתקרב: בקרוב מאות מלונות בקפריסין עלולים להיקלע לבעיה",
-        "summary": "הדדליין מתקרב: בקרוב מאות מלונות בקפריסין עלולים להיקלע לבעיה. הדיווח נשען על מקור יחיד (היום) בלי גוף כתבה להצלבה.",
+        "summary": "הדדליין מתקרב: בקרוב מאות מלונות בקפריסין עלולים להיקלע לבעיה.",
         "why_matters": "",
         "bullet_facts": [],
         "background": "",
@@ -4504,7 +4109,7 @@
         "mode": "heuristic"
       },
       "dryTitle": "הדדליין מתקרב: בקרוב מאות מלונות בקפריסין עלולים להיקלע לבעיה",
-      "summary": "הדדליין מתקרב: בקרוב מאות מלונות בקפריסין עלולים להיקלע לבעיה. הדיווח נשען על מקור יחיד (היום) בלי גוף כתבה להצלבה.",
+      "summary": "הדדליין מתקרב: בקרוב מאות מלונות בקפריסין עלולים להיקלע לבעיה.",
       "why_matters": "",
       "bullet_facts": [],
       "background": "",
@@ -4541,7 +4146,7 @@
       "digest_basis": "headlines",
       "distill": {
         "title": "ארקיע חותכת מחירים: 15% הנחה על חבילות נופש לקיץ ולחגי תשרי",
-        "summary": "ארקיע חותכת מחירים: 15% הנחה על חבילות נופש לקיץ ולחגי תשרי. הדיווח נשען על מקור יחיד (ice (אייס)) בלי גוף כתבה להצלבה.",
+        "summary": "ארקיע חותכת מחירים: 15% הנחה על חבילות נופש לקיץ ולחגי תשרי.",
         "why_matters": "",
         "bullet_facts": [],
         "background": "",
@@ -4564,7 +4169,7 @@
         "mode": "heuristic"
       },
       "dryTitle": "ארקיע חותכת מחירים: 15% הנחה על חבילות נופש לקיץ ולחגי תשרי",
-      "summary": "ארקיע חותכת מחירים: 15% הנחה על חבילות נופש לקיץ ולחגי תשרי. הדיווח נשען על מקור יחיד (ice (אייס)) בלי גוף כתבה להצלבה.",
+      "summary": "ארקיע חותכת מחירים: 15% הנחה על חבילות נופש לקיץ ולחגי תשרי.",
       "why_matters": "",
       "bullet_facts": [],
       "background": "",
@@ -4601,7 +4206,7 @@
       "digest_basis": "headlines",
       "distill": {
         "title": "100 אלף אירו לשבוע: רשת המלונות הישראלית שחונכת יאכטת פאר חדשה",
-        "summary": "100 אלף אירו לשבוע: רשת המלונות הישראלית שחונכת יאכטת פאר חדשה. הדיווח נשען על מקור יחיד (ynet.co.il) בלי גוף כתבה להצלבה.",
+        "summary": "100 אלף אירו לשבוע: רשת המלונות הישראלית שחונכת יאכטת פאר חדשה.",
         "why_matters": "",
         "bullet_facts": [],
         "background": "",
@@ -4624,7 +4229,7 @@
         "mode": "heuristic"
       },
       "dryTitle": "100 אלף אירו לשבוע: רשת המלונות הישראלית שחונכת יאכטת פאר חדשה",
-      "summary": "100 אלף אירו לשבוע: רשת המלונות הישראלית שחונכת יאכטת פאר חדשה. הדיווח נשען על מקור יחיד (ynet.co.il) בלי גוף כתבה להצלבה.",
+      "summary": "100 אלף אירו לשבוע: רשת המלונות הישראלית שחונכת יאכטת פאר חדשה.",
       "why_matters": "",
       "bullet_facts": [],
       "background": "",
@@ -4661,7 +4266,7 @@
       "digest_basis": "headlines",
       "distill": {
         "title": "100 אלף אירו לשבוע: רשת המלונות נכנסת לתחום השכרת יאכטות היוקרה",
-        "summary": "100 אלף אירו לשבוע: רשת המלונות נכנסת לתחום השכרת יאכטות היוקרה. הדיווח נשען על מקור יחיד (PassportNews) בלי גוף כתבה להצלבה.",
+        "summary": "100 אלף אירו לשבוע: רשת המלונות נכנסת לתחום השכרת יאכטות היוקרה.",
         "why_matters": "",
         "bullet_facts": [],
         "background": "",
@@ -4684,7 +4289,7 @@
         "mode": "heuristic"
       },
       "dryTitle": "100 אלף אירו לשבוע: רשת המלונות נכנסת לתחום השכרת יאכטות היוקרה",
-      "summary": "100 אלף אירו לשבוע: רשת המלונות נכנסת לתחום השכרת יאכטות היוקרה. הדיווח נשען על מקור יחיד (PassportNews) בלי גוף כתבה להצלבה.",
+      "summary": "100 אלף אירו לשבוע: רשת המלונות נכנסת לתחום השכרת יאכטות היוקרה.",
       "why_matters": "",
       "bullet_facts": [],
       "background": "",
@@ -4712,12 +4317,12 @@
     "dek": "הדברים הכי חשובים שהיום",
     "points": [
       "כל מדינות האזור גם כאלה שיש להן הסכם שלום איתנו, ינצלו את ההזדמנות להשמיד אותנו",
-      "רק 7% מהחברות ציינו את הבינה המלאכותית כסיבה המרכזית לפיטורים.",
+      "'הרבה יותר עבודה מבעבר': המחקר שמטיל ספק בהבטחת ה-AI הגדולה",
       "בשל איום מאיראן: טראמפ חולץ בחשאי - מטוסו שימש כפיתיון | דיווח",
       "מלחמה כלכלית דורשת אורך נשימה, ולאיראן יש ממנו יותר משיש לטראמפ",
       "היום בבורסה: קמטק תעלה, טאואר תרד, דוח לאלביט",
-      "נשיא ארה\"ב הוברח במטוס אחר בצאתו מטורקיה",
-      "רף הכניסה לכנסת מזנק, המפלגות הקטנות בסכנה"
+      "רף הכניסה לכנסת מזנק, המפלגות הקטנות בסכנה",
+      "ההצעה המפתיעה של פנאתינייקוס ליוקיץ' - והתקווה"
     ],
     "mode": "heuristic",
     "storyCount": 8
