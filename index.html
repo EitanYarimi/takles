@@ -1015,6 +1015,15 @@
     }
     article.card:last-child { border-bottom: 0; }
     .card-body { padding: 1.25rem 0 1.3rem; }
+    .digest-meta {
+      margin: 0.15rem 0 0;
+      padding-top: 0.55rem;
+      border-top: 1px solid color-mix(in srgb, var(--line, #d8d4cc) 80%, transparent);
+      font-size: 0.82rem;
+      color: var(--muted, #7a746a);
+      line-height: 1.45;
+    }
+
     .sources-row {
       display: flex;
       flex-wrap: wrap;
@@ -2842,14 +2851,6 @@
                     .join("")}</ul>`
                 : ""
             }
-            <p class="hint" style="margin:0.55rem 0 0">
-              ${
-                c.digest_basis === "fulltext"
-                  ? `נקראו גופי כתבות מ־${c.verification?.bodies || 0} מקורות · הצלבה בשרת`
-                  : "מבוסס בעיקר על כותרות · גופי כתבות לא נמשכו במלואם"
-              }
-              ${c.mode === "gemini" ? " · כולל בדיקת AI" : " · הצלבה מכנית בלבד"}
-            </p>
           </div>
           <div class="block">
             <h3>מה שקרה</h3>
@@ -2894,6 +2895,14 @@
               : ""
           }
           <div class="sources-row">${sourceChips}</div>
+          <p class="hint digest-meta">
+            ${
+              c.digest_basis === "fulltext"
+                ? `נקראו גופי כתבות מ־${c.verification?.bodies || 0} מקורות · הצלבה בשרת`
+                : "מבוסס בעיקר על כותרות · גופי כתבות לא נמשכו במלואם"
+            }
+            ${c.mode === "gemini" ? " · כולל בדיקת AI" : " · הצלבה מכנית בלבד"}
+          </p>
         </div>
       `;
       document.getElementById("detailAudioBtn")?.addEventListener("click", (e) => {
