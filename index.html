@@ -2900,8 +2900,9 @@
     }
 
     function trustLine(card) {
+      // Only surface concrete evidence — never process jargon about failed cross-checks.
+      // The reliability badge already covers "low / unknown"; readers don't need the essay.
       const v = card.verification || {};
-      const bodies = Number(v.bodies || 0);
       const shared = (v.shared_facts || []).slice(0, 2);
       const contra = (v.contradictions || []).slice(0, 1);
       if (contra.length) {
@@ -2909,12 +2910,6 @@
       }
       if (shared.length) {
         return `מוסכם בין המקורות: ${shared.join(" · ")}`;
-      }
-      if (bodies >= 2) {
-        return `נבדק מול ${bodies} מקורות${v.outlets?.length ? ` (${v.outlets.slice(0, 3).join(", ")})` : ""}`;
-      }
-      if (bodies === 1) {
-        return "נקרא מקור אחד במלואו — בלי הצלבה נוספת";
       }
       return "";
     }
@@ -2985,7 +2980,6 @@
           ${
             trust
               ? `<div class="trust-strip">
-            <span class="trust-label">${escapeHtml(RELIABILITY_HE[c.reliability] || "אמינות")}</span>
             <span class="trust-copy">${escapeHtml(trust)}</span>
           </div>`
               : ""
