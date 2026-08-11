@@ -25,7 +25,7 @@ from zoneinfo import ZoneInfo
 ROOT = Path(__file__).resolve().parent
 CACHE_PATH = ROOT / "distill_cache.json"
 ARTICLE_CACHE_PATH = ROOT / "article_cache.json"
-DISTILL_VERSION = "v17-clean-leads"
+DISTILL_VERSION = "v18-restore-structure"
 SSL_CTX = ssl._create_unverified_context()
 UA = (
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
@@ -81,7 +81,8 @@ OPINION_COLOR_RE = re.compile(
 FACT_SIGNAL_RE = re.compile(
     r"מגיב|הודיע|מסר|נמסר|אישר|הכחיש|דחה|נעצר|נפצע|נהרג|הורשע|"
     r"הצביע|אושר|מינה|פיטר|חתם|שיגר|ירה|יי.?רט|התרע|אזעק|"
-    r"העלה|הוריד|קבע|פרסם|דיווח|חק[רה]|הגיש|התפטר|הכריז",
+    r"העלה|הוריד|קבע|פרסם|דיווח|חק[רה]|הגיש|התפטר|הכריז|"
+    r"ייעץ|יעצה|ייעצו|יעצו|תכננ|התארגן|התכונן|שריין|שיריין",
     re.I,
 )
 QUOTE_REACTION_RE = re.compile(
@@ -174,14 +175,30 @@ PREFERRED_OUTLET_RE = re.compile(
 RADIO_OUTLET_RE = re.compile(r"רדיו|1045|\.fm|podcast|פודקאסט", re.I)
 SPEECH_JUNK_RE = re.compile(
     r"לא מפתיע אותי|יגיע הרגע|רגליים האחוריות|לטעמי|"
-    r"אני (חושב|מאמין|אומר)|בין שיחם|בני שיחם|\bי\.מ\.",
+    r"אני (חושב|מאמין|אומר)|בין שיחם|בני שיחם|\bי\.מ\.|"
+    r"להשמיד אותנו|ינצלו את ההזדמנות|ערניים ופקוחים",
     re.I,
 )
 
 
+def _strip_hebrew_gershayim(text: str) -> str:
+    """Remove abbreviation marks (הרמטכ\"ל, כ\"ץ) so they don't count as quotes."""
+    return re.sub(r'(?<=[\u0590-\u05FFa-zA-Z])["״](?=[\u0590-\u05FFa-zA-Z])', "", text or "")
+
+
+def _quote_mark_count(text: str) -> int:
+    s = _strip_hebrew_gershayim(text)
+    return sum(s.count(c) for c in '"״„“”')
+
+
 def _quote_heavy(text: str) -> bool:
-    q = sum((text or "").count(c) for c in '"״„“”')
-    return q >= 3 or (q >= 2 and not FACT_SIGNAL_RE.search(text or ""))
+    """True for transcript-like quote piles — not a single attributed phrase."""
+    q = _quote_mark_count(text)
+    if q >= 4:
+        return True
+    if q >= 3 and not FACT_SIGNAL_RE.search(_strip_hebrew_gershayim(text or "")):
+        return True
+    return False
 
 
 def _is_speech_junk(text: str) -> bool:
@@ -193,14 +210,14 @@ def _is_speech_junk(text: str) -> bool:
         return True
     if _quote_heavy(s):
         return True
-    if re.match(r'^[\"״\'׳]', s):
+    # Starts with an opening quote (not Hebrew abbreviation gershayim)
+    if re.match(r'^["״„“”\'׳]', _strip_hebrew_gershayim(s)):
         return True
     # Mid-thought after a broken quote boundary
     if re.search(r'[\"״]\s*[\"״]', s):
         return True
-    # Odd number of quote marks usually means a sliced transcript line
-    q = sum(s.count(c) for c in '"״„“”')
-    if q % 2 == 1:
+    # Odd real quote marks usually means a sliced transcript line
+    if _quote_mark_count(s) % 2 == 1 and SPEECH_JUNK_RE.search(s):
         return True
     return False
 
@@ -935,7 +952,8 @@ def _cluster_topic_tokens(item: dict) -> set[str]:
 SIDE_STORY_RE = re.compile(
     r"מצר הורמוז|מחירי הנפט|רצועת עזה|חמאס|בורס|דולר|ריבית|"
     r"כדורגל|מכבי תל|הפועל |פרמייר|מניית |פיטורים|הייטק|"
-    r"15 הנקודות|מועצת השלום|רפיח|הורמוז",
+    r"15 הנקודות|מועצת השלום|רפיח|הורמוז|"
+    r"פיצוי(?:ים)? מאיראן|פיצוי(?:ים)? על הנזק|דורש פיצוי",
     re.I,
 )
 GENERIC_TOPIC = {"ישראל", "תוכנית", "מדינה", "מדינות", "אזור", "הסכם", "דיווח", "חדשות"}
@@ -1126,7 +1144,8 @@ def _headline_fallback_story(
             continue
         if re.sub(r"\W+", "", h.lower())[:48] == title_key:
             continue
-        if looks_like_fact_line(h) or re.search(r"\d", h):
+        # Keep any distinct non-junk headline — don't require a hard fact verb.
+        if looks_like_fact_line(h) or re.search(r"\d", h) or len(dry_title(h)) >= 28:
             fresh.append(h)
     parts: list[str] = []
     # Lead with the clearest factual line, not a recycled quote title.
@@ -1219,9 +1238,9 @@ def build_cross_source_story(item: dict, verdict: dict) -> tuple[str, list[str]]
         parts.append("המקורות חלוקים בנתון: " + verdict["contradictions"][0] + ".")
 
     summary = " ".join(parts)
-    # Soft cap — focused cards beat long dumps.
-    if len(summary) > 420:
-        summary = summary[:417].rsplit(" ", 1)[0] + "…"
+    # Soft cap — keep enough room for a real lead + one follow-up fact.
+    if len(summary) > 560:
+        summary = summary[:557].rsplit(" ", 1)[0] + "…"
 
     bullets: list[str] = []
 
@@ -1260,30 +1279,91 @@ def _build_summary(title: str, headlines: list[str], names: list[str]) -> str:
     return story
 
 
-def _substantive_fallback(title: str, headlines: list[str], names: list[str]) -> tuple[str, str, str]:
-    """Build useful background/outlook/why — never product meta-text."""
-    points = _extract_fact_points(title, headlines)
-    who = f" לפי {', '.join(names[:3])}" if names else ""
-    if len(points) >= 2:
-        background = (
-            f"הדיווח{who} מתרכז בכמה קווים עובדתיים: {'; '.join(points[:3])}."
-        )
-        outlook = (
-            f"עדיין פתוח: האם «{points[0]}» יאושר רשמית, ובאיזה היקף ולוח זמנים. "
-            "חסרים פרטים על הגורם המאשר ועל ההשלכות המעשיות."
-        )
-        why_matters = (
-            f"הדיווח נוגע ל־{points[0]} — שינוי במצב הזה ישפיע ישירות על המציאות בשטח או במדיניות."
-        )
-    else:
-        background = (
-            f"הדיווח{who} מתאר: {dry_title(title).rstrip('.')}. "
-            "עדיין חסר פירוט מצולב בפיד."
-        )
-        outlook = "חסר אישור רשמי או פירוט על לוח זמנים, היקף והשלכות מעשיות."
-        why_matters = (
-            "הדיווח מתאר מהלך שעדיין לא סגור — אישור או דחייה ישנו את המצב בפועל."
-        )
+def _build_story_sections(
+    item: dict,
+    title: str,
+    summary: str,
+    bullets: list[str],
+    headlines: list[str],
+    names: list[str],
+    verdict: dict,
+) -> tuple[str, str, str]:
+    """Background / open questions / why — only when we have real leftover facts."""
+    used = " ".join([summary or "", title or ""] + list(bullets or []))
+    # Anchor topic to the dry title + preferred outlets — ignore noisy cluster siblings.
+    topic_bits = [title or ""]
+    for s in item.get("sources") or []:
+        name = s.get("name") or ""
+        h = s.get("headline") or ""
+        if PREFERRED_OUTLET_RE.search(name) and h and not _is_speech_junk(h):
+            topic_bits.append(h)
+    topic_tokens = _content_tokens(" ".join(topic_bits)) or _cluster_topic_tokens(
+        {**item, "title": title}
+    )
+    extras: list[str] = []
+
+    for s in item.get("sources") or []:
+        excerpt = (s.get("excerpt") or "").strip()
+        if not (s.get("fetch_ok") and excerpt):
+            continue
+        for sent in _split_body_sentences(excerpt):
+            if _is_speech_junk(sent):
+                continue
+            # Background must stay on the same story — never a sidebar.
+            if not _on_topic(sent, topic_tokens, min_hit=2):
+                continue
+            distinctive = (_content_tokens(sent) & topic_tokens) - GENERIC_TOPIC
+            if len(distinctive) < 2:
+                continue
+            if re.search(r"פורסם:\s*\d|עודכן:\s*\d|כך פעל המבצע", sent):
+                continue
+            if _quote_heavy(sent) or sent.lstrip().startswith(("\"", "״", "„")):
+                continue
+            if _near_duplicate(sent, used) or any(_near_duplicate(sent, e) for e in extras):
+                continue
+            extras.append(sent)
+            if len(extras) >= 3:
+                break
+        if len(extras) >= 3:
+            break
+
+    if len(extras) < 2:
+        for h in _unique_lines(headlines, limit=8):
+            line = dry_title(h)
+            if not line or _is_speech_junk(line):
+                continue
+            if not _on_topic(line, topic_tokens, min_hit=2):
+                continue
+            if _near_duplicate(line, used) or any(_near_duplicate(line, e) for e in extras):
+                continue
+            if looks_like_fact_line(line) or re.search(r"\d", line):
+                extras.append(line)
+            if len(extras) >= 3:
+                break
+
+    background = ""
+    if extras:
+        background = " ".join(_end_sentence(x) for x in extras[:2])
+        if len(background) > 320:
+            background = background[:317].rsplit(" ", 1)[0] + "…"
+
+    outlook_bits: list[str] = []
+    if verdict.get("contradictions"):
+        outlook_bits.append("המקורות חלוקים בנתונים: " + verdict["contradictions"][0])
+    if re.search(r"עשוי|אולי|חשד|דיווח|נמסר|לפי גורמ|לטענת|לא אושר|טרם אושר", title or ""):
+        outlook_bits.append("הדיווח עדיין מבוסס על מקורות ולא על אישור רשמי פומבי")
+    if (verdict.get("bodies") or 0) < 2 and names:
+        outlook_bits.append(f"עיקר הפירוט מגיע כרגע מ־{names[0]} — חסרה הצלבה רחבה יותר")
+    outlook = ". ".join(outlook_bits)
+    if outlook and not outlook.endswith((".", "…")):
+        outlook += "."
+
+    why_matters = ""
+    if bullets:
+        lead = dry_title(str(bullets[0])).rstrip(".")
+        if lead and len(lead) >= 18 and not FILLER_COPY_RE.search(lead):
+            why_matters = f"המהלך סביב «{lead}» משנה את התמונה בשטח או במדיניות אם יתאשר."
+
     return background, outlook, why_matters
 
 
@@ -1332,13 +1412,9 @@ def heuristic_distill(item: dict) -> dict:
     if not bullets and title:
         bullets = [title]
 
-    # Keep the card focused: no boilerplate background/outlook/why.
-    # Only surface open questions when sources actually disagree.
-    background = ""
-    why_matters = ""
-    outlook = ""
-    if verdict.get("contradictions"):
-        outlook = "המקורות חלוקים בנתונים: " + verdict["contradictions"][0] + "."
+    background, outlook, why_matters = _build_story_sections(
+        item, title, summary, bullets, headlines, names, verdict
+    )
 
     topic_tokens = _cluster_topic_tokens(item)
     # Prefer short, concrete bullets (numbers / named facts) over paragraph clones.
@@ -1535,11 +1611,23 @@ def gemini_distill(item: dict) -> dict | None:
             summary = story
         if story_bullets:
             bullets = _filter_on_topic_lines(story_bullets, topic_tokens)[:5]
-        # Keep the card focused when the cluster is messy
-        background = ""
-        why_matters = ""
-        if not verdict.get("contradictions"):
-            outlook = ""
+        bg2, out2, why2 = _build_story_sections(
+            item,
+            title,
+            summary,
+            bullets,
+            [
+                s.get("headline") or ""
+                for s in (item.get("sources") or [])
+                if not is_opinion_text(s.get("headline") or "")
+                and not _is_speech_junk(s.get("headline") or "")
+            ],
+            list(verdict.get("outlets") or []),
+            verdict,
+        )
+        background = bg2 or background
+        outlook = out2 or outlook
+        why_matters = why2 or why_matters
 
     if not summary or len(bullets) < 1:
         return None

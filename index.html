@@ -2926,16 +2926,28 @@
       const tokens = topicTokens(card);
       const out = [];
       for (const raw of card.bullet_facts || []) {
-        const line = String(raw || "").trim();
-        if (!line || line.length > 120) continue;
+        let line = String(raw || "").trim();
+        if (!line || line.length < 12) continue;
         if (isFillerCopy(line)) continue;
-        if (!onTopicLine(line, tokens)) continue;
+        // Keep longer facts — trim only for display, don't drop them.
+        if (line.length > 160) line = line.slice(0, 157).replace(/\s+\S*$/, "") + "…";
+        if (!onTopicLine(line, tokens) && out.length) continue;
         const key = factKey(line);
-        if (!key || key === titleKey || key === summaryKey) continue;
-        if (summaryKey && summaryKey.includes(key.slice(0, 28))) continue;
+        if (!key || key === titleKey) continue;
+        // Skip only near-exact summary clones, not every overlapping phrase.
+        if (key === summaryKey) continue;
         if (out.some((x) => factKey(x) === key)) continue;
         out.push(line);
-        if (out.length >= 4) break;
+        if (out.length >= 5) break;
+      }
+      // If filters wiped everything, fall back to the server bullets as-is.
+      if (!out.length) {
+        for (const raw of card.bullet_facts || []) {
+          const line = String(raw || "").trim();
+          if (!line || isFillerCopy(line) || factKey(line) === titleKey) continue;
+          out.push(line.length > 160 ? line.slice(0, 157) + "…" : line);
+          if (out.length >= 4) break;
+        }
       }
       return out;
     }
@@ -3005,13 +3017,14 @@
         </article>
         <div class="detail-body">
           <div class="block story-block">
+            <h3>מה קרה</h3>
             <p class="story-text">${escapeHtml(c.summary || "")}</p>
             ${why ? `<p class="why-matters">${escapeHtml(why)}</p>` : ""}
           </div>
           ${
             facts.length
               ? `<div class="block">
-            <h3>בקצרה</h3>
+            <h3>עובדות</h3>
             <ul class="facts tight-facts">${facts
               .map((f) => `<li>${escapeHtml(f)}</li>`)
               .join("")}</ul>
@@ -3036,12 +3049,15 @@
           ${
             outlook
               ? `<div class="block">
-            <h3>עדיין פתוח</h3>
+            <h3>מה עוד לא ברור</h3>
             <p>${escapeHtml(outlook)}</p>
           </div>`
               : ""
           }
-          <div class="sources-row">${sourceChips}</div>
+          <div class="block">
+            <h3>מקורות</h3>
+            <div class="sources-row">${sourceChips}</div>
+          </div>
           <p class="hint digest-meta">
             ${
               c.digest_basis === "fulltext"
