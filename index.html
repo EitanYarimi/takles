@@ -6,7 +6,7 @@
   <title>תכל׳ס</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&family=Secular+One&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700;800&family=Heebo:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <script>
     try {
       if (localStorage.getItem("takles_theme") === "dark") {
@@ -16,65 +16,101 @@
   </script>
   <style>
     :root {
-      --ink: #1c1a17;
-      --ink-soft: #3f3b35;
-      --headline: #1a2a24;
-      --accent: #0b6e5c;
-      --h-security: #0b6e5c;
-      --h-politics: #4a3f72;
-      --h-region: #1a5f8f;
-      --h-world: #3d5268;
-      --h-economy: #5a6a18;
-      --h-domestic: #8a4a1a;
-      --h-leisure: #6d4560;
-      --h-sport: #176878;
-      --muted: #6b665e;
-      --rule: #1c1a17;
-      --rule-soft: rgba(40, 36, 30, 0.12);
-      --spot: #9b1c1c;
-      --ok: #0f5c3b;
-      --warn: #8a5a00;
-      --info: #1e3f66;
-      --badge-bg: rgba(40, 36, 30, 0.05);
-      --panel: rgba(255, 252, 247, 0.7);
-      --panel-solid: rgba(255, 253, 249, 0.86);
-      --bg0: #ebe8e2;
-      --bg1: #f4f2ed;
-      --bg2: #e5ebe6;
-      --wash-a: rgba(120, 150, 130, 0.16);
-      --wash-b: rgba(200, 170, 120, 0.12);
+      /* Calm product palette — friendly, not broadsheet */
+      --ink: #1e2a32;
+      --ink-soft: #3a4a55;
+      --headline: #1a2f36;
+      --accent: #0d8a78;
+      --accent-soft: rgba(13, 138, 120, 0.1);
+      --accent-ring: rgba(13, 138, 120, 0.28);
+      --h-security: #0d8a78;
+      --h-politics: #5b6b8c;
+      --h-region: #2a7eb0;
+      --h-world: #4a6478;
+      --h-economy: #6a7d2e;
+      --h-domestic: #b06a32;
+      --h-leisure: #8a5a78;
+      --h-sport: #1a7a8c;
+      --muted: #5f6f7a;
+      --icon: #4a5d6a;
+      --rule: #1e2a32;
+      --rule-soft: rgba(30, 42, 50, 0.1);
+      --spot: #c23b3b;
+      --ok: #168a56;
+      --warn: #b07a10;
+      --info: #2a6a9a;
+      --badge-bg: rgba(30, 42, 50, 0.05);
+      --badge-ok-fg: #0f6b42;
+      --badge-ok-bg: #e6f6ee;
+      --badge-warn-fg: #8a5f08;
+      --badge-warn-bg: #fff6e4;
+      --badge-spot-fg: #a82828;
+      --badge-spot-bg: #fceaea;
+      --badge-info-fg: #1e5680;
+      --badge-info-bg: #e8f1f8;
+      --badge-mute-fg: #5f6f7a;
+      --badge-mute-bg: rgba(30, 42, 50, 0.06);
+      --panel: rgba(255, 255, 255, 0.72);
+      --panel-solid: rgba(255, 255, 255, 0.9);
+      --bg0: #eef3f5;
+      --bg1: #f6f8f9;
+      --bg2: #e8f0ef;
+      --wash-a: rgba(13, 138, 120, 0.1);
+      --wash-b: rgba(42, 126, 176, 0.08);
+      --shadow: rgba(30, 42, 50, 0.06);
+      --surface-tint: rgba(30, 42, 50, 0.04);
+      --map-bg: #dce8ef;
+      --contain-bg: #eef2f4;
       --font: "Heebo", "Arial Hebrew", Arial, sans-serif;
-      --font-display: "Secular One", "Heebo", "Arial Hebrew", Arial, sans-serif;
+      --font-display: "Assistant", "Heebo", "Arial Hebrew", Arial, sans-serif;
     }
 
     html[data-theme="dark"] {
-      --ink: #e6eef5;
-      --ink-soft: #c5d2de;
-      --headline: #f2f6fa;
-      --accent: #3dbea3;
-      --h-security: #3dbea3;
-      --h-politics: #b7a8e0;
-      --h-region: #6eb6e3;
-      --h-world: #9eb0c2;
-      --h-economy: #c4d36a;
-      --h-domestic: #e0a06a;
-      --h-leisure: #d0a0c0;
-      --h-sport: #6ec4d4;
-      --muted: #8fa0b0;
-      --rule: #e6eef5;
-      --rule-soft: rgba(230, 238, 245, 0.14);
-      --spot: #ef7a7a;
-      --ok: #5dcc9a;
-      --warn: #e0b45a;
-      --info: #8eb4e0;
-      --badge-bg: rgba(230, 238, 245, 0.08);
-      --panel: rgba(18, 28, 40, 0.82);
-      --panel-solid: rgba(22, 34, 48, 0.92);
-      --bg0: #0d141c;
-      --bg1: #121c28;
-      --bg2: #0f1822;
-      --wash-a: rgba(61, 190, 163, 0.08);
-      --wash-b: rgba(110, 182, 227, 0.06);
+      --ink: #eef4f8;
+      --ink-soft: #d0dbe6;
+      --headline: #f5f9fc;
+      --accent: #4fd0b5;
+      --accent-soft: rgba(79, 208, 181, 0.16);
+      --accent-ring: rgba(79, 208, 181, 0.4);
+      /* Topic hues kept bright for small titles / chips */
+      --h-security: #4fd0b5;
+      --h-politics: #a8b8e0;
+      --h-region: #7ec4ef;
+      --h-world: #b0c2d4;
+      --h-economy: #d0e070;
+      --h-domestic: #f0b070;
+      --h-leisure: #e0a8c8;
+      --h-sport: #70d4e4;
+      --muted: #b4c4d4;
+      --icon: #c8d6e4;
+      --rule: #eef4f8;
+      --rule-soft: rgba(238, 244, 248, 0.16);
+      --spot: #ff8f8f;
+      --ok: #6ee0a8;
+      --warn: #f0c46a;
+      --info: #9ec8f0;
+      --badge-bg: rgba(238, 244, 248, 0.1);
+      --badge-ok-fg: #9aefc6;
+      --badge-ok-bg: rgba(79, 208, 181, 0.2);
+      --badge-warn-fg: #ffd78a;
+      --badge-warn-bg: rgba(240, 196, 106, 0.2);
+      --badge-spot-fg: #ffb0b0;
+      --badge-spot-bg: rgba(255, 143, 143, 0.2);
+      --badge-info-fg: #b8daf8;
+      --badge-info-bg: rgba(158, 200, 240, 0.2);
+      --badge-mute-fg: #c8d6e4;
+      --badge-mute-bg: rgba(238, 244, 248, 0.1);
+      --panel: rgba(20, 30, 40, 0.86);
+      --panel-solid: rgba(26, 38, 50, 0.94);
+      --bg0: #101820;
+      --bg1: #16212c;
+      --bg2: #121c26;
+      --wash-a: rgba(79, 208, 181, 0.1);
+      --wash-b: rgba(126, 196, 239, 0.08);
+      --shadow: rgba(0, 0, 0, 0.28);
+      --surface-tint: rgba(238, 244, 248, 0.06);
+      --map-bg: #1a2a38;
+      --contain-bg: #1a2632;
       color-scheme: dark;
     }
 
@@ -107,16 +143,20 @@
     }
     .theme-toggle:hover {
       color: var(--accent);
-      border-color: rgba(11, 110, 92, 0.35);
+      border-color: var(--accent-ring);
+      background: var(--accent-soft);
     }
     body::before {
       content: "";
       position: fixed;
       inset: 0;
       pointer-events: none;
-      opacity: 0.03;
+      opacity: 0.018;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
       z-index: 0;
+    }
+    html[data-theme="dark"] body::before {
+      opacity: 0.04;
     }
 
     .wrap {
@@ -161,12 +201,12 @@
 
     .brand {
       font-family: var(--font-display);
-      font-size: clamp(4rem, 13vw, 6rem);
-      font-weight: 400;
-      letter-spacing: -0.03em;
+      font-size: clamp(3.6rem, 12vw, 5.4rem);
+      font-weight: 800;
+      letter-spacing: -0.035em;
       margin: 0;
-      line-height: 0.9;
-      color: var(--ink);
+      line-height: 0.95;
+      color: var(--headline);
     }
 
     .tagline {
@@ -194,7 +234,7 @@
       margin: 0 0 0.75rem;
       font-family: var(--font-display);
       font-size: 1.7rem;
-      font-weight: 400;
+      font-weight: 700;
       letter-spacing: -0.02em;
       color: var(--headline);
     }
@@ -261,9 +301,9 @@
       gap: 0.35rem;
     }
     .audio-brief-btn:hover {
-      border-color: rgba(11, 110, 92, 0.35);
+      border-color: var(--accent-ring);
       color: var(--accent);
-      background: rgba(11, 110, 92, 0.06);
+      background: var(--accent-soft);
     }
     .audio-brief-btn.is-playing {
       background: var(--ink);
@@ -287,7 +327,7 @@
       margin: 0 0 0.25rem;
       font-family: var(--font-display);
       font-size: 1.35rem;
-      font-weight: 400;
+      font-weight: 700;
       color: var(--headline);
       letter-spacing: -0.02em;
     }
@@ -328,12 +368,8 @@
       font-size: 0.72rem;
       font-weight: 800;
       color: var(--accent);
-      background: rgba(11, 110, 92, 0.1);
-      border: 1px solid rgba(11, 110, 92, 0.18);
-    }
-    html[data-theme="dark"] .daily-brief-list li::before {
-      background: rgba(61, 190, 163, 0.12);
-      border-color: rgba(61, 190, 163, 0.28);
+      background: var(--accent-soft);
+      border: 1px solid var(--accent-ring);
     }
 
     .insights {
@@ -349,7 +385,7 @@
       margin: 0 0 0.25rem;
       font-family: var(--font-display);
       font-size: 1.35rem;
-      font-weight: 400;
+      font-weight: 700;
       color: var(--headline);
       letter-spacing: -0.02em;
     }
@@ -369,7 +405,7 @@
       border: 1px solid var(--rule-soft);
       border-radius: 14px;
       padding: 1rem 1.05rem 1.05rem;
-      box-shadow: 0 8px 22px rgba(16, 32, 51, 0.04);
+      box-shadow: 0 8px 22px var(--shadow);
       text-align: right;
     }
     .insight-top {
@@ -382,22 +418,22 @@
     }
     .insight-panel .insight-label {
       margin: 0;
-      font-size: 0.78rem;
+      font-size: 0.82rem;
       font-weight: 800;
       color: var(--accent);
       letter-spacing: 0.02em;
     }
     .insight-panel .insight-status {
       margin: 0;
-      font-size: 0.72rem;
+      font-size: 0.78rem;
       font-weight: 700;
-      color: var(--muted);
+      color: var(--icon);
     }
     .insight-panel .insight-headline {
       margin: 0 0 0.75rem;
       font-family: var(--font-display);
       font-size: 1.25rem;
-      font-weight: 400;
+      font-weight: 700;
       color: var(--ink);
       letter-spacing: -0.02em;
     }
@@ -410,15 +446,15 @@
       list-style: none;
     }
     .insight-facts li {
-      background: rgba(11, 110, 92, 0.06);
+      background: var(--accent-soft);
       border-radius: 10px;
       padding: 0.65rem 0.7rem;
     }
     .insight-facts .k {
       display: block;
-      font-size: 0.72rem;
+      font-size: 0.78rem;
       font-weight: 700;
-      color: var(--muted);
+      color: var(--icon);
       margin-bottom: 0.2rem;
     }
     .insight-facts .v {
@@ -432,9 +468,9 @@
     .insight-facts .n {
       display: block;
       margin-top: 0.2rem;
-      font-size: 0.72rem;
+      font-size: 0.76rem;
       font-weight: 600;
-      color: var(--muted);
+      color: var(--icon);
       line-height: 1.3;
     }
     .insight-analysis {
@@ -454,24 +490,24 @@
     .insight-blocs li {
       padding: 0.55rem 0.65rem;
       border-radius: 8px;
-      background: rgba(16, 32, 51, 0.04);
+      background: var(--surface-tint);
     }
     .insight-blocs li.verdict-yes {
-      background: rgba(15, 92, 59, 0.1);
+      background: var(--badge-ok-bg);
       border-inline-start: 3px solid var(--ok);
     }
     .insight-blocs li.verdict-maybe {
-      background: rgba(138, 90, 0, 0.1);
+      background: var(--badge-warn-bg);
       border-inline-start: 3px solid var(--warn);
     }
     .insight-blocs li.verdict-no {
-      background: rgba(155, 28, 28, 0.08);
+      background: var(--badge-spot-bg);
       border-inline-start: 3px solid var(--spot);
     }
     .insight-blocs .verdict {
       display: inline-block;
       margin-inline-start: 0.35rem;
-      font-size: 0.72rem;
+      font-size: 0.78rem;
       font-weight: 800;
       letter-spacing: 0.02em;
     }
@@ -485,8 +521,8 @@
       margin-bottom: 0.1rem;
     }
     .insight-blocs span {
-      font-size: 0.8rem;
-      color: var(--muted);
+      font-size: 0.82rem;
+      color: var(--icon);
       font-weight: 600;
       line-height: 1.35;
     }
@@ -497,9 +533,9 @@
       margin: 0;
       padding-top: 0.55rem;
       border-top: 1px solid var(--rule-soft);
-      font-size: 0.75rem;
+      font-size: 0.78rem;
       font-weight: 700;
-      color: var(--muted);
+      color: var(--icon);
     }
     .insight-sources a {
       color: var(--accent);
@@ -511,7 +547,7 @@
       border-radius: 12px;
       overflow: hidden;
       border: 1px solid var(--rule-soft);
-      background: #dce6ee;
+      background: var(--map-bg);
       aspect-ratio: 16 / 10;
     }
     .insight-map iframe {
@@ -578,13 +614,13 @@
       margin: 0;
       font-family: var(--font-display);
       font-size: 1.28rem;
-      font-weight: 400;
+      font-weight: 700;
       letter-spacing: -0.01em;
       color: var(--headline);
     }
     .topic-cube header .n {
-      color: var(--muted);
-      font-size: 0.72rem;
+      color: var(--icon);
+      font-size: 0.8rem;
       font-weight: 700;
     }
     .cube-list {
@@ -606,13 +642,13 @@
       gap: 0.4rem;
       flex-wrap: wrap;
       margin-bottom: 0.1rem;
-      font-size: 0.66rem;
+      font-size: 0.74rem;
       font-weight: 600;
-      color: var(--muted);
-      opacity: 0.8;
+      color: var(--icon);
+      opacity: 0.95;
     }
     .cube-title {
-      font-size: 0.94rem;
+      font-size: 0.96rem;
       font-weight: 600;
       line-height: 1.35;
       letter-spacing: -0.01em;
@@ -700,7 +736,7 @@
       height: clamp(180px, 34vw, 260px);
       border-radius: 18px;
       margin: 0 0 1rem;
-      box-shadow: 0 14px 34px rgba(16, 32, 51, 0.08);
+      box-shadow: 0 14px 34px var(--shadow);
     }
     .title-cover canvas {
       width: 100%;
@@ -721,13 +757,13 @@
       display: block;
     }
     .viz-contain {
-      background: #f3f1ea;
+      background: var(--contain-bg);
       height: clamp(220px, 42vw, 320px);
     }
     .viz-contain img {
       object-fit: contain;
       transform: none;
-      background: #f3f1ea;
+      background: var(--contain-bg);
     }
     .viz-contain::after {
       background: linear-gradient(180deg, transparent 55%, rgba(16, 32, 51, 0.25) 100%);
@@ -743,21 +779,21 @@
     }
     .title-cover::after { display: none; }
     .viz-security,
-    .viz-north { background: linear-gradient(135deg, #0b6e5c 0%, #134e63 55%, #1a3a4a 100%); }
+    .viz-north { background: linear-gradient(135deg, #0d8a78 0%, #1a6a7a 55%, #1a3a4a 100%); }
     .viz-politics,
-    .viz-knesset { background: linear-gradient(135deg, #4a3f72 0%, #2f4568 55%, #1e3348 100%); }
+    .viz-knesset { background: linear-gradient(135deg, #5b6b8c 0%, #3a5570 55%, #1e3348 100%); }
     .viz-region,
     .viz-hormuz,
-    .viz-gaza { background: linear-gradient(135deg, #1a5f8f 0%, #0f6e7a 55%, #14524a 100%); }
+    .viz-gaza { background: linear-gradient(135deg, #2a7eb0 0%, #1a7a8c 55%, #14524a 100%); }
     .viz-world,
-    .viz-usa { background: linear-gradient(135deg, #3d5268 0%, #2a4a5e 55%, #1c3a4a 100%); }
+    .viz-usa { background: linear-gradient(135deg, #4a6478 0%, #2a4a5e 55%, #1c3a4a 100%); }
     .viz-economy,
-    .viz-markets { background: linear-gradient(135deg, #5a6a18 0%, #3d6b4a 55%, #1f4f4a 100%); }
+    .viz-markets { background: linear-gradient(135deg, #6a7d2e 0%, #3d7a5a 55%, #1f4f4a 100%); }
     .viz-domestic,
-    .viz-weather { background: linear-gradient(135deg, #8a4a1a 0%, #6b4a2e 55%, #3d4550 100%); }
+    .viz-weather { background: linear-gradient(135deg, #b06a32 0%, #7a5a3a 55%, #3d4550 100%); }
     .viz-leisure,
-    .viz-travel { background: linear-gradient(135deg, #6d4560 0%, #4a5570 55%, #2f4a5a 100%); }
-    .viz-sport { background: linear-gradient(135deg, #176878 0%, #1a5f6e 55%, #164a58 100%); }
+    .viz-travel { background: linear-gradient(135deg, #8a5a78 0%, #4a5570 55%, #2f4a5a 100%); }
+    .viz-sport { background: linear-gradient(135deg, #1a7a8c 0%, #1a5f6e 55%, #164a58 100%); }
     .viz-label {
       font-family: var(--font);
       font-size: 22px;
@@ -782,10 +818,10 @@
     .lead-title {
       font-family: var(--font-display);
       margin: 0 0 0.55rem;
-      font-size: clamp(2rem, 5.6vw, 2.85rem);
-      font-weight: 400;
-      line-height: 1.1;
-      letter-spacing: -0.02em;
+      font-size: clamp(1.85rem, 5.2vw, 2.55rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.025em;
       color: var(--headline);
     }
     .lead-title.t-security { color: var(--h-security); }
@@ -954,8 +990,8 @@
     }
     .action-row .mark-seen,
     .action-row .restore-seen {
-      border: 1px solid rgba(11, 110, 92, 0.22);
-      background: rgba(11, 110, 92, 0.08);
+      border: 1px solid var(--accent-ring);
+      background: var(--accent-soft);
       color: var(--accent);
       border-radius: 999px;
       padding: 0.45rem 0.95rem;
@@ -964,9 +1000,10 @@
     }
     .action-row .mark-seen:hover,
     .action-row .restore-seen:hover {
-      background: rgba(11, 110, 92, 0.14);
+      background: var(--accent-soft);
       color: var(--accent);
-      border-color: rgba(11, 110, 92, 0.35);
+      border-color: var(--accent-ring);
+      filter: brightness(1.05);
     }
     .action-row .restore-seen {
       border-color: var(--rule-soft);
@@ -987,7 +1024,7 @@
       border-bottom: 0;
       border-radius: 18px;
       background: var(--panel);
-      box-shadow: 0 14px 34px rgba(16, 32, 51, 0.05);
+      box-shadow: 0 14px 34px var(--shadow);
       overflow: hidden;
     }
 
@@ -1018,9 +1055,9 @@
     .digest-meta {
       margin: 0.15rem 0 0;
       padding-top: 0.55rem;
-      border-top: 1px solid color-mix(in srgb, var(--line, #d8d4cc) 80%, transparent);
-      font-size: 0.82rem;
-      color: var(--muted, #7a746a);
+      border-top: 1px solid var(--rule-soft);
+      font-size: 0.84rem;
+      color: var(--icon);
       line-height: 1.45;
     }
 
@@ -1071,36 +1108,37 @@
       display: inline-flex;
       align-items: center;
       border-radius: 999px;
-      padding: 0.2rem 0.55rem;
-      font-size: 0.72rem;
+      padding: 0.28rem 0.65rem;
+      font-size: 0.78rem;
       font-weight: 700;
       letter-spacing: 0.01em;
-      background: rgba(255, 255, 255, 0.7);
-      color: var(--ink-soft);
+      background: var(--badge-mute-bg);
+      color: var(--badge-mute-fg);
       border: 0;
     }
-    .badge.reported { color: var(--warn); background: rgba(255, 247, 232, 0.9); }
-    .badge.confirmed { color: var(--ok); background: rgba(234, 246, 239, 0.95); }
-    .badge.denied { color: var(--spot); background: rgba(248, 234, 234, 0.95); }
-    .badge.review { color: var(--info); background: rgba(234, 240, 247, 0.95); }
-    .badge.rel-high { color: var(--ok); background: rgba(234, 246, 239, 0.95); }
-    .badge.rel-medium { color: var(--warn); background: rgba(255, 247, 232, 0.9); }
-    .badge.rel-low { color: var(--spot); background: rgba(248, 234, 234, 0.95); }
-    .badge.rel-unknown { color: var(--muted); background: rgba(16, 32, 51, 0.06); }
+    .badge.reported { color: var(--badge-warn-fg); background: var(--badge-warn-bg); }
+    .badge.confirmed { color: var(--badge-ok-fg); background: var(--badge-ok-bg); }
+    .badge.denied { color: var(--badge-spot-fg); background: var(--badge-spot-bg); }
+    .badge.review { color: var(--badge-info-fg); background: var(--badge-info-bg); }
+    .badge.rel-high { color: var(--badge-ok-fg); background: var(--badge-ok-bg); }
+    .badge.rel-medium { color: var(--badge-warn-fg); background: var(--badge-warn-bg); }
+    .badge.rel-low { color: var(--badge-spot-fg); background: var(--badge-spot-bg); }
+    .badge.rel-unknown { color: var(--badge-mute-fg); background: var(--badge-mute-bg); }
     .badge.sources {
-      color: var(--muted);
+      color: var(--icon);
       font-weight: 600;
       background: transparent;
       border-color: transparent;
       padding-inline: 0.15rem;
+      font-size: 0.8rem;
     }
 
     h2.title {
       font-family: var(--font-display);
       font-size: clamp(1.55rem, 3.4vw, 2.05rem);
       margin: 0 0 0.35rem;
-      line-height: 1.18;
-      font-weight: 400;
+      line-height: 1.22;
+      font-weight: 700;
       color: var(--headline);
       letter-spacing: -0.02em;
     }
@@ -1158,7 +1196,7 @@
       padding: 0.75rem 0.9rem;
       border-top: 0;
       border-radius: 12px;
-      background: rgba(11, 110, 92, 0.07);
+      background: var(--accent-soft);
       font-weight: 500;
       line-height: 1.5;
     }
@@ -1169,8 +1207,8 @@
 
     .time {
       margin-top: 0.15rem;
-      font-size: 0.8rem;
-      color: var(--muted);
+      font-size: 0.84rem;
+      color: var(--icon);
       font-weight: 600;
     }
 
@@ -1203,7 +1241,7 @@
     <header class="hero">
       <div class="mast-top">
         <div class="mast-meta">
-          <span id="editionDate">מהדורה יומית</span>
+          <span id="editionDate">היום</span>
           <span>עובדות · בלי דרמה</span>
         </div>
         <button type="button" class="theme-toggle" id="themeToggle" aria-pressed="false">מצב כהה</button>
@@ -1558,7 +1596,7 @@
         ctx.textBaseline = "alphabetic";
 
         const titleSize = Math.max(24, Math.min(40, Math.round(cssW * 0.052)));
-        ctx.font = `800 ${titleSize}px "Secular One", Heebo, Arial Hebrew, Arial, sans-serif`;
+        ctx.font = `800 ${titleSize}px Assistant, Heebo, Arial Hebrew, Arial, sans-serif`;
         ctx.fillStyle = "#fff";
         const lines = wrapCanvasLines(ctx, title, maxTextW, 3);
         const lineH = titleSize * 1.18;
@@ -2813,7 +2851,7 @@
       }
       els.detailView.innerHTML = `
         <div class="action-row">
-          <button type="button" class="back-btn" id="backBtn">← חזרה למהדורה</button>
+          <button type="button" class="back-btn" id="backBtn">← חזרה</button>
           ${
             seen
               ? `<button type="button" class="back-btn restore-seen" id="restoreBtn" title="החזר את הכתבה ללוח">החזר ללוח</button>`
