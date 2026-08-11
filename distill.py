@@ -25,7 +25,7 @@ from zoneinfo import ZoneInfo
 ROOT = Path(__file__).resolve().parent
 CACHE_PATH = ROOT / "distill_cache.json"
 ARTICLE_CACHE_PATH = ROOT / "article_cache.json"
-DISTILL_VERSION = "v16-topic-coherence"
+DISTILL_VERSION = "v17-clean-leads"
 SSL_CTX = ssl._create_unverified_context()
 UA = (
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
@@ -52,6 +52,8 @@ DRAMATIC = (
     "מתפוצצת",
     "מתפוצץ",
     "דרמה",
+    "הדרמטי",
+    "דרמטי",
     "הלם",
     "בלעדי",
     "דחוף",
@@ -162,6 +164,75 @@ def factual_core_title(title: str) -> str:
         # "טראמפ" is not a headline — keep the original when trimming guts it.
         t = core if len(core) >= MIN_CORE_TITLE else full
     return t or full
+
+
+PREFERRED_OUTLET_RE = re.compile(
+    r"ynet|גלובס|globes|הארץ|mako|כאן|walla|וואלה|מעריב|calcalist|כלכליסט|"
+    r"TheMarker|סרוגים|israel hayom|ישראל היום",
+    re.I,
+)
+RADIO_OUTLET_RE = re.compile(r"רדיו|1045|\.fm|podcast|פודקאסט", re.I)
+SPEECH_JUNK_RE = re.compile(
+    r"לא מפתיע אותי|יגיע הרגע|רגליים האחוריות|לטעמי|"
+    r"אני (חושב|מאמין|אומר)|בין שיחם|בני שיחם|\bי\.מ\.",
+    re.I,
+)
+
+
+def _quote_heavy(text: str) -> bool:
+    q = sum((text or "").count(c) for c in '"״„“”')
+    return q >= 3 or (q >= 2 and not FACT_SIGNAL_RE.search(text or ""))
+
+
+def _is_speech_junk(text: str) -> bool:
+    """Radio/interview transcript fragments that are not a news lead."""
+    s = (text or "").strip()
+    if not s:
+        return True
+    if SPEECH_JUNK_RE.search(s):
+        return True
+    if _quote_heavy(s):
+        return True
+    if re.match(r'^[\"״\'׳]', s):
+        return True
+    # Mid-thought after a broken quote boundary
+    if re.search(r'[\"״]\s*[\"״]', s):
+        return True
+    # Odd number of quote marks usually means a sliced transcript line
+    q = sum(s.count(c) for c in '"״„“”')
+    if q % 2 == 1:
+        return True
+    return False
+
+
+def best_cluster_title(item: dict) -> str:
+    """Prefer a dry news headline over a viral radio quote as the card title."""
+    raw = item.get("title") or ""
+    candidates: list[tuple[int, str]] = []
+    for s in item.get("sources") or []:
+        h = (s.get("headline") or "").strip()
+        name = s.get("name") or ""
+        if not h or is_opinion_text(h) or is_social_noise(h) or _is_speech_junk(h):
+            continue
+        score = 0
+        if PREFERRED_OUTLET_RE.search(name):
+            score += 6
+        if RADIO_OUTLET_RE.search(name):
+            score -= 5
+        if looks_like_fact_line(h):
+            score += 4
+        if re.search(r"דיווח|ייעץ|יעצה|הודיע|תכננ|הסכם|פרטים", h):
+            score += 2
+        if len(h) > 90:
+            score -= 1
+        candidates.append((score, h))
+    candidates.sort(key=lambda row: (-row[0], len(row[1])))
+
+    quoteish = _quote_heavy(raw) or bool(QUOTE_REACTION_RE.search(raw))
+    weak_fact = not looks_like_fact_line(raw)
+    if candidates and (quoteish or weak_fact or RADIO_OUTLET_RE.search(raw)):
+        return factual_core_title(candidates[0][1])
+    return factual_core_title(raw)
 
 
 def scrub_item_sources(item: dict) -> dict | None:
@@ -775,7 +846,14 @@ BOILERPLATE_SENT_RE = re.compile(
     r"מאת investing|שוק ההון -|בחירות \d{4} -|"
     r"גלובס ראשי|כל הכותרות|נדל.?ן ותשתיות|ניהול וקריירה|"
     r"דעות שיווק|פיננסי כל|תפריט|התחברות|החשבון שלי|"
-    r"^עודכן:|פורסם ב-|כפי שפורסם לראשונה כאן",
+    r"^עודכן:|פורסם ב-|כפי שפורסם לראשונה כאן|"
+    r"פרטים חדשים בישראל|המידע הדרמטי|כך פורסם הערב|כך פורסם הבוקר",
+    re.I,
+)
+PUBLISH_ATTR_RE = re.compile(
+    r"\s*[-\u2013\u2014,]?\s*כך פורסם(?:\s+הערב|\s+הבוקר|\s+הלילה)?"
+    r"(?:\s*\([^)]*\))?\s*(?:ב-?)?(?:N12|חדשות\s*\d+|ynet|mako|כאן|מעריב|גלובס|"
+    r"הארץ|וואלה|TheMarker).*$",
     re.I,
 )
 SITE_CHROME_RE = re.compile(
@@ -818,6 +896,7 @@ def _clean_story_sentence(text: str) -> str:
     s = re.sub(r"\s+", " ", text or "").strip(" -:·|•*")
     s = SITE_PREFIX_RE.sub("", s)
     s = re.sub(r"עודכן:\s*\d{1,2}\.\d{1,2}\.\d{2,4},?\s*\d{1,2}:\d{2}\s*", "", s)
+    s = PUBLISH_ATTR_RE.sub("", s)
     s = SITE_CHROME_RE.sub("", s).strip(" -:·|•*")
     # Drop a trailing orphaned site crumb that survived without a separator
     s = re.sub(
@@ -832,6 +911,9 @@ def _clean_story_sentence(text: str) -> str:
         "",
         s,
     ).strip()
+    for w in DRAMATIC:
+        s = s.replace(w, "")
+    s = re.sub(r"\s{2,}", " ", s).strip(" -:·|•*")
     return s
 
 
@@ -914,7 +996,7 @@ def _split_body_sentences(text: str) -> list[str]:
             continue
         if CLICKBAIT_LINE_RE.search(s):
             continue
-        if is_social_noise(s):
+        if is_social_noise(s) or _is_speech_junk(s):
             continue
         # Soft opinion filter: keep attributed quotes / reported speech
         if is_opinion_text(s) and not FACT_SIGNAL_RE.search(s) and not re.search(r"\d", s):
@@ -937,6 +1019,15 @@ def _sentence_support(sentence: str, other_token_sets: list[set[str]]) -> int:
     return support
 
 
+def _outlet_quality(name: str) -> int:
+    n = name or ""
+    if RADIO_OUTLET_RE.search(n):
+        return -6
+    if PREFERRED_OUTLET_RE.search(n):
+        return 5
+    return 0
+
+
 def _rank_body_sentences(
     bodies: list[tuple[str, str]], title: str
 ) -> list[dict]:
@@ -945,6 +1036,7 @@ def _rank_body_sentences(
     ranked: list[dict] = []
     for i, (outlet, text) in enumerate(bodies):
         others = [ts for j, ts in enumerate(token_sets) if j != i]
+        outlet_boost = _outlet_quality(outlet)
         for pos, sent in enumerate(_split_body_sentences(text)):
             tokens = _content_tokens(sent)
             support = _sentence_support(sent, others)
@@ -954,6 +1046,7 @@ def _rank_body_sentences(
             score = (
                 support * 12
                 + (title_hit * 3 if not title_dup else -8)
+                + outlet_boost
                 + (4 if re.search(r"\d", sent) else 0)
                 + (3 if FACT_SIGNAL_RE.search(sent) else 0)
                 + (2 if pos < 3 else 0)  # lead paragraphs usually hold the event
@@ -961,6 +1054,7 @@ def _rank_body_sentences(
                 - (3 if len(sent) > 180 else 0)
                 - (8 if "?" in sent and not re.search(r"\d", sent) else 0)
                 - (10 if sent.count('"') + sent.count("״") >= 2 and not FACT_SIGNAL_RE.search(sent) else 0)
+                - (12 if re.search(r"פרטים חדשים|מידע .{0,8}על שיחות|כך פורסם", sent) else 0)
             )
             ranked.append(
                 {
@@ -1024,30 +1118,31 @@ def _pick_story_sentences(ranked: list[dict], limit: int = 4) -> list[dict]:
 def _headline_fallback_story(
     title: str, headlines: list[str], names: list[str]
 ) -> tuple[str, list[str]]:
-    """When no article bodies exist, tell the story from distinct headlines."""
+    """Tell the story from distinct hard-news headlines."""
     title_key = re.sub(r"\W+", "", (title or "").lower())[:48]
     fresh = []
-    for h in _unique_lines(headlines or ([title] if title else []), limit=5):
+    for h in _unique_lines(headlines or ([title] if title else []), limit=6):
+        if _is_speech_junk(h):
+            continue
         if re.sub(r"\W+", "", h.lower())[:48] == title_key:
             continue
         if looks_like_fact_line(h) or re.search(r"\d", h):
             fresh.append(h)
     parts: list[str] = []
-    if title:
-        parts.append(_end_sentence(title))
-    for h in fresh[:2]:
-        parts.append(_end_sentence(h))
+    # Lead with the clearest factual line, not a recycled quote title.
+    lead = fresh[0] if fresh else title
+    if lead:
+        parts.append(_end_sentence(dry_title(lead)))
+    for h in fresh[1:3]:
+        parts.append(_end_sentence(dry_title(h)))
     if not parts:
         parts.append("לא נמסרו פרטים עובדתיים מעבר לכותרת המקבץ.")
-    elif len(names) == 1:
-        parts.append(f"הדיווח נשען על מקור יחיד ({names[0]}) בלי גוף כתבה להצלבה.")
-    elif not fresh:
-        parts.append("מעבר לכותרת לא נמצאו פרטים נוספים בכותרות המקורות.")
-    bullets = [title] if title else []
-    for h in fresh:
-        if h not in bullets:
-            bullets.append(h)
-    return " ".join(parts), bullets[:6]
+    bullets = []
+    for h in ([title] if title else []) + fresh:
+        point = dry_title(h)
+        if point and point not in bullets and not _is_speech_junk(point):
+            bullets.append(point)
+    return " ".join(parts), bullets[:5]
 
 
 def build_cross_source_story(item: dict, verdict: dict) -> tuple[str, list[str]]:
@@ -1068,32 +1163,44 @@ def build_cross_source_story(item: dict, verdict: dict) -> tuple[str, list[str]]
         seen.add(outlet)
         bodies.append((outlet, excerpt))
 
-    title = factual_core_title(item.get("title") or "")
+    title = best_cluster_title(item)
     headlines = [
         s.get("headline") or ""
         for s in (item.get("sources") or [])
         if not is_opinion_text(s.get("headline") or "")
+        and not _is_speech_junk(s.get("headline") or "")
     ]
+    # Prefer factual headlines from news outlets when the cluster title was a quote
+    preferred_heads = []
+    for s in item.get("sources") or []:
+        h = s.get("headline") or ""
+        if PREFERRED_OUTLET_RE.search(s.get("name") or "") and looks_like_fact_line(h):
+            if h not in preferred_heads:
+                preferred_heads.append(h)
     names = list(verdict.get("outlets") or [])
     if not names:
         for s in item.get("sources") or []:
             n = (s.get("name") or "").strip()
             if n and n not in names:
                 names.append(n)
-    topic_tokens = _cluster_topic_tokens(item)
+    topic_tokens = _cluster_topic_tokens({**item, "title": title})
 
     if not bodies:
-        return _headline_fallback_story(title, headlines, names)
+        return _headline_fallback_story(title, preferred_heads or headlines, names)
 
     ranked = [
         row
         for row in _rank_body_sentences(bodies, title)
-        if _on_topic(row["text"], topic_tokens, min_hit=2)
-        or _on_topic(row["text"], topic_tokens, min_hit=1)
+        if not _is_speech_junk(row["text"])
+        and (
+            _on_topic(row["text"], topic_tokens, min_hit=2)
+            or _on_topic(row["text"], topic_tokens, min_hit=1)
+        )
     ]
     picked = _pick_story_sentences(ranked, limit=4)
-    if not picked:
-        return _headline_fallback_story(title, headlines, names)
+    # If bodies are mostly interview mush, tell the story from clean headlines.
+    if not picked or all(RADIO_OUTLET_RE.search(p["outlet"] or "") for p in picked):
+        return _headline_fallback_story(title, preferred_heads or headlines, names)
 
     agreed = [p for p in picked if p["support"] >= 1]
     solo = [p for p in picked if p["support"] < 1]
@@ -1181,12 +1288,13 @@ def _substantive_fallback(title: str, headlines: list[str], names: list[str]) ->
 
 
 def heuristic_distill(item: dict) -> dict:
-    title = factual_core_title(item.get("title") or "")
+    title = best_cluster_title(item)
     sources = item.get("sources") or []
     headlines = [
         s.get("headline") or ""
         for s in sources
         if not is_opinion_text(s.get("headline") or "")
+        and not _is_speech_junk(s.get("headline") or "")
     ]
     if not headlines:
         headlines = [title] if title else []
@@ -1245,8 +1353,6 @@ def heuristic_distill(item: dict) -> dict:
             continue
         if any(_near_duplicate(point, existing) for existing in tight):
             continue
-        if _near_duplicate(point, summary):
-            continue
         tight.append(point)
         if len(tight) >= 4:
             break
@@ -1255,6 +1361,8 @@ def heuristic_distill(item: dict) -> dict:
             line = str(fact).strip()
             if line and line not in tight:
                 tight.insert(0, line)
+    if not tight and title:
+        tight = [title]
     summary = _filter_summary_to_topic(summary, topic_tokens) or summary
 
     reliability = verdict["reliability"]
@@ -1377,11 +1485,14 @@ def gemini_distill(item: dict) -> dict | None:
     insight = str(data.get("insight") or "").strip()
     summary = str(data.get("summary") or "").strip()
     why_matters = _scrub_filler(str(data.get("why_matters") or data.get("whyItMatters") or "").strip())
-    title = dry_title(str(data.get("title") or item.get("title") or ""))
+    title = best_cluster_title(item)
+    model_title = dry_title(str(data.get("title") or ""))
+    if model_title and looks_like_fact_line(model_title) and not _is_speech_junk(model_title):
+        title = model_title
     if not summary:
         return None
 
-    topic_tokens = _cluster_topic_tokens(item)
+    topic_tokens = _cluster_topic_tokens({**item, "title": title})
     summary = _filter_summary_to_topic(summary, topic_tokens)
     bullets = _filter_on_topic_lines(bullets, topic_tokens)[:5]
     if why_matters and not _on_topic(why_matters, topic_tokens):
@@ -1551,7 +1662,10 @@ def enrich_items(items: list[dict]) -> list[dict]:
             slim_sources.append(slim)
         enriched["sources"] = slim_sources
         enriched["distill"] = d
-        enriched["dryTitle"] = d.get("title")
+        # Replace viral quote titles with the dry news lead for the whole payload.
+        if d.get("title"):
+            enriched["title"] = d.get("title")
+            enriched["dryTitle"] = d.get("title")
         enriched["summary"] = d.get("summary")
         enriched["why_matters"] = d.get("why_matters")
         enriched["bullet_facts"] = d.get("bullet_facts")

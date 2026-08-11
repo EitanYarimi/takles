@@ -2706,8 +2706,9 @@
         .replace(/^[:\-–|,\s]+|[:\-–|,\s]+$/g, "")
         .replace(/\s{2,}/g, " ")
         .trim();
+      // Keep server dry titles intact; only trim extreme clickbait leftovers.
       const words = t.split(/\s+/).filter(Boolean);
-      if (words.length > 12) t = words.slice(0, 12).join(" ");
+      if (words.length > 18) t = words.slice(0, 18).join(" ");
       return t || title;
     }
 
@@ -3111,25 +3112,27 @@
       const headlines = (item.sources || []).map((s) => s.headline).filter(Boolean);
       const names = [...new Set((item.sources || []).map((s) => s.name).filter(Boolean))];
       const serverFacts = pre?.bullet_facts || item.bullet_facts || [];
-      const title = dryTitle(pre?.title || item.dryTitle || item.title || "");
+      // Prefer the server-picked dry title (not the raw Google News quote title).
+      const title = dryTitle(item.dryTitle || pre?.title || item.title || "");
+      const summary = pre?.summary || item.summary || "";
 
-      if (serverFacts.length || (item.summary && item.background && item.outlook) || (pre && pre.summary)) {
+      if (serverFacts.length || summary || (pre && pre.summary)) {
         return {
           title,
-          bullet_facts: serverFacts.length ? serverFacts : [title || "חסר פירוט עובדתי מהשרת"],
+          bullet_facts: serverFacts.length ? serverFacts : [],
           status: pre?.status || item.status || "reported",
           reliability: pre?.reliability || item.reliability || "unknown",
           reliability_notes:
             pre?.reliability_notes ||
             item.reliability_notes ||
-            "טרם בוצעה בדיקת אמינות מול המקורות.",
+            "",
           verification: pre?.verification || item.verification || null,
           digest_basis: pre?.digest_basis || item.digest_basis || "headlines",
           insight: "",
           historical_context: pre?.historical_context || item.historical_context || item.background || pre?.background || "",
-          background: pre?.background || item.background || pre?.historical_context || "",
-          outlook: pre?.outlook || item.outlook || "חסרים פרטים נוספים מהשרת.",
-          summary: pre?.summary || item.summary || item.background || "",
+          background: pre?.background || item.background || "",
+          outlook: pre?.outlook || item.outlook || "",
+          summary,
           why_matters: pre?.why_matters || item.why_matters || "",
           sources: item.sources || [],
           original_headlines: headlines,
