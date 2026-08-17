@@ -1,0 +1,14 @@
+{
+  "name": "ClearNews (takles)",
+  "install": "pip install --user -r requirements.txt",
+  "terminals": [
+    {
+      "name": "serve",
+      "command": "python3 serve.py",
+      "description": "Local ClearNews server on http://127.0.0.1:8765 (routes: /, /api/news, /api/tts, /ws, /insights.json). The server fetches Google News RSS, cross-verifies, and distills on a background loop. Set the optional GEMINI_API_KEY env var for AI distillation; without it the server runs in deterministic heuristic mode."
+    }
+  ],
+  "ports": [
+    { "name": "web", "port": 8765 }
+  ]
+}
