@@ -25,7 +25,7 @@ from zoneinfo import ZoneInfo
 ROOT = Path(__file__).resolve().parent
 CACHE_PATH = ROOT / "distill_cache.json"
 ARTICLE_CACHE_PATH = ROOT / "article_cache.json"
-DISTILL_VERSION = "v18-restore-structure"
+DISTILL_VERSION = "v24-title-clean-quote"
 SSL_CTX = ssl._create_unverified_context()
 UA = (
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
@@ -147,10 +147,32 @@ def looks_like_fact_line(text: str) -> bool:
 MIN_CORE_TITLE = 18
 
 
+# Head ends with an outlet attribution ("... ל-N12", "... לגלובס").
+ATTRIB_TAIL_RE = re.compile(
+    r'\bל[-־\s]?(?:N12|ynet|mako|וואלה|walla|כאן|מעריב|הארץ|גלובס|globes|'
+    r'כלכליסט|calcalist|themarker|i24|רשת ?\d?|גל"?צ|ישראל היום|סרוגים|'
+    r'זמן ישראל|וואינט|ערוץ ?\d+)\s*$',
+    re.I,
+)
+INTERVIEW_LEADIN_RE = re.compile(r"(בראיון|בשיחה|מדבר|מדברת|מספר|מספרת|התראיין)\s")
+
+
 def factual_core_title(title: str) -> str:
     """Strip quoted spin after a reaction lead-in."""
     full = dry_title(title or "")
     t = full
+    # Attribution-lead headline ("<מרואיין> ל-N12: '<the actual news>'") — the news
+    # is AFTER the colon; the head is just who spoke to whom. Split only on the colon
+    # so an inner hyphen ("ל-N12") isn't mistaken for the separator.
+    if ":" in t:
+        head, _, tail = t.partition(":")
+        head = head.strip(" -:·\"״")
+        tail_clean = dry_title(tail).strip(" -:·\"״“”")
+        if (
+            (ATTRIB_TAIL_RE.search(head) or INTERVIEW_LEADIN_RE.search(head))
+            and len(tail_clean) >= MIN_CORE_TITLE
+        ):
+            return tail_clean
     # יועץ X מגיב ל-Y: "ספין..." → שמור רק את הליבה
     m = re.match(
         r'^(.{8,80}?(?:מגיב|הודיע|מסר|אישר|הכחיש)\s+ל[^:\"״]{2,40})\s*[:\-–—]\s*[\"״].*',
@@ -159,11 +181,26 @@ def factual_core_title(title: str) -> str:
     if m:
         core = m.group(1).strip(" -:·")
         return core if len(core) >= MIN_CORE_TITLE else full
-    # חתוך ציטוט ארוך אחרי נקודתיים
-    if re.search(r'[:\-–—]\s*[\"״]', t):
-        core = re.split(r'[:\-–—]\s*[\"״]', t, maxsplit=1)[0].strip(" -:·")
-        # "טראמפ" is not a headline — keep the original when trimming guts it.
-        t = core if len(core) >= MIN_CORE_TITLE else full
+    # ציטוט אחרי נקודתיים/מקף/נקודה-פסיק
+    m3 = re.match(r'^(.*?)[:\-–—;؛]\s*[\"״](.*)$', t)
+    if m3:
+        core = m3.group(1).strip(" -:·")
+        inner = m3.group(2).strip().strip("\"״“”")
+        # Keep the pre-quote core only if it can stand alone as a headline. A bare
+        # speaker/subject label ("מנכ\"ל רשת מלונות היוקרה") has no verb, so trimming
+        # to it leaves a dangling fragment.
+        core_ok = len(core) >= MIN_CORE_TITLE and (
+            looks_like_fact_line(core)
+            or bool(FACT_SIGNAL_RE.search(core))
+            or len(core) >= 34
+        )
+        if core_ok:
+            t = core  # factual core stands alone — drop the spin quote
+        elif len(core) >= 3 and len(inner) >= 6:
+            # Bare speaker/subject label: keep it complete, without orphan quote marks.
+            t = f"{core}: {inner}"
+        else:
+            t = full
     return t or full
 
 
@@ -508,6 +545,9 @@ MIN_SHARED_STRONG = int(os.environ.get("DISTILL_SHARED_STRONG", "12"))
 MIN_SHARED_WEAK = int(os.environ.get("DISTILL_SHARED_WEAK", "5"))
 MIN_OVERLAP_STRONG = float(os.environ.get("DISTILL_OVERLAP_STRONG", "0.30"))
 MIN_OVERLAP_WEAK = float(os.environ.get("DISTILL_OVERLAP_WEAK", "0.14"))
+# Units that are meaningless as a standalone "agreed fact" bullet without an anchor
+# noun (e.g. "47 שנים", "3 ימים") — they read as context-free noise on a card.
+AMBIGUOUS_SHARED_UNITS = {"שנים", "שעות", "ימים", "חודשים", "מעלות", 'ק"מ', "מטרים"}
 
 
 def _norm_token(word: str) -> str:
@@ -626,6 +666,8 @@ def cross_source_verify(item: dict) -> dict:
             continue
         common = set.intersection(*(vals for _, vals in stating))
         if common:
+            if unit in AMBIGUOUS_SHARED_UNITS:
+                continue
             value = sorted(common)[0]
             shared_facts.append(f"{value} {unit}")
         else:
@@ -930,6 +972,12 @@ def _clean_story_sentence(text: str) -> str:
     ).strip()
     for w in DRAMATIC:
         s = s.replace(w, "")
+    # Bodies often restate their headline before the first real sentence
+    # ("<כותרת> <כותרת> <המשך…>"). Collapse an immediately repeated leading clause.
+    s = re.sub(r"^(.{12,140}?)\s+\1(?=\s|$)", r"\1", s).strip(" -:·|•*")
+    # Photo-caption crumbs glued into the sentence ("(ארכיון)", "..., ארכיון").
+    s = re.sub(r"\s*[\(\[]\s*ארכיון\s*[\)\]]", "", s)
+    s = re.sub(r"\s*,?\s*ארכיון\s*$", "", s)
     s = re.sub(r"\s{2,}", " ", s).strip(" -:·|•*")
     return s
 
@@ -1046,6 +1094,19 @@ def _outlet_quality(name: str) -> int:
     return 0
 
 
+# Sentences that open with a connective are continuations, not a lead — they read
+# as "mid-thought" when they land first in a summary.
+CONNECTIVE_OPENER_RE = re.compile(
+    r"^(?:במקביל|עם זאת|יחד עם זאת|בנוסף|כמו כן|לצד זאת|לצד כך|מנגד|מאידך|"
+    r"אולם|ואולם|ברם|בתוך כך|בהמשך|כזכור|יצוין|יש לציין|לדברי|לדבריו|לדבריה|"
+    r"על פי הדיווח|לפי הדיווח|כאמור|בין היתר)\b"
+)
+
+
+def _is_connective_opener(sent: str) -> bool:
+    return bool(CONNECTIVE_OPENER_RE.match((sent or "").lstrip(" \"״'“„-–—")))
+
+
 def _rank_body_sentences(
     bodies: list[tuple[str, str]], title: str
 ) -> list[dict]:
@@ -1069,6 +1130,7 @@ def _rank_body_sentences(
                 + (3 if FACT_SIGNAL_RE.search(sent) else 0)
                 + (2 if pos < 3 else 0)  # lead paragraphs usually hold the event
                 - (8 if quoted else 0)  # prefer reported fact over opening quote
+                - (14 if _is_connective_opener(sent) else 0)  # continuations aren't leads
                 - (3 if len(sent) > 180 else 0)
                 - (8 if "?" in sent and not re.search(r"\d", sent) else 0)
                 - (10 if sent.count('"') + sent.count("״") >= 2 and not FACT_SIGNAL_RE.search(sent) else 0)
@@ -1226,13 +1288,29 @@ def build_cross_source_story(item: dict, verdict: dict) -> tuple[str, list[str]]
     parts: list[str] = []
 
     lead_pool = agreed or picked
-    parts.append(_end_sentence(lead_pool[0]["text"]))
-    for row in lead_pool[1:2]:
+    # Prefer a clean declarative lead over a connective/quote continuation, so the
+    # summary opens with what happened instead of a mid-thought "במקביל…".
+    lead_idx = next(
+        (
+            i
+            for i, r in enumerate(lead_pool)
+            if not _is_connective_opener(r["text"])
+            and not r["text"].lstrip().startswith(('"', "״", "„", "'", "'"))
+        ),
+        0,
+    )
+    lead = lead_pool[lead_idx]
+    parts.append(_end_sentence(lead["text"]))
+    for row in lead_pool[:2]:
+        # One follow-up fact, but never a near-duplicate of the lead.
+        if row is lead or _near_duplicate(row["text"], lead["text"]):
+            continue
         # Keep multi-source sentences unattributed — they are the shared story.
         if row["support"] >= 1:
             parts.append(_end_sentence(row["text"]))
         else:
             parts.append(f"לפי {row['outlet']}: {_end_sentence(row['text'])}")
+        break
 
     if verdict.get("contradictions"):
         parts.append("המקורות חלוקים בנתון: " + verdict["contradictions"][0] + ".")
@@ -1358,11 +1436,12 @@ def _build_story_sections(
     if outlook and not outlook.endswith((".", "…")):
         outlook += "."
 
+    # No deterministic "why it matters": the old template wrapped a whole body
+    # sentence in boilerplate ("...משנה את התמונה בשטח או במדיניות אם יתאשר"),
+    # which was redundant with the summary, edged into spin, and often produced an
+    # unreadable run-on. Gemini still supplies a real one when available (this
+    # heuristic value would otherwise clobber it, see the gemini path).
     why_matters = ""
-    if bullets:
-        lead = dry_title(str(bullets[0])).rstrip(".")
-        if lead and len(lead) >= 18 and not FILLER_COPY_RE.search(lead):
-            why_matters = f"המהלך סביב «{lead}» משנה את התמונה בשטח או במדיניות אם יתאשר."
 
     return background, outlook, why_matters
 
@@ -1688,7 +1767,13 @@ def distill_item(item: dict, cache: dict | None = None, *, use_gemini: bool = Tr
     return distilled
 
 
-def enrich_items(items: list[dict]) -> list[dict]:
+def _story_id(title: str) -> str:
+    """Stable id for a story so the client and /api/debug agree on which card."""
+    digest = hashlib.sha1((title or "").strip().encode("utf-8")).hexdigest()
+    return "a" + digest[:8]
+
+
+def enrich_items(items: list[dict], debug: bool = False) -> list[dict]:
     cache = load_cache()
     article_cache = load_article_cache()
     dropped = 0
@@ -1708,15 +1793,13 @@ def enrich_items(items: list[dict]) -> list[dict]:
     # Scarce budgets (article fetches, AI calls) go to the stories that matter,
     # not to whichever feed happened to merge first.
     now = datetime.now(IL_TZ)
-    by_importance = sorted(
-        kept, key=lambda pair: _importance_score(pair[1], now=now), reverse=True
-    )
+    scored = [(idx, scrubbed, _importance_score(scrubbed, now=now)) for idx, scrubbed in kept]
+    scored.sort(key=lambda row: row[2], reverse=True)
 
     results: dict[int, dict] = {}
-    for rank, (idx, scrubbed) in enumerate(by_importance):
-        hydrated = hydrate_item_sources(
-            scrubbed, article_cache, deep=rank < MAX_DEEP_ITEMS
-        )
+    for rank, (idx, scrubbed, importance) in enumerate(scored):
+        deep_eligible = rank < MAX_DEEP_ITEMS
+        hydrated = hydrate_item_sources(scrubbed, article_cache, deep=deep_eligible)
         if hydrated.get("_fetched_count"):
             deep_ok += 1
 
@@ -1730,7 +1813,8 @@ def enrich_items(items: list[dict]) -> list[dict]:
             if use_gemini:
                 gemini_attempts += 1
             d = distill_item(hydrated, cache=cache, use_gemini=use_gemini)
-        if d.get("mode") == "gemini":
+        gemini_used = d.get("mode") == "gemini"
+        if gemini_used:
             gemini_shown += 1
 
         enriched = dict(hydrated)
@@ -1747,6 +1831,11 @@ def enrich_items(items: list[dict]) -> list[dict]:
                 slim["resolved_url"] = s.get("resolved_url")
             if s.get("fetch_ok"):
                 slim["fetch_ok"] = True
+            if debug:
+                # Explicit flags (incl. false) so the panel can show what was
+                # fetched vs 403'd and which bodies actually fed verification.
+                slim["fetch_ok"] = bool(s.get("fetch_ok"))
+                slim["used_for_verify"] = bool(s.get("fetch_ok") and s.get("excerpt"))
             slim_sources.append(slim)
         enriched["sources"] = slim_sources
         enriched["distill"] = d
@@ -1767,6 +1856,16 @@ def enrich_items(items: list[dict]) -> list[dict]:
         enriched["verification"] = d.get("verification")
         enriched["digest_basis"] = d.get("digest_basis") or hydrated.get("digest_basis")
         enriched["distillMode"] = d.get("mode")
+        if debug:
+            enriched["id"] = _story_id(enriched.get("title") or "")
+            enriched["debug"] = {
+                "importance": round(importance, 2),
+                "rank": rank,
+                "deep_eligible": deep_eligible,
+                "bodies_fetched": int(hydrated.get("_fetched_count") or 0),
+                "gemini_used": bool(gemini_used),
+                "rawTitle": (items[idx].get("title") or "").strip(),
+            }
         results[idx] = enriched
 
     out = [results[idx] for idx, _ in kept]

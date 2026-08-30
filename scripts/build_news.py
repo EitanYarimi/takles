@@ -24,7 +24,9 @@ def load_previous(path: Path) -> dict | None:
 
 
 def main() -> int:
-    payload = build_payload()
+    # Ship the debug fields (ids + per-item/source diagnostics) so the gated
+    # ?debug=1 explainability panel works on the public Pages site too.
+    payload = build_payload(debug=True)
     out = ROOT / "news.json"
     count = int(payload.get("count") or 0)
     previous = load_previous(out)
