@@ -1344,6 +1344,19 @@
     // הלקוח רק מציג — משיכה+זיקוק בשרת (serve.py / GitHub Actions → news.json)
     const POLL_MS = IS_PAGES ? 5 * 60_000 : 60_000;
 
+    // מצב פיתוח: ?debug=1 מדליק פאנל "איך זה נבנה" בכל כתבה (נשמר ב-localStorage).
+    // כבוי כברירת מחדל; זמין רק מול serve.py המקומי (לא ב-Pages).
+    const DEBUG = (() => {
+      try {
+        const q = new URLSearchParams(location.search).get("debug");
+        if (q === "1" || q === "true") localStorage.setItem("takles_debug", "1");
+        if (q === "0" || q === "false") localStorage.removeItem("takles_debug");
+        return !IS_PAGES && localStorage.getItem("takles_debug") === "1";
+      } catch (e) {
+        return false;
+      }
+    })();
+
     const DRAMATIC = [
       "שומט את הקרקע",
       "על חודו של קול",
@@ -2347,6 +2360,16 @@
       dailyBriefDek: document.getElementById("dailyBriefDek"),
     };
 
+    if (DEBUG && document.body) {
+      const badge = document.createElement("div");
+      badge.textContent = "מצב פיתוח · ?debug=0 לכיבוי";
+      badge.title = "מצב פיתוח: פאנל 'איך זה נבנה' מוצג בכל כתבה";
+      badge.style.cssText =
+        "position:fixed;bottom:10px;left:10px;z-index:9999;background:var(--accent);color:#04231d;" +
+        "font-size:.72rem;font-weight:700;padding:5px 10px;border-radius:999px;box-shadow:0 4px 12px var(--shadow);opacity:.92";
+      document.body.appendChild(badge);
+    }
+
     let dailyBriefData = null;
 
     const SEEN_KEY = "takles_seen_map";
@@ -2725,12 +2748,20 @@
 
     function enrichCard(card, item) {
       const id =
+        item.id ||
         "a" +
-        Math.abs(
-          Array.from(item.title || card.title || "")
-            .reduce((h, ch) => ((h << 5) - h + ch.charCodeAt(0)) | 0, 0)
-        ).toString(16);
-      return { ...card, id };
+          Math.abs(
+            Array.from(item.title || card.title || "")
+              .reduce((h, ch) => ((h << 5) - h + ch.charCodeAt(0)) | 0, 0)
+          ).toString(16);
+      // Carry the server debug fields through so the explainability panel can read them.
+      return {
+        ...card,
+        id,
+        debug: item.debug || null,
+        opinion_sources: item.opinion_sources || [],
+        distillMode: item.distillMode || card.mode || "",
+      };
     }
 
     let listTopicId = null;
@@ -2967,6 +2998,118 @@
       return "";
     }
 
+    function debugPanelHtml(c) {
+      const dbg = c.debug || {};
+      const v = c.verification || {};
+      const esc = escapeHtml;
+      const yesno = (b) => (b ? "כן" : "לא");
+      const list = (arr) => (arr && arr.length ? arr.map(esc).join(" · ") : "—");
+
+      const sourceRows = (c.sources || [])
+        .map((s) => {
+          const status = !s.fetch_ok
+            ? '<span style="color:#c0392b">✗ 403/כשל</span>'
+            : s.used_for_verify
+            ? '<span style="color:#1e8449">✓ שימש לאימות</span>'
+            : "נמשך";
+          return `<tr>
+            <td style="padding:2px 6px">${esc(s.name || "")}</td>
+            <td style="padding:2px 6px;opacity:.85">${esc(s.headline || "")}</td>
+            <td style="padding:2px 6px;white-space:nowrap">${status}</td>
+          </tr>`;
+        })
+        .join("");
+
+      const opinion = (c.opinion_sources || [])
+        .map(
+          (s) =>
+            `<li>${esc(s.name || "")} — <span style="opacity:.8">${esc(s.headline || "")}</span></li>`
+        )
+        .join("");
+      const contra = v.contradictions || [];
+
+      return `
+      <details class="debug-panel" style="margin-top:18px;border:1px dashed var(--accent);border-radius:12px;padding:10px 14px;background:var(--surface-tint)">
+        <summary style="cursor:pointer;font-weight:700">איך זה נבנה · מצב פיתוח</summary>
+        <div style="font-size:.86rem;line-height:1.7;margin-top:8px">
+          <p><strong>כותרת מקור:</strong> ${esc(dbg.rawTitle || "—")}<br>
+             <strong>כותרת יבשה:</strong> ${esc(c.title || "")}</p>
+          <p>
+            <strong>מנוע:</strong> ${esc(c.distillMode || c.mode || "—")} ·
+            <strong>בסיס:</strong> ${c.digest_basis === "fulltext" ? "גופי כתבות" : "כותרות"} ·
+            <strong>AI:</strong> ${yesno(dbg.gemini_used)}<br>
+            <strong>ציון חשיבות:</strong> ${dbg.importance ?? "—"} ·
+            <strong>דירוג:</strong> ${dbg.rank ?? "—"} ·
+            <strong>זכאי למשיכה עמוקה:</strong> ${yesno(dbg.deep_eligible)} ·
+            <strong>גופים שנמשכו:</strong> ${dbg.bodies_fetched ?? 0}
+          </p>
+          <p>
+            <strong>אימות:</strong> ${v.bodies || 0} גופים · חפיפה ${v.overlap_ratio ?? 0} ·
+            מונחים משותפים ${v.shared_terms ?? 0}<br>
+            <strong>עובדות משותפות:</strong> ${list(v.shared_facts)}<br>
+            <strong>נושאים משותפים:</strong> ${list(v.shared_topics)}<br>
+            ${contra.length ? `<strong style="color:#c0392b">סתירות:</strong> ${list(contra)}<br>` : ""}
+            <strong>הערת אמינות:</strong> ${esc(c.reliability_notes || "")}
+          </p>
+          <table style="width:100%;border-collapse:collapse;margin:6px 0">
+            <thead><tr style="text-align:right;border-bottom:1px solid var(--shadow)">
+              <th style="padding:2px 6px">מקור</th><th style="padding:2px 6px">כותרת המקור</th><th style="padding:2px 6px">סטטוס</th>
+            </tr></thead>
+            <tbody>${sourceRows}</tbody>
+          </table>
+          ${
+            opinion
+              ? `<p><strong>נופו כדעה/רעש (לא נכנסו לזיקוק):</strong></p><ul style="margin:.2rem 1rem">${opinion}</ul>`
+              : ""
+          }
+          <div class="debug-deep" style="margin-top:8px;opacity:.9">טוען גופי כתבות ומשפטים…</div>
+        </div>
+      </details>`;
+    }
+
+    async function loadDeepDebug(id) {
+      const box = els.detailView.querySelector(".debug-deep");
+      if (!box || !id) return;
+      try {
+        const res = await fetchWithTimeout(
+          `/api/debug?id=${encodeURIComponent(id)}`,
+          20000
+        );
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        const d = await res.json();
+        const esc = escapeHtml;
+        const ranked = (d.ranked_sentences || [])
+          .map(
+            (r) =>
+              `<li><span style="opacity:.7">[${esc(r.outlet || "")} · ${r.score}]</span> ${esc(
+                r.text || ""
+              )}</li>`
+          )
+          .join("");
+        const bodies = (d.sources || [])
+          .map(
+            (s) =>
+              `<details style="margin:.3rem 0"><summary>${esc(s.name || "")}${
+                s.fetch_ok ? "" : " · ✗ לא נמשך"
+              }</summary><p style="opacity:.8;white-space:pre-wrap">${esc(
+                (s.excerpt || "—").slice(0, 700)
+              )}</p></details>`
+          )
+          .join("");
+        const k = d.knobs || {};
+        box.innerHTML = `
+          <p><strong>משפטים שהזינו את הסיכום (מדורגים):</strong></p>
+          <ol style="margin:.2rem 1rem">${ranked || "<li>—</li>"}</ol>
+          <p><strong>גופי כתבות שנמשכו:</strong></p>
+          ${bodies || "—"}
+          <p style="opacity:.7;margin-top:6px">כווננים: חפיפה חזקה ≥ ${k.DISTILL_OVERLAP_STRONG} · מונחים משותפים ≥ ${k.DISTILL_SHARED_STRONG} · משיכה עמוקה עד ${k.DISTILL_MAX_DEEP} כתבות</p>`;
+      } catch (e) {
+        box.innerHTML = `<span style="opacity:.7">לא ניתן לטעון פירוט עמוק (${escapeHtml(
+          String((e && e.message) || e)
+        )})</span>`;
+      }
+    }
+
     function showDetail(id) {
       const c = allCards.find((x) => x.id === id);
       if (!c) {
@@ -3066,12 +3209,14 @@
             }
             ${c.mode === "gemini" ? " · כולל AI" : ""}
           </p>
+          ${DEBUG ? debugPanelHtml(c) : ""}
         </div>
       `;
       document.getElementById("detailAudioBtn")?.addEventListener("click", (e) => {
         e.stopPropagation();
         speakBriefing(c, e.currentTarget);
       });
+      if (DEBUG) loadDeepDebug(c.id);
       document.getElementById("backBtn").addEventListener("click", showHome);
       const seenBtn = document.getElementById("seenBtn");
       if (seenBtn) {

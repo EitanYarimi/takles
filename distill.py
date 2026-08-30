@@ -1688,7 +1688,13 @@ def distill_item(item: dict, cache: dict | None = None, *, use_gemini: bool = Tr
     return distilled
 
 
-def enrich_items(items: list[dict]) -> list[dict]:
+def _story_id(title: str) -> str:
+    """Stable id for a story so the client and /api/debug agree on which card."""
+    digest = hashlib.sha1((title or "").strip().encode("utf-8")).hexdigest()
+    return "a" + digest[:8]
+
+
+def enrich_items(items: list[dict], debug: bool = False) -> list[dict]:
     cache = load_cache()
     article_cache = load_article_cache()
     dropped = 0
@@ -1708,15 +1714,13 @@ def enrich_items(items: list[dict]) -> list[dict]:
     # Scarce budgets (article fetches, AI calls) go to the stories that matter,
     # not to whichever feed happened to merge first.
     now = datetime.now(IL_TZ)
-    by_importance = sorted(
-        kept, key=lambda pair: _importance_score(pair[1], now=now), reverse=True
-    )
+    scored = [(idx, scrubbed, _importance_score(scrubbed, now=now)) for idx, scrubbed in kept]
+    scored.sort(key=lambda row: row[2], reverse=True)
 
     results: dict[int, dict] = {}
-    for rank, (idx, scrubbed) in enumerate(by_importance):
-        hydrated = hydrate_item_sources(
-            scrubbed, article_cache, deep=rank < MAX_DEEP_ITEMS
-        )
+    for rank, (idx, scrubbed, importance) in enumerate(scored):
+        deep_eligible = rank < MAX_DEEP_ITEMS
+        hydrated = hydrate_item_sources(scrubbed, article_cache, deep=deep_eligible)
         if hydrated.get("_fetched_count"):
             deep_ok += 1
 
@@ -1730,7 +1734,8 @@ def enrich_items(items: list[dict]) -> list[dict]:
             if use_gemini:
                 gemini_attempts += 1
             d = distill_item(hydrated, cache=cache, use_gemini=use_gemini)
-        if d.get("mode") == "gemini":
+        gemini_used = d.get("mode") == "gemini"
+        if gemini_used:
             gemini_shown += 1
 
         enriched = dict(hydrated)
@@ -1747,6 +1752,11 @@ def enrich_items(items: list[dict]) -> list[dict]:
                 slim["resolved_url"] = s.get("resolved_url")
             if s.get("fetch_ok"):
                 slim["fetch_ok"] = True
+            if debug:
+                # Explicit flags (incl. false) so the panel can show what was
+                # fetched vs 403'd and which bodies actually fed verification.
+                slim["fetch_ok"] = bool(s.get("fetch_ok"))
+                slim["used_for_verify"] = bool(s.get("fetch_ok") and s.get("excerpt"))
             slim_sources.append(slim)
         enriched["sources"] = slim_sources
         enriched["distill"] = d
@@ -1767,6 +1777,16 @@ def enrich_items(items: list[dict]) -> list[dict]:
         enriched["verification"] = d.get("verification")
         enriched["digest_basis"] = d.get("digest_basis") or hydrated.get("digest_basis")
         enriched["distillMode"] = d.get("mode")
+        if debug:
+            enriched["id"] = _story_id(enriched.get("title") or "")
+            enriched["debug"] = {
+                "importance": round(importance, 2),
+                "rank": rank,
+                "deep_eligible": deep_eligible,
+                "bodies_fetched": int(hydrated.get("_fetched_count") or 0),
+                "gemini_used": bool(gemini_used),
+                "rawTitle": (items[idx].get("title") or "").strip(),
+            }
         results[idx] = enriched
 
     out = [results[idx] for idx, _ in kept]

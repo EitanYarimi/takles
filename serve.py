@@ -217,7 +217,7 @@ def safe_feed(url: str, limit: int, topic_hint: str | None = None) -> list[dict]
         return []
 
 
-def build_payload() -> dict:
+def build_payload(debug: bool = False) -> dict:
     from distill import build_daily_brief, enrich_items
 
     main = safe_feed(GOOGLE_RSS, 18)
@@ -228,7 +228,9 @@ def build_payload() -> dict:
     business = safe_feed(GOOGLE_BUSINESS, 12, "economy")[:8]
     sports = safe_feed(GOOGLE_SPORTS, 8, "sport")
     leisure = safe_feed(GOOGLE_TRAVEL, 25, "leisure")[:5]
-    clusters = enrich_items(merge_items(main, world, world_focus, nation, business, sports, leisure))
+    clusters = enrich_items(
+        merge_items(main, world, world_focus, nation, business, sports, leisure), debug=debug
+    )
     return {
         "fetchedAt": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "count": len(clusters),
@@ -320,7 +322,9 @@ def broadcast(payload: dict) -> None:
 def refresh_news(force_broadcast: bool = False) -> dict | None:
     global _latest_payload, _latest_fp
     try:
-        payload = build_payload()
+        # The live server ships debug fields (ids + per-item/source diagnostics);
+        # scripts/build_news.py stays default so the public Pages payload is unchanged.
+        payload = build_payload(debug=True)
     except Exception as exc:  # noqa: BLE001
         print(f"[poc] news fetch failed: {exc}")
         return None
@@ -376,6 +380,9 @@ class Handler(SimpleHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(body)
             return
+        if self.path.startswith("/api/debug"):
+            self._handle_debug()
+            return
         if self.path.startswith("/api/tts"):
             self._handle_tts()
             return
@@ -386,6 +393,102 @@ class Handler(SimpleHTTPRequestHandler):
             self._handle_tts()
             return
         self.send_error(404, "Not found")
+
+    def _handle_debug(self) -> None:
+        """Local-only deep view for one story: source bodies, the sentences that
+        fed the summary, the raw cross-source verdict, and the active knobs.
+
+        Excerpts stay server-side (never in news.json); this endpoint re-hydrates
+        from the article cache on demand so tuning has the full picture.
+        """
+        try:
+            parsed = urllib.parse.urlparse(self.path)
+            qs = urllib.parse.parse_qs(parsed.query)
+            story_id = (qs.get("id") or [""])[0]
+            with _lock:
+                payload = _latest_payload
+            items = (payload or {}).get("items") or []
+            item = next((it for it in items if it.get("id") == story_id), None)
+            if not item:
+                self.send_response(404)
+                self.send_header("Content-Type", "application/json; charset=utf-8")
+                self.end_headers()
+                self.wfile.write(json.dumps({"error": "unknown id"}).encode("utf-8"))
+                return
+
+            from distill import (
+                MAX_DEEP_ITEMS,
+                MAX_GEMINI_ITEMS,
+                MAX_SOURCES_FETCH,
+                MIN_OVERLAP_STRONG,
+                MIN_OVERLAP_WEAK,
+                MIN_SHARED_STRONG,
+                MIN_SHARED_WEAK,
+                _rank_body_sentences,
+                cross_source_verify,
+                hydrate_item_sources,
+                load_article_cache,
+            )
+
+            article_cache = load_article_cache()
+            hydrated = hydrate_item_sources(item, article_cache, deep=True)
+            bodies = [
+                (s.get("name") or "מקור", s.get("excerpt") or "")
+                for s in hydrated.get("sources") or []
+                if s.get("fetch_ok") and s.get("excerpt")
+            ]
+            verdict = cross_source_verify(hydrated)
+            ranked = _rank_body_sentences(bodies, hydrated.get("title") or "")
+
+            out = {
+                "id": story_id,
+                "title": item.get("title") or "",
+                "rawTitle": (item.get("debug") or {}).get("rawTitle") or "",
+                "sources": [
+                    {
+                        "name": s.get("name") or "",
+                        "headline": s.get("headline") or "",
+                        "resolved_url": s.get("resolved_url") or s.get("url") or "",
+                        "fetch_ok": bool(s.get("fetch_ok")),
+                        "excerpt": (s.get("excerpt") or "")[:1200],
+                    }
+                    for s in hydrated.get("sources") or []
+                ],
+                "ranked_sentences": [
+                    {
+                        "outlet": r.get("outlet"),
+                        "text": r.get("text"),
+                        "score": round(float(r.get("score") or 0), 1),
+                        "support": r.get("support"),
+                    }
+                    for r in ranked[:10]
+                ],
+                "verification": {
+                    k: v for k, v in verdict.items() if k != "notes"
+                },
+                "reliability_notes": verdict.get("notes") or "",
+                "knobs": {
+                    "DISTILL_MAX_DEEP": MAX_DEEP_ITEMS,
+                    "DISTILL_MAX_SOURCES": MAX_SOURCES_FETCH,
+                    "DISTILL_MAX_GEMINI": MAX_GEMINI_ITEMS,
+                    "DISTILL_SHARED_STRONG": MIN_SHARED_STRONG,
+                    "DISTILL_SHARED_WEAK": MIN_SHARED_WEAK,
+                    "DISTILL_OVERLAP_STRONG": MIN_OVERLAP_STRONG,
+                    "DISTILL_OVERLAP_WEAK": MIN_OVERLAP_WEAK,
+                },
+            }
+            body = json.dumps(out, ensure_ascii=False).encode("utf-8")
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json; charset=utf-8")
+            self.send_header("Cache-Control", "no-store")
+            self.end_headers()
+            self.wfile.write(body)
+        except Exception as exc:  # noqa: BLE001
+            body = json.dumps({"error": str(exc)}, ensure_ascii=False).encode("utf-8")
+            self.send_response(502)
+            self.send_header("Content-Type", "application/json; charset=utf-8")
+            self.end_headers()
+            self.wfile.write(body)
 
     def _handle_tts(self) -> None:
         try:
