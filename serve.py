@@ -231,10 +231,30 @@ def build_payload(debug: bool = False) -> dict:
     clusters = enrich_items(
         merge_items(main, world, world_focus, nation, business, sports, leisure), debug=debug
     )
+
+    # Relevant, copyright-safe imagery: a freely-licensed entity photo (Wikimedia
+    # Commons, with credit) or a public-domain flag — never a publisher's photo.
+    from images import image_for_item, load_image_cache, save_image_cache
+
+    image_cache = load_image_cache()
+    with_images = 0
+    for it in clusters:
+        try:
+            img = image_for_item(it, image_cache)
+        except Exception as exc:  # noqa: BLE001
+            print(f"[images] pick failed: {exc}")
+            img = None
+        if img:
+            it["image"] = img["url"]
+            it["imageCredit"] = img.get("credit") or ""
+            it["imageLink"] = img.get("link") or ""
+            with_images += 1
+    save_image_cache(image_cache)
+
     return {
         "fetchedAt": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "count": len(clusters),
-        "withImages": 0,
+        "withImages": with_images,
         "items": clusters,
         "dailyBrief": build_daily_brief(clusters),
     }

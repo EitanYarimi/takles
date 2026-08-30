@@ -32,6 +32,7 @@ jobs:
           path: |
             distill_cache.json
             article_cache.json
+            image_cache.json
           key: distill-${{ runner.os }}-${{ github.run_id }}
           restore-keys: |
             distill-${{ runner.os }}-

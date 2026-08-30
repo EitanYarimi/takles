@@ -751,6 +751,24 @@
       object-position: center;
       transform: scale(1.02);
     }
+    .viz { position: relative; }
+    .viz-credit {
+      position: absolute;
+      bottom: 0;
+      inset-inline: 0;
+      margin: 0;
+      padding: 3px 8px;
+      font-size: 0.66rem;
+      line-height: 1.3;
+      color: #fff;
+      background: linear-gradient(to top, rgba(0,0,0,0.55), rgba(0,0,0,0));
+      text-align: start;
+      pointer-events: none;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    .viz-imgfail .viz-credit { display: none; }
     .viz-map svg {
       width: 100%;
       height: 100%;
@@ -1702,8 +1720,21 @@
     function storyVisual(card) {
       const key = pickVisualContext(card?.title || "", card?.topic || "domestic");
       const chosen = VISUAL_PACK[key] || VISUAL_PACK.domestic;
+      const fallback = chosen.src;
+      // Prefer the server-picked, freely-licensed photo (with credit); if it fails
+      // to load, drop back to the bundled category art and hide the credit.
+      if (card && card.image) {
+        const credit = card.imageCredit
+          ? `<figcaption class="viz-credit">${escapeHtml(card.imageCredit)}</figcaption>`
+          : "";
+        return `<figure class="viz viz-photo viz-${escapeHtml(key)}">
+          <img src="${escapeHtml(card.image)}" alt="" loading="lazy" decoding="async"
+               onerror="this.onerror=null;this.src='${escapeHtml(fallback)}';this.closest('.viz')&&this.closest('.viz').classList.add('viz-imgfail')" />
+          ${credit}
+        </figure>`;
+      }
       return `<div class="viz viz-${escapeHtml(key)}">
-        <img src="${escapeHtml(chosen.src)}" alt="" loading="lazy" decoding="async" />
+        <img src="${escapeHtml(fallback)}" alt="" loading="lazy" decoding="async" />
       </div>`;
     }
 
