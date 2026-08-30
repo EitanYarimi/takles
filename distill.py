@@ -25,7 +25,7 @@ from zoneinfo import ZoneInfo
 ROOT = Path(__file__).resolve().parent
 CACHE_PATH = ROOT / "distill_cache.json"
 ARTICLE_CACHE_PATH = ROOT / "article_cache.json"
-DISTILL_VERSION = "v21-dedupe-lead"
+DISTILL_VERSION = "v24-title-clean-quote"
 SSL_CTX = ssl._create_unverified_context()
 UA = (
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
@@ -181,11 +181,26 @@ def factual_core_title(title: str) -> str:
     if m:
         core = m.group(1).strip(" -:·")
         return core if len(core) >= MIN_CORE_TITLE else full
-    # חתוך ציטוט ארוך אחרי נקודתיים
-    if re.search(r'[:\-–—]\s*[\"״]', t):
-        core = re.split(r'[:\-–—]\s*[\"״]', t, maxsplit=1)[0].strip(" -:·")
-        # "טראמפ" is not a headline — keep the original when trimming guts it.
-        t = core if len(core) >= MIN_CORE_TITLE else full
+    # ציטוט אחרי נקודתיים/מקף/נקודה-פסיק
+    m3 = re.match(r'^(.*?)[:\-–—;؛]\s*[\"״](.*)$', t)
+    if m3:
+        core = m3.group(1).strip(" -:·")
+        inner = m3.group(2).strip().strip("\"״“”")
+        # Keep the pre-quote core only if it can stand alone as a headline. A bare
+        # speaker/subject label ("מנכ\"ל רשת מלונות היוקרה") has no verb, so trimming
+        # to it leaves a dangling fragment.
+        core_ok = len(core) >= MIN_CORE_TITLE and (
+            looks_like_fact_line(core)
+            or bool(FACT_SIGNAL_RE.search(core))
+            or len(core) >= 34
+        )
+        if core_ok:
+            t = core  # factual core stands alone — drop the spin quote
+        elif len(core) >= 3 and len(inner) >= 6:
+            # Bare speaker/subject label: keep it complete, without orphan quote marks.
+            t = f"{core}: {inner}"
+        else:
+            t = full
     return t or full
 
 
