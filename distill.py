@@ -25,7 +25,7 @@ from zoneinfo import ZoneInfo
 ROOT = Path(__file__).resolve().parent
 CACHE_PATH = ROOT / "distill_cache.json"
 ARTICLE_CACHE_PATH = ROOT / "article_cache.json"
-DISTILL_VERSION = "v18-restore-structure"
+DISTILL_VERSION = "v19-drop-why-boilerplate"
 SSL_CTX = ssl._create_unverified_context()
 UA = (
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
@@ -1358,11 +1358,12 @@ def _build_story_sections(
     if outlook and not outlook.endswith((".", "…")):
         outlook += "."
 
+    # No deterministic "why it matters": the old template wrapped a whole body
+    # sentence in boilerplate ("...משנה את התמונה בשטח או במדיניות אם יתאשר"),
+    # which was redundant with the summary, edged into spin, and often produced an
+    # unreadable run-on. Gemini still supplies a real one when available (this
+    # heuristic value would otherwise clobber it, see the gemini path).
     why_matters = ""
-    if bullets:
-        lead = dry_title(str(bullets[0])).rstrip(".")
-        if lead and len(lead) >= 18 and not FILLER_COPY_RE.search(lead):
-            why_matters = f"המהלך סביב «{lead}» משנה את התמונה בשטח או במדיניות אם יתאשר."
 
     return background, outlook, why_matters
 
