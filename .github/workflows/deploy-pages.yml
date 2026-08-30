@@ -38,7 +38,7 @@ jobs:
       - name: Fetch news feeds
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          GEMINI_MODEL: gemini-flash-latest
+          GEMINI_MODEL: gemini-3.6-flash
           DISTILL_MAX_GEMINI: "10"
         run: python3 scripts/build_news.py
         timeout-minutes: 25
