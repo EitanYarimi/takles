@@ -1345,13 +1345,14 @@
     const POLL_MS = IS_PAGES ? 5 * 60_000 : 60_000;
 
     // מצב פיתוח: ?debug=1 מדליק פאנל "איך זה נבנה" בכל כתבה (נשמר ב-localStorage).
-    // כבוי כברירת מחדל; זמין רק מול serve.py המקומי (לא ב-Pages).
+    // כבוי כברירת מחדל. עובד גם ב-Pages; פירוט גופי הכתבות העמוק (/api/debug)
+    // זמין רק בהרצה מקומית מול serve.py.
     const DEBUG = (() => {
       try {
         const q = new URLSearchParams(location.search).get("debug");
         if (q === "1" || q === "true") localStorage.setItem("takles_debug", "1");
         if (q === "0" || q === "false") localStorage.removeItem("takles_debug");
-        return !IS_PAGES && localStorage.getItem("takles_debug") === "1";
+        return localStorage.getItem("takles_debug") === "1";
       } catch (e) {
         return false;
       }
@@ -3070,6 +3071,13 @@
     async function loadDeepDebug(id) {
       const box = els.detailView.querySelector(".debug-deep");
       if (!box || !id) return;
+      if (IS_PAGES) {
+        // Pages is static — there is no /api/debug server. Everything else in the
+        // panel works; only the source bodies + ranked sentences are local-only.
+        box.innerHTML =
+          '<span style="opacity:.7">פירוט גופי הכתבות והמשפטים המדורגים זמין רק בהרצה מקומית מול serve.py.</span>';
+        return;
+      }
       try {
         const res = await fetchWithTimeout(
           `/api/debug?id=${encodeURIComponent(id)}`,
