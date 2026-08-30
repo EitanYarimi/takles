@@ -2786,13 +2786,17 @@
             Array.from(item.title || card.title || "")
               .reduce((h, ch) => ((h << 5) - h + ch.charCodeAt(0)) | 0, 0)
           ).toString(16);
-      // Carry the server debug fields through so the explainability panel can read them.
+      // Carry server-only fields through (localDistill builds a fresh object):
+      // debug for the panel, and the server-picked image + attribution.
       return {
         ...card,
         id,
         debug: item.debug || null,
         opinion_sources: item.opinion_sources || [],
         distillMode: item.distillMode || card.mode || "",
+        image: item.image || "",
+        imageCredit: item.imageCredit || "",
+        imageLink: item.imageLink || "",
       };
     }
 
