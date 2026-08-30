@@ -25,7 +25,7 @@ from zoneinfo import ZoneInfo
 ROOT = Path(__file__).resolve().parent
 CACHE_PATH = ROOT / "distill_cache.json"
 ARTICLE_CACHE_PATH = ROOT / "article_cache.json"
-DISTILL_VERSION = "v19-drop-why-boilerplate"
+DISTILL_VERSION = "v21-dedupe-lead"
 SSL_CTX = ssl._create_unverified_context()
 UA = (
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
@@ -147,10 +147,32 @@ def looks_like_fact_line(text: str) -> bool:
 MIN_CORE_TITLE = 18
 
 
+# Head ends with an outlet attribution ("... ל-N12", "... לגלובס").
+ATTRIB_TAIL_RE = re.compile(
+    r'\bל[-־\s]?(?:N12|ynet|mako|וואלה|walla|כאן|מעריב|הארץ|גלובס|globes|'
+    r'כלכליסט|calcalist|themarker|i24|רשת ?\d?|גל"?צ|ישראל היום|סרוגים|'
+    r'זמן ישראל|וואינט|ערוץ ?\d+)\s*$',
+    re.I,
+)
+INTERVIEW_LEADIN_RE = re.compile(r"(בראיון|בשיחה|מדבר|מדברת|מספר|מספרת|התראיין)\s")
+
+
 def factual_core_title(title: str) -> str:
     """Strip quoted spin after a reaction lead-in."""
     full = dry_title(title or "")
     t = full
+    # Attribution-lead headline ("<מרואיין> ל-N12: '<the actual news>'") — the news
+    # is AFTER the colon; the head is just who spoke to whom. Split only on the colon
+    # so an inner hyphen ("ל-N12") isn't mistaken for the separator.
+    if ":" in t:
+        head, _, tail = t.partition(":")
+        head = head.strip(" -:·\"״")
+        tail_clean = dry_title(tail).strip(" -:·\"״“”")
+        if (
+            (ATTRIB_TAIL_RE.search(head) or INTERVIEW_LEADIN_RE.search(head))
+            and len(tail_clean) >= MIN_CORE_TITLE
+        ):
+            return tail_clean
     # יועץ X מגיב ל-Y: "ספין..." → שמור רק את הליבה
     m = re.match(
         r'^(.{8,80}?(?:מגיב|הודיע|מסר|אישר|הכחיש)\s+ל[^:\"״]{2,40})\s*[:\-–—]\s*[\"״].*',
@@ -508,6 +530,9 @@ MIN_SHARED_STRONG = int(os.environ.get("DISTILL_SHARED_STRONG", "12"))
 MIN_SHARED_WEAK = int(os.environ.get("DISTILL_SHARED_WEAK", "5"))
 MIN_OVERLAP_STRONG = float(os.environ.get("DISTILL_OVERLAP_STRONG", "0.30"))
 MIN_OVERLAP_WEAK = float(os.environ.get("DISTILL_OVERLAP_WEAK", "0.14"))
+# Units that are meaningless as a standalone "agreed fact" bullet without an anchor
+# noun (e.g. "47 שנים", "3 ימים") — they read as context-free noise on a card.
+AMBIGUOUS_SHARED_UNITS = {"שנים", "שעות", "ימים", "חודשים", "מעלות", 'ק"מ', "מטרים"}
 
 
 def _norm_token(word: str) -> str:
@@ -626,6 +651,8 @@ def cross_source_verify(item: dict) -> dict:
             continue
         common = set.intersection(*(vals for _, vals in stating))
         if common:
+            if unit in AMBIGUOUS_SHARED_UNITS:
+                continue
             value = sorted(common)[0]
             shared_facts.append(f"{value} {unit}")
         else:
@@ -930,6 +957,12 @@ def _clean_story_sentence(text: str) -> str:
     ).strip()
     for w in DRAMATIC:
         s = s.replace(w, "")
+    # Bodies often restate their headline before the first real sentence
+    # ("<כותרת> <כותרת> <המשך…>"). Collapse an immediately repeated leading clause.
+    s = re.sub(r"^(.{12,140}?)\s+\1(?=\s|$)", r"\1", s).strip(" -:·|•*")
+    # Photo-caption crumbs glued into the sentence ("(ארכיון)", "..., ארכיון").
+    s = re.sub(r"\s*[\(\[]\s*ארכיון\s*[\)\]]", "", s)
+    s = re.sub(r"\s*,?\s*ארכיון\s*$", "", s)
     s = re.sub(r"\s{2,}", " ", s).strip(" -:·|•*")
     return s
 
@@ -1046,6 +1079,19 @@ def _outlet_quality(name: str) -> int:
     return 0
 
 
+# Sentences that open with a connective are continuations, not a lead — they read
+# as "mid-thought" when they land first in a summary.
+CONNECTIVE_OPENER_RE = re.compile(
+    r"^(?:במקביל|עם זאת|יחד עם זאת|בנוסף|כמו כן|לצד זאת|לצד כך|מנגד|מאידך|"
+    r"אולם|ואולם|ברם|בתוך כך|בהמשך|כזכור|יצוין|יש לציין|לדברי|לדבריו|לדבריה|"
+    r"על פי הדיווח|לפי הדיווח|כאמור|בין היתר)\b"
+)
+
+
+def _is_connective_opener(sent: str) -> bool:
+    return bool(CONNECTIVE_OPENER_RE.match((sent or "").lstrip(" \"״'“„-–—")))
+
+
 def _rank_body_sentences(
     bodies: list[tuple[str, str]], title: str
 ) -> list[dict]:
@@ -1069,6 +1115,7 @@ def _rank_body_sentences(
                 + (3 if FACT_SIGNAL_RE.search(sent) else 0)
                 + (2 if pos < 3 else 0)  # lead paragraphs usually hold the event
                 - (8 if quoted else 0)  # prefer reported fact over opening quote
+                - (14 if _is_connective_opener(sent) else 0)  # continuations aren't leads
                 - (3 if len(sent) > 180 else 0)
                 - (8 if "?" in sent and not re.search(r"\d", sent) else 0)
                 - (10 if sent.count('"') + sent.count("״") >= 2 and not FACT_SIGNAL_RE.search(sent) else 0)
@@ -1226,13 +1273,29 @@ def build_cross_source_story(item: dict, verdict: dict) -> tuple[str, list[str]]
     parts: list[str] = []
 
     lead_pool = agreed or picked
-    parts.append(_end_sentence(lead_pool[0]["text"]))
-    for row in lead_pool[1:2]:
+    # Prefer a clean declarative lead over a connective/quote continuation, so the
+    # summary opens with what happened instead of a mid-thought "במקביל…".
+    lead_idx = next(
+        (
+            i
+            for i, r in enumerate(lead_pool)
+            if not _is_connective_opener(r["text"])
+            and not r["text"].lstrip().startswith(('"', "״", "„", "'", "'"))
+        ),
+        0,
+    )
+    lead = lead_pool[lead_idx]
+    parts.append(_end_sentence(lead["text"]))
+    for row in lead_pool[:2]:
+        # One follow-up fact, but never a near-duplicate of the lead.
+        if row is lead or _near_duplicate(row["text"], lead["text"]):
+            continue
         # Keep multi-source sentences unattributed — they are the shared story.
         if row["support"] >= 1:
             parts.append(_end_sentence(row["text"]))
         else:
             parts.append(f"לפי {row['outlet']}: {_end_sentence(row['text'])}")
+        break
 
     if verdict.get("contradictions"):
         parts.append("המקורות חלוקים בנתון: " + verdict["contradictions"][0] + ".")
