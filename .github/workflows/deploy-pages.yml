@@ -40,6 +40,7 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GEMINI_MODEL: gemini-3.6-flash
           DISTILL_MAX_GEMINI: "10"
+          DISTILL_GEMINI_INTERVAL: "7"
         run: python3 scripts/build_news.py
         timeout-minutes: 25
       - name: Stage site
