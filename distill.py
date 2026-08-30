@@ -25,13 +25,13 @@ from zoneinfo import ZoneInfo
 ROOT = Path(__file__).resolve().parent
 CACHE_PATH = ROOT / "distill_cache.json"
 ARTICLE_CACHE_PATH = ROOT / "article_cache.json"
-DISTILL_VERSION = "v24-title-clean-quote"
+DISTILL_VERSION = "v25-ai-original-hebrew"
 SSL_CTX = ssl._create_unverified_context()
 UA = (
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
     "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
 )
-GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-flash-latest")
+GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.6-flash")
 MAX_DEEP_ITEMS = int(os.environ.get("DISTILL_MAX_DEEP", "28"))
 MAX_SOURCES_FETCH = int(os.environ.get("DISTILL_MAX_SOURCES", "3"))
 MAX_ARTICLE_CHARS = int(os.environ.get("DISTILL_ARTICLE_CHARS", "3200"))
@@ -337,8 +337,8 @@ PROMPT = """אתה עורך חדשות יבש לפורטל "תכל׳ס" (ישר�
 תפקידך: למזג את המקורות לסיפור אחד נייטרלי של מה שקרה — לא מטא על "כמה מקורות דיווחו".
 
 החזר JSON בלבד (בלי markdown) עם השדות:
-- title: כותרת יבשה בעברית, בלי דרמה/קליקבייט/ציטוטי ספין
-- summary: 2–3 משפטים בעברית — סיפור אחד על האירוע שבכותרת המקבץ בלבד.
+- title: כותרת מקורית משלך בעברית תקנית ורהוטה שמנסחת את העובדה המרכזית (מי/מה/כמה/היכן/מתי). חובה שתכלול עובדה קונקרטית ולא רק נושא. אל תעתיק כותרת של מקור מילה-במילה, אל תפתח בציטוט, בלי דרמה/קליקבייט/גרשיים דרמטיים.
+- summary: 2–3 משפטים בעברית תקנית ורהוטה — נסח מחדש במילים שלך; אסור להעתיק משפטים מגוף הכתבה מילה-במילה. סיפור אחד על האירוע שבכותרת המקבץ בלבד.
   * פרטים שחוזרים בין מקורות: כתוב כעובדה, בלי לייחס למוציא לאור.
   * פרט שמופיע במקור יחיד: ייחס ("לפי X…").
   * אם יש סתירה בנתון: ציין את שני הערכים במשפט אחד.
@@ -357,8 +357,9 @@ PROMPT = """אתה עורך חדשות יבש לפורטל "תכל׳ס" (ישר�
 - status: confirmed | reported | denied | review
 
 כללים:
+- כל הטקסט חייב להיות ניסוח מקורי שלך בעברית תקנית ותחבירית — לא העתקה של משפטים או כותרות מהמקורות.
 - אל תמציא. אל תבחר צד. אל תשתמש במילות דרמה.
-- הסתמך קודם על גופי הכתבות; כותרות רק כגיבוי.
+- הסתמך על גופי הכתבות לעובדות; כותרות רק כגיבוי — אך נסח הכל מחדש במילים שלך.
 - confirmed רק עם לפחות שני מקורות על אותה עובדה בלי לשון ספק.
 """
 
@@ -1640,9 +1641,12 @@ def gemini_distill(item: dict) -> dict | None:
     insight = str(data.get("insight") or "").strip()
     summary = str(data.get("summary") or "").strip()
     why_matters = _scrub_filler(str(data.get("why_matters") or data.get("whyItMatters") or "").strip())
+    # Prefer the model's original headline — the whole point is not to copy source
+    # headlines. Only fall back to a source-derived title if the model gave nothing
+    # usable (empty / speech-junk / too short).
     title = best_cluster_title(item)
     model_title = dry_title(str(data.get("title") or ""))
-    if model_title and looks_like_fact_line(model_title) and not _is_speech_junk(model_title):
+    if model_title and len(model_title) >= 10 and not _is_speech_junk(model_title):
         title = model_title
     if not summary:
         return None
