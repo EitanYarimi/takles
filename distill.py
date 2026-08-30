@@ -36,7 +36,9 @@ MAX_DEEP_ITEMS = int(os.environ.get("DISTILL_MAX_DEEP", "28"))
 MAX_SOURCES_FETCH = int(os.environ.get("DISTILL_MAX_SOURCES", "3"))
 MAX_ARTICLE_CHARS = int(os.environ.get("DISTILL_ARTICLE_CHARS", "3200"))
 MAX_GEMINI_ITEMS = int(os.environ.get("DISTILL_MAX_GEMINI", "10"))
-GEMINI_MIN_INTERVAL = float(os.environ.get("DISTILL_GEMINI_INTERVAL", "2.0"))
+# Free tier allows ~10 requests/minute; ~6.5s between calls keeps us safely under it
+# so a build doesn't trip a per-minute 429 before spending its daily quota.
+GEMINI_MIN_INTERVAL = float(os.environ.get("DISTILL_GEMINI_INTERVAL", "6.5"))
 ARTICLE_CACHE_TTL = 60 * 60 * 36
 FETCH_TIMEOUT = 12
 _ARTICLE_LOCK = threading.Lock()
