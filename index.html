@@ -1497,6 +1497,19 @@
       return allowUnverified ? 0.9 : 0.55;
     }
 
+    // Credibility should shape what leads the board — not just the status line.
+    // Demote low/unverified so verified stories rise; keep it soft for genuine
+    // breaking security so an unfolding event isn't buried. "unknown" means we
+    // couldn't fetch bodies to cross-check (not "false"), so it's penalized less.
+    function reliabilityFactor(c) {
+      const rel = c.reliability || "unknown";
+      const soft = isSecurityish(c) || isRollingEvent(c);
+      if (rel === "high") return 1.15;
+      if (rel === "medium") return 1.0;
+      if (rel === "low") return soft ? 0.8 : 0.5;
+      return soft ? 0.92 : 0.7; // unknown
+    }
+
     function importanceScore(c) {
       const ageH = Math.max(0, (Date.now() - cardTime(c)) / 3600000);
       // בתוך היום: דעיכה עדינה; מחוץ ליום כמעט לא רלוונטי
@@ -1524,7 +1537,7 @@
       else if (sourcesN >= 2) boost += 10;
 
       const relevance = topicScore + sourcesN * 6 + boost;
-      return relevance * recency * verificationFactor(c);
+      return relevance * recency * verificationFactor(c) * reliabilityFactor(c);
     }
 
     function compareByRelevance(a, b) {
