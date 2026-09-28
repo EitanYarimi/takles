@@ -42,6 +42,9 @@ jobs:
           GEMINI_MODEL: gemini-3.6-flash
           DISTILL_MAX_GEMINI: "10"
           DISTILL_GEMINI_INTERVAL: "7"
+          # Optional: set an ARTICLE_FETCH_PROXY secret (a scraping-proxy URL template
+          # containing {url}) to fetch publishers that hard-block bots. Empty = direct only.
+          ARTICLE_FETCH_PROXY: ${{ secrets.ARTICLE_FETCH_PROXY }}
         run: python3 scripts/build_news.py
         timeout-minutes: 25
       - name: Stage site
