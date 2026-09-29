@@ -14,6 +14,7 @@ import ssl
 import threading
 import time
 import urllib.error
+import urllib.parse
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
@@ -41,6 +42,10 @@ MAX_GEMINI_ITEMS = int(os.environ.get("DISTILL_MAX_GEMINI", "10"))
 GEMINI_MIN_INTERVAL = float(os.environ.get("DISTILL_GEMINI_INTERVAL", "6.5"))
 ARTICLE_CACHE_TTL = 60 * 60 * 36
 FETCH_TIMEOUT = 12
+# Optional scraping-proxy fallback for publishers that hard-block bots/datacenter
+# IPs (Cloudflare etc.). A URL template containing "{url}" — e.g. a ScraperAPI /
+# ZenRows / r.jina.ai endpoint. Empty by default (direct fetch only).
+ARTICLE_FETCH_PROXY = os.environ.get("ARTICLE_FETCH_PROXY", "").strip()
 _ARTICLE_LOCK = threading.Lock()
 _LAST_GEMINI_TS = 0.0
 _GEMINI_CIRCUIT_OPEN = False
@@ -429,34 +434,71 @@ def html_to_text(html: str) -> str:
     return "\n".join(lines).strip()
 
 
+_BROWSER_HEADERS = {
+    "User-Agent": UA,
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "he-IL,he;q=0.9,en-US;q=0.8,en;q=0.7",
+    # Look like a real navigation from a Google result — recovers some soft blocks.
+    "Referer": "https://www.google.com/",
+    "Upgrade-Insecure-Requests": "1",
+    "Sec-Fetch-Dest": "document",
+    "Sec-Fetch-Mode": "navigate",
+    "Sec-Fetch-Site": "cross-site",
+    "Sec-Fetch-User": "?1",
+}
+
+
+def _html_to_article(raw: bytes, ctype: str) -> str:
+    if "html" not in ctype and not raw[:200].lstrip().lower().startswith(b"<!doctype"):
+        if b"<html" not in raw[:800].lower() and b"<body" not in raw[:800].lower():
+            # A reader proxy may return plain text rather than HTML.
+            text = raw.decode("utf-8", "replace").strip()
+            return text[: MAX_ARTICLE_CHARS + 400] if len(text) >= 180 else ""
+    text = html_to_text(raw.decode("utf-8", "replace"))
+    return text[: MAX_ARTICLE_CHARS + 400] if len(text) >= 180 else ""
+
+
+def _fetch_via_proxy(u: str) -> str:
+    """Route a blocked URL through the configured scraping proxy, if any."""
+    if not ARTICLE_FETCH_PROXY:
+        return ""
+    target = (
+        ARTICLE_FETCH_PROXY.replace("{url}", urllib.parse.quote(u, safe=""))
+        if "{url}" in ARTICLE_FETCH_PROXY
+        else ARTICLE_FETCH_PROXY.rstrip("/") + "/" + u
+    )
+    req = urllib.request.Request(target, headers={"User-Agent": UA, "Accept": "*/*"})
+    try:
+        with urllib.request.urlopen(req, timeout=FETCH_TIMEOUT + 20, context=SSL_CTX) as resp:
+            ctype = (resp.headers.get("Content-Type") or "").lower()
+            raw = resp.read()
+        return _html_to_article(raw, ctype)
+    except Exception as exc:  # noqa: BLE001
+        print(f"[distill] proxy fetch failed {u[:50]}: {exc}")
+        return ""
+
+
 def fetch_article_text(url: str) -> str:
     u = (url or "").strip()
     if not u.startswith("http"):
         return ""
-    req = urllib.request.Request(
-        u,
-        headers={
-            "User-Agent": UA,
-            "Accept": "text/html,application/xhtml+xml;q=0.9,*/*;q=0.8",
-            "Accept-Language": "he-IL,he;q=0.9,en-US;q=0.8,en;q=0.7",
-        },
-    )
+    req = urllib.request.Request(u, headers=_BROWSER_HEADERS)
     try:
         with urllib.request.urlopen(req, timeout=FETCH_TIMEOUT, context=SSL_CTX) as resp:
             ctype = (resp.headers.get("Content-Type") or "").lower()
             raw = resp.read()
-        if "html" not in ctype and not raw[:200].lstrip().lower().startswith(b"<!doctype"):
-            # still try decode if looks like html
-            if b"<html" not in raw[:800].lower() and b"<body" not in raw[:800].lower():
-                return ""
-        html = raw.decode("utf-8", "replace")
-        text = html_to_text(html)
-        if len(text) < 180:
-            return ""
-        return text[: MAX_ARTICLE_CHARS + 400]
+        text = _html_to_article(raw, ctype)
+        if text:
+            return text
+    except urllib.error.HTTPError as exc:
+        # 401/403/429/451 = bot/IP block or paywall — expected for some publishers;
+        # try the optional proxy instead of spamming the log.
+        if exc.code not in (401, 403, 429, 451):
+            print(f"[distill] fetch failed {u[:60]}: {exc}")
     except Exception as exc:  # noqa: BLE001
         print(f"[distill] fetch failed {u[:60]}: {exc}")
-        return ""
+    # Fallback for hard-blocked publishers, only when a proxy is configured.
+    return _fetch_via_proxy(u)
 
 
 def _fetch_one_source(src: dict, article_cache: dict) -> dict:

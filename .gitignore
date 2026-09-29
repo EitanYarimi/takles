@@ -5,3 +5,4 @@ __pycache__/
 .env
 distill_cache.json
 article_cache.json
+image_cache.json
