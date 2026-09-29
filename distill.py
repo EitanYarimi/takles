@@ -26,7 +26,7 @@ from zoneinfo import ZoneInfo
 ROOT = Path(__file__).resolve().parent
 CACHE_PATH = ROOT / "distill_cache.json"
 ARTICLE_CACHE_PATH = ROOT / "article_cache.json"
-DISTILL_VERSION = "v25-ai-original-hebrew"
+DISTILL_VERSION = "v26-proxy-fulltext"
 SSL_CTX = ssl._create_unverified_context()
 UA = (
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
@@ -42,10 +42,24 @@ MAX_GEMINI_ITEMS = int(os.environ.get("DISTILL_MAX_GEMINI", "10"))
 GEMINI_MIN_INTERVAL = float(os.environ.get("DISTILL_GEMINI_INTERVAL", "6.5"))
 ARTICLE_CACHE_TTL = 60 * 60 * 36
 FETCH_TIMEOUT = 12
-# Optional scraping-proxy fallback for publishers that hard-block bots/datacenter
-# IPs (Cloudflare etc.). A URL template containing "{url}" — e.g. a ScraperAPI /
-# ZenRows / r.jina.ai endpoint. Empty by default (direct fetch only).
+# Scraping-proxy fallback for publishers that hard-block bots/datacenter IPs
+# (Cloudflare etc.) — and, importantly, for the GitHub Actions build IP, which
+# many Israeli publishers 403 outright. A URL template containing "{url}" — e.g.
+# a ScraperAPI / ZenRows endpoint. When unset we fall back to r.jina.ai's free
+# reader, which fetches from its own clean IPs (no key required).
 ARTICLE_FETCH_PROXY = os.environ.get("ARTICLE_FETCH_PROXY", "").strip()
+# Jina Reader is free and keyless; an optional key raises the rate limit.
+JINA_READER = os.environ.get("JINA_READER", "https://r.jina.ai/{url}").strip()
+JINA_API_KEY = os.environ.get("JINA_API_KEY", "").strip()
+# Cap proxy fallbacks per build so a fully-blocked IP can't stall the run on a
+# rate-limited free proxy. Best-effort: the most important stories fetch first.
+MAX_PROXY_FETCH = int(os.environ.get("DISTILL_MAX_PROXY", "60"))
+# Keyless Jina rate-limits rapid/parallel calls (403); a key lifts this, so we
+# only need meaningful spacing when running keyless.
+PROXY_MIN_INTERVAL = float(os.environ.get("DISTILL_PROXY_INTERVAL", "3.0"))
+_PROXY_CALLS = 0
+_LAST_PROXY_TS = 0.0
+_PROXY_TS_LOCK = threading.Lock()
 _ARTICLE_LOCK = threading.Lock()
 _LAST_GEMINI_TS = 0.0
 _GEMINI_CIRCUIT_OPEN = False
@@ -406,8 +420,13 @@ def resolve_publisher_url(url: str) -> str | None:
         from googlenewsdecoder import gnewsdecoder
 
         result = gnewsdecoder(u, interval=0)
-        if isinstance(result, dict) and result.get("status") and result.get("decoded_url"):
-            return str(result["decoded_url"]).strip()
+        if isinstance(result, dict) and result.get("decoded_url"):
+            # The success flag key changed across versions: 0.1.x uses "status",
+            # 0.2.x uses "success". Accept either so a routine upgrade doesn't
+            # silently break decoding (which drops every card to headlines-only).
+            if result.get("status") or result.get("success"):
+                return str(result["decoded_url"]).strip()
+        print(f"[distill] gnews decode returned no url for {u[:60]}: {result}")
     except Exception as exc:  # noqa: BLE001
         print(f"[distill] gnews decode failed: {exc}")
     return None
@@ -458,21 +477,69 @@ def _html_to_article(raw: bytes, ctype: str) -> str:
     return text[: MAX_ARTICLE_CHARS + 400] if len(text) >= 180 else ""
 
 
+_JINA_PREAMBLE_RE = re.compile(
+    r"^(?:Title|URL Source|Published Time|Markdown Content|Warning|Images|Links):.*$",
+    re.I | re.M,
+)
+
+
+def _clean_reader_markdown(text: str) -> str:
+    """Strip the Jina Reader header block and leftover markdown link syntax."""
+    text = _JINA_PREAMBLE_RE.sub(" ", text)
+    text = re.sub(r"!\[[^\]]*\]\([^)]*\)", " ", text)  # images
+    text = re.sub(r"\[([^\]]+)\]\([^)]*\)", r"\1", text)  # links -> label
+    text = re.sub(r"[ \t]+", " ", text)
+    text = re.sub(r"\n{2,}", "\n", text)
+    return text.strip()
+
+
 def _fetch_via_proxy(u: str) -> str:
-    """Route a blocked URL through the configured scraping proxy, if any."""
-    if not ARTICLE_FETCH_PROXY:
+    """Route a blocked URL through a scraping proxy.
+
+    Uses ARTICLE_FETCH_PROXY when configured, otherwise the free keyless Jina
+    Reader. The proxy fetches from clean IPs, which is what lets the GitHub
+    Actions build get past publisher 403s on its datacenter IP.
+    """
+    global _PROXY_CALLS, _LAST_PROXY_TS
+    template = ARTICLE_FETCH_PROXY or JINA_READER
+    if not template:
         return ""
-    target = (
-        ARTICLE_FETCH_PROXY.replace("{url}", urllib.parse.quote(u, safe=""))
-        if "{url}" in ARTICLE_FETCH_PROXY
-        else ARTICLE_FETCH_PROXY.rstrip("/") + "/" + u
-    )
-    req = urllib.request.Request(target, headers={"User-Agent": UA, "Accept": "*/*"})
+    with _ARTICLE_LOCK:
+        if _PROXY_CALLS >= MAX_PROXY_FETCH:
+            return ""
+        _PROXY_CALLS += 1
+    is_jina = not ARTICLE_FETCH_PROXY and "r.jina.ai" in template
+    # Space keyless proxy calls so a burst doesn't trip the free rate limit.
+    if is_jina and not JINA_API_KEY and PROXY_MIN_INTERVAL > 0:
+        with _PROXY_TS_LOCK:
+            wait = PROXY_MIN_INTERVAL - (time.time() - _LAST_PROXY_TS)
+            if wait > 0:
+                time.sleep(wait)
+            _LAST_PROXY_TS = time.time()
+    if is_jina:
+        # Jina Reader expects the raw target appended after r.jina.ai/ — a
+        # percent-encoded URL is rejected with a 403.
+        target = "https://r.jina.ai/" + u
+    elif "{url}" in template:
+        target = template.replace("{url}", urllib.parse.quote(u, safe=""))
+    else:
+        target = template.rstrip("/") + "/" + u
+    headers = {"User-Agent": UA, "Accept": "*/*"}
+    if is_jina:
+        # Ask Jina for the main article text only, and authenticate when a key
+        # is available to lift the free rate limit.
+        headers["X-Return-Format"] = "markdown"
+        if JINA_API_KEY:
+            headers["Authorization"] = f"Bearer {JINA_API_KEY}"
+    req = urllib.request.Request(target, headers=headers)
     try:
-        with urllib.request.urlopen(req, timeout=FETCH_TIMEOUT + 20, context=SSL_CTX) as resp:
+        with urllib.request.urlopen(req, timeout=FETCH_TIMEOUT + 30, context=SSL_CTX) as resp:
             ctype = (resp.headers.get("Content-Type") or "").lower()
             raw = resp.read()
-        return _html_to_article(raw, ctype)
+        text = _html_to_article(raw, ctype)
+        if is_jina and text:
+            text = _clean_reader_markdown(text)
+        return text if len(text) >= 180 else ""
     except Exception as exc:  # noqa: BLE001
         print(f"[distill] proxy fetch failed {u[:50]}: {exc}")
         return ""
@@ -1822,6 +1889,8 @@ def _story_id(title: str) -> str:
 
 
 def enrich_items(items: list[dict], debug: bool = False) -> list[dict]:
+    global _PROXY_CALLS
+    _PROXY_CALLS = 0
     cache = load_cache()
     article_cache = load_article_cache()
     dropped = 0
@@ -1925,6 +1994,7 @@ def enrich_items(items: list[dict], debug: bool = False) -> list[dict]:
         f"(cap {MAX_DEEP_ITEMS}); gemini digests shown {gemini_shown} "
         f"({gemini_attempts} new calls attempted, cap {MAX_GEMINI_ITEMS}, "
         f"model {GEMINI_MODEL}); cache reuse {reused}; "
+        f"proxy fetches {_PROXY_CALLS}/{MAX_PROXY_FETCH}; "
         f"cross-source confirmed {verified}"
     )
     save_cache(cache)
