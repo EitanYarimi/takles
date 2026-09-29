@@ -636,7 +636,23 @@
     }
     .cube-list li:hover .cube-title { color: var(--accent); }
     .cube-list li:last-child { border-bottom: 0; }
-    .cube-list .item { display: block; }
+    .cube-list .item { display: flex; gap: 0.6rem; align-items: flex-start; }
+    .item-text { flex: 1; min-width: 0; }
+    .thumb {
+      flex: 0 0 auto;
+      width: 56px;
+      height: 56px;
+      border-radius: 10px;
+      overflow: hidden;
+      background: var(--rule-soft);
+      box-shadow: 0 2px 8px var(--shadow);
+    }
+    .thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
     .cube-meta {
       display: flex;
       gap: 0.4rem;
@@ -960,7 +976,11 @@
       padding: 0.85rem 0;
       border-bottom: 1px solid var(--rule-soft);
       cursor: pointer;
+      display: flex;
+      gap: 0.75rem;
+      align-items: flex-start;
     }
+    .topic-full-list li .thumb { width: 64px; height: 64px; }
     .topic-full-list li:last-child { border-bottom: 0; }
     .topic-full-list li:hover .tfl-title { color: var(--accent); }
     .topic-full-list li.is-seen { opacity: 0.62; }
@@ -1731,6 +1751,20 @@
         data-cover-title="${escapeHtml(title || "")}"></div>`;
     }
 
+    // Small square thumbnail for compact list rows. Prefers the server-picked
+    // licensed photo, and falls back to the bundled category art so every row
+    // has an image even when no specific photo was matched.
+    function thumbHtml(card) {
+      const key = pickVisualContext(card?.title || "", card?.topic || "domestic");
+      const chosen = VISUAL_PACK[key] || VISUAL_PACK.domestic;
+      const fallback = chosen.src;
+      const src = card && card.image ? card.image : fallback;
+      return `<span class="thumb thumb-${escapeHtml(key)}">
+        <img src="${escapeHtml(src)}" alt="" loading="lazy" decoding="async"
+             onerror="this.onerror=null;this.src='${escapeHtml(fallback)}'" />
+      </span>`;
+    }
+
     function storyVisual(card) {
       const key = pickVisualContext(card?.title || "", card?.topic || "domestic");
       const chosen = VISUAL_PACK[key] || VISUAL_PACK.domestic;
@@ -2189,12 +2223,15 @@
                   const names = [...new Set(c.sources.map((s) => s.name))];
                   return `<li data-id="${escapeHtml(c.id)}">
                     <div class="item">
-                      <div class="cube-meta">
-                        <span>${escapeHtml(relativeTime(c.pubDate))}</span>
-                        <span>·</span>
-                        <span>${names.length} מקורות</span>
+                      ${thumbHtml(c)}
+                      <div class="item-text">
+                        <div class="cube-meta">
+                          <span>${escapeHtml(relativeTime(c.pubDate))}</span>
+                          <span>·</span>
+                          <span>${names.length} מקורות</span>
+                        </div>
+                        <div class="cube-title">${escapeHtml(c.title)}</div>
                       </div>
-                      <div class="cube-title">${escapeHtml(c.title)}</div>
                     </div>
                   </li>`;
                 })
@@ -2877,16 +2914,19 @@
                     const names = [...new Set(c.sources.map((s) => s.name))];
                     const seen = isSeen(c.id);
                     return `<li class="${seen ? "is-seen" : ""}" data-id="${escapeHtml(c.id)}">
-                      <div class="tfl-meta">
-                        <span>${seen ? "נצפה" : "על הלוח"}</span>
-                        <span>·</span>
-                        <span>${STATUS_HE[c.status] || c.status}</span>
-                        <span>·</span>
-                        <span>${names.length} מקורות</span>
-                        <span>·</span>
-                        <span>${escapeHtml(relativeTime(c.pubDate))}</span>
+                      ${thumbHtml(c)}
+                      <div class="item-text">
+                        <div class="tfl-meta">
+                          <span>${seen ? "נצפה" : "על הלוח"}</span>
+                          <span>·</span>
+                          <span>${STATUS_HE[c.status] || c.status}</span>
+                          <span>·</span>
+                          <span>${names.length} מקורות</span>
+                          <span>·</span>
+                          <span>${escapeHtml(relativeTime(c.pubDate))}</span>
+                        </div>
+                        <div class="tfl-title t-${escapeHtml(c.topic)}">${escapeHtml(c.title)}</div>
                       </div>
-                      <div class="tfl-title t-${escapeHtml(c.topic)}">${escapeHtml(c.title)}</div>
                     </li>`;
                   })
                   .join("")
